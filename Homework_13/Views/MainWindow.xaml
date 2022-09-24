@@ -1,0 +1,133 @@
+﻿<Window x:Class="Homework_13.MainWindow"
+        x:Name="MainWind"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Homework_13"
+        xmlns:fa="http://schemas.fontawesome.com/icons/"
+        xmlns:e1="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:behaviours="clr-namespace:Homework_13.Infrastructure"
+        xmlns:vm="clr-namespace:Homework_13.ViewModels" d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
+        mc:Ignorable="d"
+        Title="{Binding Title}" Height="464" Width="930" WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+    <DockPanel>
+        <Grid DockPanel.Dock="Top" Height="380" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="119*"/>
+                <ColumnDefinition Width="281*"/>
+            </Grid.ColumnDefinitions>
+            <GroupBox Header="Отделы" Margin="5,0">
+                <StackPanel>
+                    <TreeView x:Name="DepartmentsList" Height="224" Width="200" 
+                              ItemsSource="{Binding Departments}">
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding departments}">
+                                <TextBlock Text="{Binding Name}"/>
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                        <e1:Interaction.Behaviors>
+                            <behaviours:BindableSelectedItemBehavior SelectedItem="{Binding SelectedDepartment, Mode=TwoWay}" />
+                        </e1:Interaction.Behaviors>
+                    </TreeView>
+                    <Button Margin="5" Height="40"  
+                        Command="{Binding AddDepartmentCommand}"
+                        CommandParameter="{Binding ElementName=DepartmentsList}"
+                        Cursor="Hand">
+                        <TextBlock Text="Добавить отдел"/>
+                    </Button>
+                    <Button Height="40" Margin="5" 
+                        Command="{Binding DeleteDepartmentCommand}" 
+                        CommandParameter="{Binding ElementName=DepartmentsList}"  Cursor="Hand">
+                        <TextBlock Text="Удалить отдел" />
+                    </Button>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Grid.Column="1" Header="Клиенты" Margin="5,0">
+                <GroupBox.Resources>
+                    <CollectionViewSource x:Key="ClientCollection"
+                                  x:Name="ClientCollection"
+                                  Source="{Binding Path=SelectedDepartment.clients}"                                  
+                                  Filter="ClientCollectionFilter"/>
+                </GroupBox.Resources>
+                <DockPanel Grid.Column="1" Background="White" Margin="0,15,0,-7" Width="633">
+                    <DockPanel DockPanel.Dock="Top" Width="133" HorizontalAlignment="Left" Margin="10,0,0,0">
+                        <fa:FontAwesome Icon="Solid_Search" Margin="3,0" FontSize="18" Foreground="Gray"/>
+                        <TextBox Name="ClientFilter" TextChanged="OnClientFilterTextChanget" Cursor="Arrow" Margin="0,0,0,5" Width="100"/>
+                    </DockPanel>
+                    <DataGrid DockPanel.Dock="Top" Height="235" 
+                              ItemsSource="{Binding Source={StaticResource ClientCollection}}"
+                              SelectedItem="{Binding SelectedClient}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True" Width="609">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Фамилия" Binding="{Binding Lastname}"/>
+                            <DataGridTextColumn Header="Имя" Binding="{Binding Firstname}"/>
+                            <DataGridTextColumn Header="Отчество" Binding="{Binding Patronymic}"/>
+                            <DataGridTextColumn Header="Номер телефона" Binding="{Binding PhoneNumber}"/>
+                            <DataGridTextColumn Header="Серия и номер паспорта" Binding="{Binding SeriesAndNumberOfPassport}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" Height="53">
+                        <Button Margin="5" Height="40"  
+                        Command="{Binding AddClientCommand}"
+                        CommandParameter="{Binding ElementName=DepartmentsList}"
+                        Cursor="Hand" Width="160">
+                            <StackPanel Orientation="Horizontal">
+                                <fa:ImageAwesome Icon="Solid_Plus" Height="20" Margin="0,0,10,0" Foreground="Yellow">
+                                    <fa:ImageAwesome.Effect>
+                                        <DropShadowEffect ShadowDepth="2"/>
+                                    </fa:ImageAwesome.Effect>
+                                </fa:ImageAwesome>
+                                <TextBlock Text="Добавить" FontSize="18"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Height="40" Margin="5" 
+                        Command="{Binding DeleteClientCommand}" 
+                        CommandParameter="{Binding SelectedDepartment}"  Cursor="Hand" Width="149">
+                            <StackPanel Orientation="Horizontal">
+                                <fa:ImageAwesome Icon="Solid_Trash" Height="20" Margin="0,0,10,0" Foreground="red">
+                                    <fa:ImageAwesome.Effect>
+                                        <DropShadowEffect ShadowDepth="2"/>
+                                    </fa:ImageAwesome.Effect>
+                                </fa:ImageAwesome>
+                                <TextBlock Text="Удалить" FontSize="18"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Height="40" Margin="5" 
+                        Command="{Binding EditClientCommand}" 
+                        CommandParameter="{Binding SelectedDepartment}" Cursor="Hand" Width="auto">
+                            <StackPanel Orientation="Horizontal">
+                                <fa:ImageAwesome Icon="Regular_Edit" Height="20" Margin="0,0,10,0" Foreground="LightGreen">
+                                    <fa:ImageAwesome.Effect>
+                                        <DropShadowEffect ShadowDepth="2"/>
+                                    </fa:ImageAwesome.Effect>
+                                </fa:ImageAwesome>
+                                <TextBlock Text="Редактировать" FontSize="18"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </DockPanel>
+            </GroupBox>
+        </Grid>
+        <StatusBar DockPanel.Dock="Bottom" Height="40">
+            <Canvas Width="790">
+                <TextBlock Text="Режим работы:" VerticalAlignment="Top" Canvas.Left="10" Canvas.Top="-8" HorizontalAlignment="Center" />
+                <TextBlock Text="{Binding Path=Worker}" VerticalAlignment="Center" HorizontalAlignment="Left" Width="123" Canvas.Left="99" Canvas.Top="-8"/>
+                <Button Width="170" FontSize="20" Cursor="Hand" 
+                        Command="{Binding OutLoggingCommand}" 
+                        CommandParameter="{Binding ElementName=MainWind}" Canvas.Left="599" Canvas.Top="-16" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:ImageAwesome Icon="Solid_SignOutAlt" Height="20" Margin="0,0,10,0" Foreground="White">
+                            <fa:ImageAwesome.Effect>
+                                <DropShadowEffect ShadowDepth="2"/>
+                            </fa:ImageAwesome.Effect>
+                        </fa:ImageAwesome>
+                        <TextBlock Text="Выход"/>
+                    </StackPanel>
+                </Button>
+            </Canvas>
+        </StatusBar>
+    </DockPanel>
+</Window>
