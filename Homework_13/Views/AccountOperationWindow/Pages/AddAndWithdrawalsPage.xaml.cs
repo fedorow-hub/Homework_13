@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Homework_13.Views
+namespace Homework_13.Views.AccountOperationWindow.Pages
 {
     /// <summary>
-    /// Логика взаимодействия для DeparimentInfoWindow.xaml
+    /// Логика взаимодействия для AddAndWithdrawalsPage.xaml
     /// </summary>
-    public partial class DeparimentInfoWindow : Window
+    public partial class AddAndWithdrawalsPage : Page
     {
-        public DeparimentInfoWindow()
+        public AddAndWithdrawalsPage()
         {
             InitializeComponent();
         }

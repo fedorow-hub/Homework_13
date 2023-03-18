@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Homework_13.Models.Account;
+using Homework_13.Models.Money;
+using System;
+using System.Windows.Documents;
 
 namespace Homework_13.Models.Client
 {
@@ -14,6 +13,7 @@ namespace Homework_13.Models.Client
         private string patronymic;
         private PhoneNumber phoneNumber;
         private Passport seriesAndNumberOfPassport;
+        
 
         public Guid Id { get { return id; } set { id = value; } }
 

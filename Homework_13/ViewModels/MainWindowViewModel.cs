@@ -1,25 +1,25 @@
 ﻿using Homework_13.Infrastructure.Commands;
+using Homework_13.Infrastructure.DataAccess;
 using Homework_13.Models.Bank;
 using Homework_13.Models.Client;
 using Homework_13.Models.Department;
+using Homework_13.Models.Money;
 using Homework_13.Models.Worker;
 using Homework_13.ViewModels.Base;
+using Homework_13.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows;
-using Homework_13.Views;
+using System.Windows.Input;
 
 namespace Homework_13.ViewModels
 {
-    internal class MainWindowViewModel : ViewModel
+    public class MainWindowViewModel : ViewModel
     {
         #region Window title
+
+        public Action UpdateClientsList;
 
         private string title;
         /// <summary>
@@ -32,19 +32,31 @@ namespace Homework_13.ViewModels
         }
         #endregion
 
-        public Action UpdateDepartmentList;
-
         public Bank Bank { get; private set; }
 
         public Worker Worker { get; private set; }
 
-        private ObservableCollection<Department> departments;
+        public string Date { get; private set; }
 
-        public ObservableCollection<Department> Departments
+        public Dollar Dollar { get; private set; } = new Dollar();
+
+        public Euro Euro { get; private set; } = new Euro();
+
+        public string IconDollar { get; private set; }
+        public string ColorDollar { get; private set; }
+        public string IconEuro { get; private set; }
+        public string ColorEuro { get; private set; }
+
+        IDataAccess _data = new DataAccessProxy(new DataAccess());
+
+        private ObservableCollection<ClientAccessInfo> clients;
+
+        public ObservableCollection<ClientAccessInfo> Clients
         {
-            get => departments;
-            set => Set(ref departments, value);
+            get => clients;
+            set => Set(ref clients, value);
         }
+               
 
         public MainWindowViewModel() { }
 
@@ -53,39 +65,32 @@ namespace Homework_13.ViewModels
             Bank = new Bank("Банк А", new DepartmentRepository("departments.json"), worker);
             this.title = $"{Bank.Name}. Работа с клиентами";
             Worker = worker;
+            Clients = Bank.department.Clients;            
+            string[] data = _data.GetAllData();
+            Date = Convert.ToDateTime(data[0]).ToShortDateString();
+            Dollar.CurrentRate = Convert.ToDecimal(data[1]);
+            Dollar.PreviousRate = Convert.ToDecimal(data[2]);
+            Euro.CurrentRate = Convert.ToDecimal(data[3]);
+            Euro.PreviousRate = Convert.ToDecimal(data[4]);
 
-            Departments = new ObservableCollection<Department>();
+            IconDollar = GetStileIcon<Dollar>(Dollar).Item1;
+            ColorDollar = GetStileIcon<Dollar>(Dollar).Item2;
+            IconEuro = GetStileIcon<Euro>(Euro).Item1;
+            ColorEuro = GetStileIcon<Euro>(Euro).Item2;
 
             #region commands
             DeleteClientCommand = new LambdaCommand(OnDeleteClientCommandExecute, CanDeleteClientCommandExecute);
             OutLoggingCommand = new LambdaCommand(OnOutLoggingCommandExecute, CanOutLoggingCommandExecute);
             AddClientCommand = new LambdaCommand(OnAddClientCommandExecute, CanAddClientCommandExecute);
-            AddDepartmentCommand = new LambdaCommand(OnAddDepartmentCommandExecute, CanAddDepartmentCommandExecute);
-            DeleteDepartmentCommand = new LambdaCommand(OnDeleteDepartmentCommandExecute, CanDeleteDepartmentCommandExecute);
             EditClientCommand = new LambdaCommand(OnEditClientCommandExecute, CanEditClientCommandExecute);
+
+            OpenOperationWindowCommand = new LambdaCommand(OnOpenOperationWindowCommandExecute, CanOpenOperationWindowCommandExecute);
             #endregion
 
             _enableAddClient = Worker.DataAccess.Commands.AddClient;
             _enableDelClient = Worker.DataAccess.Commands.DelClient;
             _enableEditClient = Worker.DataAccess.Commands.EditClient;
-
-            UpdateDepartmentList += UpdateDeparments;
-            UpdateDepartmentList.Invoke();
-        }
-
-        /// <summary>
-        /// Обновление списка отделов
-        /// </summary>
-        private void UpdateDeparments()
-        {
-            Departments.Clear();
-            Department temtDepartment = new Department();
-            foreach (var department in Bank.DepartmentRepository.Departments)
-            {
-                temtDepartment = department;
-                temtDepartment.clients = GetClientsInfo(department);
-                Departments.Add(temtDepartment);
-            }
+            _enableOperationAccounts = Worker.DataAccess.Commands.OperationAccount;
         }
 
         /// <summary>
@@ -93,15 +98,38 @@ namespace Homework_13.ViewModels
         /// представление зависит от работника
         /// </summary>
         /// <returns></returns>
-        public List<ClientAccessInfo> GetClientsInfo(Department department)
+        public List<ClientAccessInfo> GetClientsInfo()
         {
             var clientsInfo = new List<ClientAccessInfo>();
 
-            foreach (var client in department.clients)
+            foreach (var client in Clients)
             {
                 clientsInfo.Add(Worker.GetClientInfo(client));
             }
             return clientsInfo;
+        }
+        /// <summary>
+        /// Метод возвращает нужный вид и цвет иконки динамики курса валют
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        private (string icon, string color) GetStileIcon<T>(T obj)
+            where T : Currency
+        {
+            string icon = "";
+            string color = "";
+            if (obj.CurrentRate > obj.PreviousRate)
+            {
+                icon = "Solid_SortUp";
+                color = "Green";
+            }
+            else if (obj.CurrentRate < obj.PreviousRate)
+            {
+                icon = "Solid_SortDown";
+                color = "Red";
+            }
+            return (icon, color);
         }
 
         #region Команды
@@ -134,65 +162,14 @@ namespace Homework_13.ViewModels
         }
         private void OnAddClientCommandExecute(object p)
         {
-            if (p is TreeView treeView)
-            {
-                ClientInfoWindow infoWindow = new ClientInfoWindow();
-                ClientInfoViewModel viewModel = new ClientInfoViewModel(new ClientAccessInfo(), Bank, this, Worker.DataAccess, Worker, (Department)treeView.SelectedItem);
-                infoWindow.DataContext = viewModel;
-                infoWindow.Show();
-            }
+            ClientInfoWindow infoWindow = new ClientInfoWindow();
+            ClientInfoViewModel viewModel = new ClientInfoViewModel(new ClientAccessInfo(), Bank, Worker.DataAccess);
+            infoWindow.DataContext = viewModel;
+            infoWindow.Show();
         }
 
         #endregion
 
-        #region AddDepartmentCommand
-
-        public ICommand AddDepartmentCommand { get; }
-
-        private bool CanAddDepartmentCommandExecute(object p)
-        {
-            if (_enableAddClient == true)
-                return true;
-            else return false;
-        }
-        private void OnAddDepartmentCommandExecute(object p)
-        {
-            DeparimentInfoWindow infoWindow = new DeparimentInfoWindow();
-            if (p is TreeView treeView)
-            {
-                DepartmentInfoViewModel viewModel = new DepartmentInfoViewModel(new Department(),
-                    (Department)treeView.SelectedItem, this, Bank);
-                infoWindow.DataContext = viewModel;
-                infoWindow.Show();
-            }
-        }
-        #endregion
-
-        #region DeleteDepartmentCommand
-
-        public ICommand DeleteDepartmentCommand { get; }
-
-        private bool CanDeleteDepartmentCommandExecute(object p)
-        {
-            if (p is TreeView treeView)
-            {
-                if (treeView.SelectedItem == null)
-                    return false;
-            }
-            if (_enableDelClient == true)
-                return true;
-            else return false;
-        }
-        private void OnDeleteDepartmentCommandExecute(object p)
-        {
-            if (p is null) return;
-            if (p is TreeView treeView)
-            {
-                Bank.DeleteDepartment((Department)treeView.SelectedItem);
-                UpdateDepartmentList.Invoke();
-            }
-        }
-        #endregion
 
         #region DeleteClient
 
@@ -208,12 +185,9 @@ namespace Homework_13.ViewModels
         private void OnDeleteClientCommandExecute(object p)
         {
             if (SelectedClient is null) return;
-            if (p is Department department)
-            {
-                Bank.DeleteClient(department, SelectedClient);
-                UpdateDepartmentList.Invoke();
-            }
 
+            Bank.DeleteClient(SelectedClient);
+            Clients.Remove(SelectedClient);            
         }
         #endregion
 
@@ -233,11 +207,41 @@ namespace Homework_13.ViewModels
             if (SelectedClient is null) return;
 
             ClientInfoWindow infoWindow = new ClientInfoWindow();
-            ClientInfoViewModel viewModel = new ClientInfoViewModel(SelectedClient, Bank, this, Worker.DataAccess, Worker, (Department)p);
+            ClientInfoViewModel viewModel = new ClientInfoViewModel(SelectedClient, Bank, Worker.DataAccess);
             infoWindow.DataContext = viewModel;
             infoWindow.Show();
         }
         #endregion
+
+        #region OpenOperationWindow
+
+        public ICommand OpenOperationWindowCommand { get; }
+
+        private bool CanOpenOperationWindowCommandExecute(object p)
+        {
+            if (SelectedClient is null || _enableOperationAccounts == false)
+                return false;
+            return true;
+
+        }
+
+        private void OnOpenOperationWindowCommandExecute(object p)
+        {
+            if (SelectedClient is null) return;
+
+            OperationsWindow operationWindow = new OperationsWindow();
+            OperationsWindowViewModel viewModel = new OperationsWindowViewModel(SelectedClient, Bank, Worker);
+            operationWindow.DataContext = viewModel;
+            operationWindow.Show();
+
+            if (p is Window window)
+            {
+                window.Close();
+            }
+        }
+
+        #endregion
+
 
         #endregion
 
@@ -251,20 +255,6 @@ namespace Homework_13.ViewModels
         {
             get { return _SelectedClient; }
             set => Set(ref _SelectedClient, value);
-        }
-        #endregion
-
-
-        #region SelectedDepartment
-
-        private Department _SelectedDepartment;
-        /// <summary>
-        /// Выбранный отдел
-        /// </summary>
-        public Department SelectedDepartment
-        {
-            get { return _SelectedDepartment; }
-            set => Set(ref _SelectedDepartment, value);
         }
         #endregion
 
@@ -296,5 +286,13 @@ namespace Homework_13.ViewModels
         }
         #endregion
 
+        #region EnableOperationAccounts
+        private bool _enableOperationAccounts;
+        public bool EnableOperationAccounts
+        {
+            get => _enableOperationAccounts;
+            set => Set(ref _enableOperationAccounts, value);
+        }
+        #endregion
     }
 }

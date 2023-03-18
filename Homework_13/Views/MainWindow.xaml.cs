@@ -56,5 +56,6 @@ namespace Homework_13
             var collection = (CollectionViewSource)text_box.FindResource("ClientCollection");
             collection.View.Refresh();
         }
+
     }
 }

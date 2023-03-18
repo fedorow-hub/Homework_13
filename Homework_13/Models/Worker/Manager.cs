@@ -16,7 +16,8 @@ namespace Homework_13.Models.Worker
                 {
                     AddClient = true,
                     EditClient = true,
-                    DelClient = true
+                    DelClient = true,
+                    OperationAccount = true
                 },
                 new EditFieldsAccess()
                 {
@@ -25,7 +26,7 @@ namespace Homework_13.Models.Worker
                     MidleName = true,
                     PassortData = true,
                     PhoneNumber = true
-                });
+                }) ;
         }
 
         public override ClientAccessInfo GetClientInfo(Client.Client client)

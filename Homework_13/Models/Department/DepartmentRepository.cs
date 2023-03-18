@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,13 +11,12 @@ using System.Threading.Tasks;
 
 namespace Homework_13.Models.Department
 {
-    public class DepartmentRepository : IEnumerable<Department>
+    public class DepartmentRepository : IEnumerable<ClientAccessInfo>
     {
-        private List<Department>? _departments;
-        public List<Department>? Departments => _departments;
+        
 
-        private List<ClientAccessInfo>? _clients;
-        public List<ClientAccessInfo>? Clients => _clients;
+        private ObservableCollection<ClientAccessInfo>? _clients;
+        public ObservableCollection<ClientAccessInfo>? Clients => _clients;
 
         /// <summary>
         /// Файл репозитория
@@ -49,59 +49,25 @@ namespace Homework_13.Models.Department
         /// Добавление нового клиента
         /// </summary>
         /// <param name="client">клиент</param>
-        public void InsertClient(Department department, ClientAccessInfo client)
+        public void InsertClient(ClientAccessInfo client)
         {
             if (client is null)
                 return;
             client.Id = Guid.NewGuid();
-            department.clients.Add(client);
+            _clients.Add(client);
             Save();
         }
 
-        /// <summary>
-        /// Добавление нового отдела
-        /// </summary>
-        /// <param name="client">клиент</param>
-        public void InsertDepartment(Department parentDepartment, Department childDepartment)
-        {
-            if (childDepartment is null)
-                return;
-            if (parentDepartment == null)
-            {
-                _departments.Add(childDepartment);
-            }
-            else
-            {
-                parentDepartment.departments.Add(childDepartment);
-            }
-            Save();
-        }
-
-        /// <summary>
-        /// Редактирование названия отдела
-        /// </summary>
-        /// <param name="department"></param>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public void UpdateDepartment(Department department)
-        {
-            if (!_departments.Any(c => c.Id == department.Id))
-            {
-                throw new ArgumentOutOfRangeException(nameof(department), "Такого объекта нет в списке");
-            }
-
-            _departments[_departments.IndexOf(_departments.First(c => c.Id == department.Id))] = department;
-            Save();
-        }
 
         /// <summary>
         /// Обновление данных о клиенте
         /// </summary>
         /// <param name="client"></param>
-        public void UpdateClient(Department department, ClientAccessInfo client)
+        public void UpdateClient(ClientAccessInfo client)
         {
-            if (department.clients.Any(c => c.Id == client.Id))
+            if (_clients.Any(c => c.Id == client.Id))
             {
-                department.clients[department.clients.IndexOf(department.clients.First(c => c.Id == client.Id))] = client;
+                _clients[_clients.IndexOf(_clients.First(c => c.Id == client.Id))] = client;
             }
             Save();
         }
@@ -110,42 +76,18 @@ namespace Homework_13.Models.Department
         /// Удаление клиента
         /// </summary>
         /// <param name="clientId">ИД клиента</param>
-        public void DeleteClient(Department department, Guid clientId)
+        public void DeleteClient(Guid clientId)
         {
-            if (department.clients.Any(c => c.Id == clientId))
+            if (_clients.Any(c => c.Id == clientId))
             {
-                department.clients.Remove(department.clients.FirstOrDefault(c => c.Id == clientId));
+                _clients.Remove(_clients.FirstOrDefault(c => c.Id == clientId));
             }
             Save();
         }
 
-        /// <summary>
-        /// Удаление отдела
-        /// </summary>
-        /// <param name="department"></param>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public void DeleteDepartment(Department parentDepartment, Department deletingDepartment)
-        {
-            if (parentDepartment.departments.Count > 0)
-            {
-                foreach (var item in parentDepartment.departments)
-                {
-                    if (item.Id == deletingDepartment.Id)
-                    {
-                        parentDepartment.departments.Remove(item);
-                        Save();
-                        return;
-                    }
-                    else
-                    {
-                        DeleteDepartment(item, deletingDepartment);
-                    }
-                }
-            }
-        }
 
         /// <summary>
-        /// Сохранение списка отделов с включенными в них клиентами в файл
+        /// Сохранение в файл
         /// </summary>
         void Save()
         {
@@ -156,7 +98,7 @@ namespace Homework_13.Models.Department
             //{
             //    Directory.CreateDirectory(dirPath);
             //}
-            string json = JsonSerializer.Serialize(_departments);
+            string json = JsonSerializer.Serialize(_clients);
             File.WriteAllText(_path, json);
         }
 
@@ -171,12 +113,12 @@ namespace Homework_13.Models.Department
                 NoDepartmentsForLoad();
                 return;
             }
-            _departments = JsonSerializer.Deserialize<List<Department>>(data, new JsonSerializerOptions()
+            _clients = JsonSerializer.Deserialize<ObservableCollection<ClientAccessInfo>>(data, new JsonSerializerOptions()
             {
                 PropertyNameCaseInsensitive = true
             });
 
-            if (_departments is null)
+            if (_clients is null)
             {
                 NoDepartmentsForLoad();
                 return;
@@ -188,13 +130,13 @@ namespace Homework_13.Models.Department
         /// </summary>
         private void NoDepartmentsForLoad()
         {
-            _departments = new List<Department>();
+            _clients = new ObservableCollection<ClientAccessInfo>();
         }
-        public IEnumerator<Department> GetEnumerator()
+        public IEnumerator<ClientAccessInfo> GetEnumerator()
         {
-            for (int i = 0; i < Departments.Count(); i++)
+            for (int i = 0; i < _clients.Count(); i++)
             {
-                yield return Departments[i];
+                yield return _clients[i];
             }
         }
 

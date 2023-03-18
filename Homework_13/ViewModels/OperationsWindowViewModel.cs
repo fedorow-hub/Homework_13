@@ -1,0 +1,87 @@
+﻿using Homework_13.Infrastructure.Commands;
+using Homework_13.Models.Bank;
+using Homework_13.Models.Client;
+using Homework_13.Models.Worker;
+using Homework_13.ViewModels.Base;
+using Homework_13.Views.AccountOperationWindow.Pages;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+
+namespace Homework_13.ViewModels;
+
+public class OperationsWindowViewModel : ViewModel
+{
+    private ClientAccessInfo _currentClient;
+    private Bank _bank;
+    private Worker _worker;
+
+    public ClientAccessInfo CurrentClient { get; set; }
+
+    public OperationsWindowViewModel()
+    {
+
+    }
+    public OperationsWindowViewModel(ClientAccessInfo currentClient, Bank bank, Worker worker)
+    {
+        _currentClient = currentClient;
+        _bank = bank;
+        _worker = worker;
+
+        #region Pages
+        _addAndWithdrawals = new AddAndWithdrawalsPage();
+
+        _addAndWithdrawals.DataContext = new AddAndWithdrawalsViewModel(_currentClient);
+
+        CurrentPage = new EmptyPage();
+        #endregion
+
+        ExitCommand = new LambdaCommand(OnExitCommandExecute, CanExitCommandExecute);
+        SetAddAndWithdrawalsViewCommand = new LambdaCommand(OnSetAddAndWithdrawalsExecuted, CanSetAddAndWithdrawalsViewExecute);
+    }
+
+    #region Pages
+    private readonly Page _addAndWithdrawals;
+    //private readonly Page _appSettings;
+
+    private Page _currentPage;
+    /// <summary>
+    /// Текущая страница фрейма
+    /// </summary>
+    public Page CurrentPage
+    {
+        get => _currentPage;
+        set => Set(ref _currentPage, value);        
+    }
+    #endregion
+
+    #region SetAddAndWithdrawalsViewCommand
+    public ICommand SetAddAndWithdrawalsViewCommand { get; }
+    private void OnSetAddAndWithdrawalsExecuted(object p)
+    {
+        CurrentPage = _addAndWithdrawals;
+        _addAndWithdrawals.DataContext = new AddAndWithdrawalsViewModel(_currentClient);
+        
+    }
+    private bool CanSetAddAndWithdrawalsViewExecute(object p) => true;
+    #endregion
+
+    #region ExitCommand
+    public ICommand ExitCommand { get; }
+
+    private bool CanExitCommandExecute(object p) => true;
+
+    private void OnExitCommandExecute(object p)
+    {
+        MainWindow mainWindow = new MainWindow();
+        mainWindow.DataContext = new MainWindowViewModel(_worker);
+        mainWindow.Show();
+
+        if (p is Window window)
+        {
+            window.Close();
+        }
+    }
+    #endregion    
+
+}

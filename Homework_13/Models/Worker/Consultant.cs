@@ -16,7 +16,8 @@ namespace Homework_13.Models.Worker
                 {
                     AddClient = false,
                     EditClient = true,
-                    DelClient = false
+                    DelClient = false,
+                    OperationAccount = false
                 },
                 new EditFieldsAccess()
                 {

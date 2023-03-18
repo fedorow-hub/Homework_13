@@ -1,36 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Homework_13.Models.Worker;
 
-namespace Homework_13.Models.Worker
+public class RoleDataAccess
 {
-    public class RoleDataAccess
-    {
-        public CommandsAccess Commands;
-        public EditFieldsAccess EditFields;
+    public CommandsAccess Commands;
+    public EditFieldsAccess EditFields;
 
-        public RoleDataAccess(CommandsAccess commands, EditFieldsAccess editFields)
-        {
-            Commands = commands;
-            EditFields = editFields;
-        }
-    }
-
-    public struct CommandsAccess
+    public RoleDataAccess(CommandsAccess commands, EditFieldsAccess editFields)
     {
-        public bool AddClient;
-        public bool DelClient;
-        public bool EditClient;
+        Commands = commands;
+        EditFields = editFields;
     }
+}
 
-    public struct EditFieldsAccess
-    {
-        public bool FirstName;
-        public bool LastName;
-        public bool MidleName;
-        public bool PhoneNumber;
-        public bool PassortData;
-    }
+public struct CommandsAccess
+{
+    public bool AddClient;
+    public bool DelClient;
+    public bool EditClient;
+    public bool OperationAccount;
+}
+
+public struct EditFieldsAccess
+{
+    public bool FirstName;
+    public bool LastName;
+    public bool MidleName;
+    public bool PhoneNumber;
+    public bool PassortData;
 }

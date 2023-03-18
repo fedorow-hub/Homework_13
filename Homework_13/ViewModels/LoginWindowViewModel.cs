@@ -11,7 +11,7 @@ using System.Windows;
 
 namespace Homework_13.ViewModels
 {
-    internal class LoginWindowViewModel : ViewModel
+    public class LoginWindowViewModel : ViewModel
     {
         public LoginWindowViewModel()
         {
@@ -49,7 +49,6 @@ namespace Homework_13.ViewModels
         }
         private bool CanOutCommandExecute(object p) => true;
         #endregion
-
 
         private void OpenMainWindow(Worker worker, object p)
         {
