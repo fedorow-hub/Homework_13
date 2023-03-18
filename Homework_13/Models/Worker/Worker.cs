@@ -17,5 +17,6 @@ namespace Homework_13.Models.Worker
         /// <param name="client"></param>
         /// <returns></returns>
         public abstract ClientAccessInfo GetClientInfo(Client.Client client);
+
     }
 }
