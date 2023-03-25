@@ -1,5 +1,4 @@
-﻿using Homework_13.Models.Client;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -7,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 
-namespace Homework_13.Infrastructure.DataAccess;
+namespace BankDAL.DataAccess;
 
 public class DataAccessProxy : IDataAccess
 {

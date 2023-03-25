@@ -2,7 +2,6 @@
 
 public class Currency
 {
-    public decimal CurrentRate { get; set; }
-    public decimal PreviousRate { get; set; }
+    public static decimal Rate { get; set; }    
     public decimal Money { get; set; }
 }

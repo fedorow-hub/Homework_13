@@ -1,12 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System;
-
-namespace Homework_13.Infrastructure.DataAccess;
+﻿namespace BankDAL.DataAccess;
 
 public class DataAccess : IDataAccess
 {
@@ -44,16 +36,16 @@ public class DataAccess : IDataAccess
         data[0] = lineWithDate.Substring(13, 10);
 
         string lineWithUSDRate = allLines.Skip(129).First();
-        data[1] = lineWithUSDRate.Substring(21, 7).Replace(".", ",");
+        data[1] = lineWithUSDRate.Substring(21, 6).Replace(".", ",");
 
         string lineWithUSDPreviousRate = allLines.Skip(130).First();
-        data[2] = lineWithUSDPreviousRate.Substring(24, 7).Replace(".", ",");
+        data[2] = lineWithUSDPreviousRate.Substring(24, 6).Replace(".", ",");
 
         string lineWithEuroRate = allLines.Skip(138).First();
-        data[3] = lineWithEuroRate.Substring(21, 7).Replace(".", ",");
+        data[3] = lineWithEuroRate.Substring(21, 6).Replace(".", ",");
 
         string lineWithEuroPreviousRate = allLines.Skip(139).First();
-        data[4] = lineWithEuroPreviousRate.Substring(24, 7).Replace(".", ",");
+        data[4] = lineWithEuroPreviousRate.Substring(24, 6).Replace(".", ",");
 
         return data;
     }

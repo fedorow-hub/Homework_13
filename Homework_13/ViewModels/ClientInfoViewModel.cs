@@ -13,13 +13,13 @@ namespace Homework_13.ViewModels;
 public class ClientInfoViewModel : ViewModel
 {
     private ClientAccessInfo currentClient;
-    private Bank bank;
+    private BankRepository bank;
 
     private RoleDataAccess _dataAccess;
     
     public ClientInfoViewModel() { }
 
-    public ClientInfoViewModel(ClientAccessInfo clientInfo, Bank bank, RoleDataAccess dataAccess)
+    public ClientInfoViewModel(ClientAccessInfo clientInfo, BankRepository bank, RoleDataAccess dataAccess)
     {
         this.currentClient = clientInfo;
         this.bank = bank;

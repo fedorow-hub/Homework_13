@@ -13,7 +13,7 @@ namespace Homework_13.ViewModels;
 public class OperationsWindowViewModel : ViewModel
 {
     private ClientAccessInfo _currentClient;
-    private Bank _bank;
+    private BankRepository _bank;
     private Worker _worker;
 
     public ClientAccessInfo CurrentClient { get; set; }
@@ -22,27 +22,30 @@ public class OperationsWindowViewModel : ViewModel
     {
 
     }
-    public OperationsWindowViewModel(ClientAccessInfo currentClient, Bank bank, Worker worker)
+    public OperationsWindowViewModel(ClientAccessInfo currentClient, BankRepository bank, Worker worker)
     {
         _currentClient = currentClient;
         _bank = bank;
         _worker = worker;
 
         #region Pages
-        _addAndWithdrawals = new AddAndWithdrawalsPage();
+        _addAndWithdrawals = new AddAndWithdrawalsPage();     
+        _addAndWithdrawals.DataContext = new AddAndWithdrawalsViewModel(_currentClient, _bank);
 
-        _addAndWithdrawals.DataContext = new AddAndWithdrawalsViewModel(_currentClient);
+        _openDeposit = new OpenDepositPage();
+        _openDeposit.DataContext = new OpenDepositViewModel(_currentClient, _bank);
 
         CurrentPage = new EmptyPage();
         #endregion
 
         ExitCommand = new LambdaCommand(OnExitCommandExecute, CanExitCommandExecute);
         SetAddAndWithdrawalsViewCommand = new LambdaCommand(OnSetAddAndWithdrawalsExecuted, CanSetAddAndWithdrawalsViewExecute);
+        OpenDepositCommand = new LambdaCommand(OnOpenDepositCommandExecuted, CanOpenDepositCommandViewExecute);
     }
 
     #region Pages
     private readonly Page _addAndWithdrawals;
-    //private readonly Page _appSettings;
+    private readonly Page _openDeposit;
 
     private Page _currentPage;
     /// <summary>
@@ -55,16 +58,42 @@ public class OperationsWindowViewModel : ViewModel
     }
     #endregion
 
+    #region Command
+
     #region SetAddAndWithdrawalsViewCommand
     public ICommand SetAddAndWithdrawalsViewCommand { get; }
     private void OnSetAddAndWithdrawalsExecuted(object p)
     {
         CurrentPage = _addAndWithdrawals;
-        _addAndWithdrawals.DataContext = new AddAndWithdrawalsViewModel(_currentClient);
-        
+        _addAndWithdrawals.DataContext = new AddAndWithdrawalsViewModel(_currentClient, _bank);        
     }
-    private bool CanSetAddAndWithdrawalsViewExecute(object p) => true;
+    private bool CanSetAddAndWithdrawalsViewExecute(object p)
+    {
+        if (CurrentPage == _addAndWithdrawals)
+            return false;
+        return true;
+    }
+        
     #endregion
+
+
+    #region OpenDepositCommand
+    public ICommand OpenDepositCommand { get; }
+    private void OnOpenDepositCommandExecuted(object p)
+    {
+        CurrentPage = _openDeposit;
+        _addAndWithdrawals.DataContext = new AddAndWithdrawalsViewModel(_currentClient, _bank);
+    }
+    private bool CanOpenDepositCommandViewExecute(object p)
+    {
+        if (CurrentPage == _openDeposit)
+            return false;
+        return true;
+    }
+    #endregion
+    
+
+
 
     #region ExitCommand
     public ICommand ExitCommand { get; }
@@ -83,5 +112,6 @@ public class OperationsWindowViewModel : ViewModel
         }
     }
     #endregion    
+    #endregion
 
 }

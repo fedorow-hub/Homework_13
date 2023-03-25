@@ -9,3 +9,10 @@ public interface IAccount<T>
     public T GetMoney(decimal amount);
     public T CloseAccount();
 }
+
+public interface IAccount
+{
+    public void SetMoney(decimal amount);
+    public void GetMoney(decimal amount);
+    public decimal CloseAccount();
+}

@@ -6,12 +6,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Homework_13"
         xmlns:fa="http://schemas.fontawesome.com/icons/"
-        xmlns:e1="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:behaviours="clr-namespace:Homework_13.Infrastructure"
         xmlns:vm="clr-namespace:Homework_13.ViewModels" d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="464" Width="930" WindowStartupLocation="CenterScreen"
+        Title="Bank" Height="464" Width="950" WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
+   
     <DockPanel Margin="0,0,0,-6">
         <Grid DockPanel.Dock="Top" Height="380" >
             <Grid.ColumnDefinitions>
@@ -39,14 +38,14 @@
                         </StatusBar>
                         <StatusBar>
                             <TextBlock Text="Доллар США" Margin="0,0,55,0"/>
-                            <TextBlock Text="{Binding Path=Dollar.CurrentRate}" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding Path=DollarCurrentRate}" FontWeight="Bold"/>
                             <TextBlock>                            
                             <fa:ImageAwesome Icon="{Binding Path=IconDollar}" Height="5" Margin="0,0,10,0" Foreground="{Binding Path=ColorDollar}"/>
                             </TextBlock>
                         </StatusBar>
                         <StatusBar>
                             <TextBlock Text="Евро" Margin="0,0,100,0"/>
-                            <TextBlock Text="{Binding Path=Euro.CurrentRate}" FontWeight="Bold" />
+                            <TextBlock Text="{Binding Path=EuroCurrentRate}" FontWeight="Bold" />
                             <TextBlock>                            
                             <fa:ImageAwesome Icon="{Binding Path=IconEuro}" Height="5" Margin="0,0,10,0" Foreground="{Binding Path=ColorEuro}"/>
                             </TextBlock>
@@ -70,13 +69,14 @@
                               ItemsSource="{Binding Source={StaticResource ClientCollection}, UpdateSourceTrigger=PropertyChanged}"
                               SelectedItem="{Binding SelectedClient}"
                               AutoGenerateColumns="False"
-                              IsReadOnly="True" Width="609"                              >
+                              IsReadOnly="True" Width="620"                              >
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Фамилия" Binding="{Binding Lastname}"/>
                             <DataGridTextColumn Header="Имя" Binding="{Binding Firstname}"/>
                             <DataGridTextColumn Header="Отчество" Binding="{Binding Patronymic}"/>
                             <DataGridTextColumn Header="Номер телефона" Binding="{Binding PhoneNumber}"/>
-                            <DataGridTextColumn Header="Серия и номер паспорта" Binding="{Binding SeriesAndNumberOfPassport}"/>
+                            <DataGridTextColumn Header="Серия " Binding="{Binding PassportSerie}"/>
+                            <DataGridTextColumn Header="Номер паспорта" Binding="{Binding PassportNumber}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" Height="53">

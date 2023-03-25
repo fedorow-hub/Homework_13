@@ -1,10 +1,11 @@
-﻿using Microsoft.VisualBasic;
-using System.Net.Http;
+﻿namespace Homework_13.Models.Money;
 
-namespace Homework_13.Models.Money;
-
-public class Dollar : Currency
+public class Dollar : Currency, ICurrency<Currency>
 {
-    
-    
+    public Currency GetValue { get { return new Currency(); } }
+
+    public Currency GetValueMethod()
+    {
+        return new Currency();
+    }
 }

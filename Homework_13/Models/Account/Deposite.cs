@@ -14,7 +14,7 @@ public class Deposite<T> : Account<T>
     public DateTime DepositeOpeningDate { get; private set; }
 
     public Deposite(T amount, byte mounth)
-        :base(amount)
+        : base(amount)
     {
         TermInMounth = mounth;
         InterestRate = GetInterestRate(amount, mounth);
@@ -23,7 +23,7 @@ public class Deposite<T> : Account<T>
     }
     private byte GetInterestRate(T amount, byte mounth)
     {
-        if(mounth > 12)
+        if (mounth > 12)
         {
             if (amount.Money > 100000)
             {
@@ -33,7 +33,7 @@ public class Deposite<T> : Account<T>
             {
                 return Convert.ToByte(Rate.medium);
             }
-            else 
+            else
             {
                 return Convert.ToByte(Rate.small);
             }
@@ -41,7 +41,7 @@ public class Deposite<T> : Account<T>
         else
         {
             return Convert.ToByte(Rate.small);
-        }        
+        }
     }
 
     private enum Rate
