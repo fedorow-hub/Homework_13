@@ -8,8 +8,9 @@ namespace Homework_13.ViewModels;
 
 public class LoginWindowViewModel : ViewModel
 {
+    
     public LoginWindowViewModel()
-    {
+    {        
         SetConsultantMode = new LambdaCommand(OnSetConsultantModeExecuted, CanSetConsultantModeExecute);
         SetManagerMode = new LambdaCommand(OnSetManagerModeExecuted, CanSetManagerModeExecute);
         OutCommand = new LambdaCommand(OnOutCommandExecuted, CanOutCommandExecute);

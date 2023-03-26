@@ -12,8 +12,6 @@ namespace Homework_13.Models.Bank;
 
 public class BankRepository : IEnumerable<ClientAccessInfo>
 {
-    private Worker.Worker _worker;
-
     private ObservableCollection<ClientAccessInfo>? _clients;
     public ObservableCollection<ClientAccessInfo>? Clients => _clients;
 
@@ -22,9 +20,8 @@ public class BankRepository : IEnumerable<ClientAccessInfo>
     /// </summary>
     string _path;
 
-    public BankRepository(string path, Worker.Worker worker)
-    {
-        this._worker = worker;
+    public BankRepository(string path)
+    {       
 
         if (string.IsNullOrEmpty(path) || string.IsNullOrWhiteSpace(path))
         {

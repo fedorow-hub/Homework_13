@@ -51,7 +51,7 @@ public class MainWindowViewModel : ViewModel
     public MainWindowViewModel(Worker worker)
     {                
         //_clients = clients;
-        Bank = new BankRepository("bank.json", worker);
+        Bank = new BankRepository("bank.json");
         Worker = worker;
         Clients = GetClientsInfo();
 
