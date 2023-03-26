@@ -1,4 +1,5 @@
-﻿using Homework_13.Infrastructure.Commands;
+﻿using BankDAL.DataOperations;
+using Homework_13.Infrastructure.Commands;
 using Homework_13.Models.Bank;
 using Homework_13.Models.Client;
 using Homework_13.Models.Worker;
@@ -18,12 +19,15 @@ public class OperationsWindowViewModel : ViewModel
 
     public ClientAccessInfo CurrentClient { get; set; }
 
+    //private readonly IClientDAL _clients;
+
     public OperationsWindowViewModel()
     {
 
     }
     public OperationsWindowViewModel(ClientAccessInfo currentClient, BankRepository bank, Worker worker)
     {
+        //_clients = clients;
         _currentClient = currentClient;
         _bank = bank;
         _worker = worker;

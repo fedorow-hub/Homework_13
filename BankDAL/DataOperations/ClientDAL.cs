@@ -5,7 +5,7 @@ using System.Data;
 
 namespace BankDAL.DataOperations;
 
-public class ClientDAL : IDisposable
+public class ClientDAL : IDisposable, IClientDAL
 {
     private readonly string _connectionString;
 

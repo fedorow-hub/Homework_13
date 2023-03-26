@@ -1,4 +1,5 @@
 ﻿using BankDAL.DataAccess;
+using BankDAL.DataOperations;
 using Homework_13.Infrastructure.Commands;
 using Homework_13.Models.Bank;
 using Homework_13.Models.Client;
@@ -43,10 +44,13 @@ public class MainWindowViewModel : ViewModel
         set => Set(ref clients, value);
     }
 
+    private readonly IClientDAL _clients;   
+
     public MainWindowViewModel() { }
 
     public MainWindowViewModel(Worker worker)
-    {
+    {                
+        //_clients = clients;
         Bank = new BankRepository("bank.json", worker);
         Worker = worker;
         Clients = GetClientsInfo();
@@ -83,6 +87,12 @@ public class MainWindowViewModel : ViewModel
         _enableOperationAccounts = Worker.DataAccess.Commands.OperationAccount;
         #endregion
     }
+
+
+    //private ObservableCollection<ClientAccessInfo> GetClients()
+    //{
+    //    _clients.GetAllClients();
+    //}
 
     /// <summary>
     /// Получение сведений о клиентах
@@ -132,9 +142,9 @@ public class MainWindowViewModel : ViewModel
     private bool CanOutLoggingCommandExecute(object p) => true;
 
     private void OnOutLoggingCommandExecute(object p)
-    {
-        LoginWindow loginWindow = new LoginWindow();
-        loginWindow.Show();
+    {   
+        //LoginWindow loginWindow = new LoginWindow();
+        //loginWindow.Show();
 
         if (p is Window window)
         {
@@ -154,7 +164,7 @@ public class MainWindowViewModel : ViewModel
         else return false;
     }
     private void OnAddClientCommandExecute(object p)
-    {
+    {        
         ClientInfoWindow infoWindow = new ClientInfoWindow();
         ClientInfoViewModel viewModel = new ClientInfoViewModel(new ClientAccessInfo(), Bank, Worker.DataAccess);
         infoWindow.DataContext = viewModel;
