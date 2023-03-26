@@ -7,6 +7,7 @@
         xmlns:local="clr-namespace:Homework_13.Views"
         xmlns:cmd="clr-namespace:Homework_13.Infrastructure.Commands"
         xmlns:vm="clr-namespace:Homework_13.ViewModels"
+        DataContext="{Binding LoginWindowModel, Source={StaticResource Locator}}"
         mc:Ignorable="d"
         Title="Авторизация" Height="350" Width="520" WindowStartupLocation="CenterScreen" >
     <Window.Resources>
@@ -14,10 +15,7 @@
     </Window.Resources>
     <Window.Background>
         <ImageBrush ImageSource="/Resources/Images/bank.jpg"></ImageBrush>
-    </Window.Background>
-    <Window.DataContext>
-        <vm:LoginWindowViewModel />
-    </Window.DataContext>
+    </Window.Background>    
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="200" />

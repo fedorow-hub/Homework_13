@@ -4,8 +4,8 @@ namespace Homework_13.ViewModels;
 
 public class ViewModelLocator
 {
-    public MainWindowViewModel MainWindowViewModel => 
+    public MainWindowViewModel MainWindowModel => 
         App.Host.Services.GetRequiredService<MainWindowViewModel>();
-    public LoginWindowViewModel LoginWindowViewModel => 
+    public LoginWindowViewModel LoginWindowModel => 
         App.Host.Services.GetRequiredService<LoginWindowViewModel>();
 }
