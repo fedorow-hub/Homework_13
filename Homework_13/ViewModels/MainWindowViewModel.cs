@@ -42,11 +42,14 @@ public class MainWindowViewModel : ViewModel
     private readonly IClientDAL _clients;
     private readonly IDataAccess _dataAccess;
     private readonly BankRepository _bankRepository;
+    private readonly ClientInfoViewModel _clientInfoViewModel;
             
-    public MainWindowViewModel(IDataAccess dataAccess, BankRepository bankRepository)
+    public MainWindowViewModel(IDataAccess dataAccess, 
+        BankRepository bankRepository, ClientInfoViewModel clientInfoViewModel)
     {         
         _dataAccess = dataAccess;
         _bankRepository = bankRepository;
+        _clientInfoViewModel = clientInfoViewModel;
         //_clients = clients;
         Bank = _bankRepository;
         
@@ -135,7 +138,7 @@ public class MainWindowViewModel : ViewModel
     private void OnAddClientCommandExecute(object p)
     {        
         ClientInfoWindow infoWindow = new ClientInfoWindow();
-        ClientInfoViewModel viewModel = new ClientInfoViewModel(new Client(), Bank);
+        ClientInfoViewModel viewModel = _clientInfoViewModel;
         infoWindow.DataContext = viewModel;
         infoWindow.Show();
     }

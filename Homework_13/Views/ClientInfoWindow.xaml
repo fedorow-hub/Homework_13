@@ -8,11 +8,9 @@
         xmlns:vm="clr-namespace:Homework_13.ViewModels" 
         xmlns:c="clr-namespace:Homework_13.Infrastructure.Convertors"
         mc:Ignorable="d"
+        DataContext="{Binding ClientWindowModel, Source={StaticResource Locator}}"
         Title="Карта клиента" Height="350" Width="600" WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize">
-    <Window.DataContext>
-        <vm:ClientInfoViewModel />
-    </Window.DataContext>
+        ResizeMode="NoResize">    
     <Window.Resources>
         <c:InputValueValidationConvertor x:Key="InputValueValidationConvertor" />
     </Window.Resources>
