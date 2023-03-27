@@ -1,4 +1,5 @@
 ﻿using BankDAL.DataAccess;
+using Homework_13.Models.Bank;
 using Homework_13.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,6 +26,8 @@ public partial class App : Application
         services.AddSingleton<MainWindowViewModel>();
         services.AddSingleton<LoginWindowViewModel>();
         services.AddSingleton<IDataAccess, DataAccessProxy>();
+
+        services.AddSingleton<BankRepository>();
 
         services.AddSingleton<DataAccess>();
     }

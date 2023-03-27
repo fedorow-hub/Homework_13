@@ -41,12 +41,14 @@ public class MainWindowViewModel : ViewModel
 
     private readonly IClientDAL _clients;
     private readonly IDataAccess _dataAccess;
+    private readonly BankRepository _bankRepository;
             
-    public MainWindowViewModel(IDataAccess dataAccess)
+    public MainWindowViewModel(IDataAccess dataAccess, BankRepository bankRepository)
     {         
         _dataAccess = dataAccess;
+        _bankRepository = bankRepository;
         //_clients = clients;
-        Bank = new BankRepository("bank.json");
+        Bank = _bankRepository;
         
         Clients = Bank.Clients;
 

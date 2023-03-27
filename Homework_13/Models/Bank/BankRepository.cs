@@ -18,14 +18,9 @@ public class BankRepository : IEnumerable<Client.Client>
     /// </summary>
     string _path;
 
-    public BankRepository(string path)
+    public BankRepository()
     {
-
-        if (string.IsNullOrEmpty(path) || string.IsNullOrWhiteSpace(path))
-        {
-            throw new ArgumentNullException(nameof(path));
-        }
-        _path = path;
+        _path = "bank.json";
 
         if (File.Exists(_path)) // если файл существует, подгружаем данные
         {

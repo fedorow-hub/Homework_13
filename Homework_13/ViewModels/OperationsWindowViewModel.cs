@@ -12,8 +12,8 @@ namespace Homework_13.ViewModels;
 
 public class OperationsWindowViewModel : ViewModel
 {
-    private Client _currentClient;
-    private BankRepository _bank;
+    private readonly Client _currentClient;
+    private readonly BankRepository _bank;
 
     public Client CurrentClient { get; set; }
 
