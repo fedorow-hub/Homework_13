@@ -26,8 +26,6 @@ public partial class App : Application
         //сюда добавляем необходимые сервисы
         services.AddSingleton<MainWindowViewModel>();
         services.AddSingleton<LoginWindowViewModel>();
-        services.AddSingleton<ClientInfoViewModel>();
-
 
         services.AddSingleton<IDataAccess, DataAccessProxy>();
 

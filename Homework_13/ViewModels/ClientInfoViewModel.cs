@@ -11,7 +11,7 @@ namespace Homework_13.ViewModels;
 
 public class ClientInfoViewModel : ViewModel
 {
-    private readonly Client currentClient;
+    public Client currentClient;
     private readonly BankRepository bank;
     
     public ClientInfoViewModel() { }

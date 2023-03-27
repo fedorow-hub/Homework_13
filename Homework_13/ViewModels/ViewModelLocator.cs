@@ -8,6 +8,5 @@ public class ViewModelLocator
         App.Host.Services.GetRequiredService<MainWindowViewModel>();
     public LoginWindowViewModel LoginWindowModel => 
         App.Host.Services.GetRequiredService<LoginWindowViewModel>();
-    public ClientInfoViewModel ClientWindowModel =>
-        App.Host.Services.GetRequiredService<ClientInfoViewModel>();
+    
 }
