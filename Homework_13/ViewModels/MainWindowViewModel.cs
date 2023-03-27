@@ -31,8 +31,6 @@ public class MainWindowViewModel : ViewModel
     public string ColorEuro { get; private set; }
     #endregion
 
-    IDataAccess _data = new DataAccessProxy(new DataAccess());
-
     private ObservableCollection<Client> clients;
 
     public ObservableCollection<Client> Clients
@@ -41,17 +39,19 @@ public class MainWindowViewModel : ViewModel
         set => Set(ref clients, value);
     }
 
-    private readonly IClientDAL _clients;   
-        
-    public MainWindowViewModel()
-    {                
+    private readonly IClientDAL _clients;
+    private readonly IDataAccess _dataAccess;
+            
+    public MainWindowViewModel(IDataAccess dataAccess)
+    {         
+        _dataAccess = dataAccess;
         //_clients = clients;
         Bank = new BankRepository("bank.json");
         
         Clients = Bank.Clients;
 
         #region Currency
-        string[] data = _data.GetAllData();
+        string[] data = _dataAccess.GetAllData();
         Date = Convert.ToDateTime(data[0]).ToShortDateString();
         DollarCurrentRate = Convert.ToDecimal(data[1]);
         Dollar.Rate = DollarCurrentRate;

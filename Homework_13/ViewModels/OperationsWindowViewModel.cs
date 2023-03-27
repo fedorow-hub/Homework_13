@@ -104,7 +104,7 @@ public class OperationsWindowViewModel : ViewModel
     private void OnExitCommandExecute(object p)
     {
         MainWindow mainWindow = new MainWindow();
-        mainWindow.DataContext = new MainWindowViewModel();
+        //mainWindow.DataContext = new MainWindowViewModel();
         mainWindow.Show();
 
         if (p is Window window)

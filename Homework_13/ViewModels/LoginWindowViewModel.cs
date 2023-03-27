@@ -7,9 +7,11 @@ namespace Homework_13.ViewModels;
 
 public class LoginWindowViewModel : ViewModel
 {
-    
-    public LoginWindowViewModel()
+    private readonly MainWindowViewModel _mainWindowViewModel;
+
+    public LoginWindowViewModel(MainWindowViewModel mainWindowViewModel)
     {
+        _mainWindowViewModel = mainWindowViewModel;
         ComeInCommand = new LambdaCommand(OnComeInCommandExecuted, CanSetComeInCommandExecute);
         OutCommand = new LambdaCommand(OnOutCommandExecuted, CanOutCommandExecute);
     }
@@ -21,7 +23,7 @@ public class LoginWindowViewModel : ViewModel
     private void OnComeInCommandExecuted(object p)
     {
         MainWindow mainWindow = new MainWindow();
-        mainWindow.DataContext = new MainWindowViewModel();
+        mainWindow.DataContext = _mainWindowViewModel;
         mainWindow.Show();
 
         if (p is Window window)
