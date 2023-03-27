@@ -16,7 +16,7 @@ public class BankRepository : IEnumerable<Client.Client>
     /// <summary>
     /// Файл репозитория
     /// </summary>
-    string _path;
+    private readonly string _path;
 
     public BankRepository()
     {

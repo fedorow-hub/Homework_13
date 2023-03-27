@@ -39,7 +39,6 @@ public class MainWindowViewModel : ViewModel
         set => Set(ref clients, value);
     }
 
-    private readonly IClientDAL _clients;
     private readonly IDataAccess _dataAccess;
     private readonly BankRepository _bankRepository;
             
@@ -48,7 +47,6 @@ public class MainWindowViewModel : ViewModel
     {         
         _dataAccess = dataAccess;
         _bankRepository = bankRepository;
-        //_clients = clients;
         Bank = _bankRepository;
         
         Clients = Bank.Clients;
@@ -150,7 +148,7 @@ public class MainWindowViewModel : ViewModel
 
     private bool CanDeleteClientCommandExecute(object p)
     {
-        if (_enableDelClient == true && SelectedClient != null)
+        if (SelectedClient != null)
             return true;
         else return false;
     }
@@ -160,7 +158,6 @@ public class MainWindowViewModel : ViewModel
         if (SelectedClient is null) return;
 
         Bank.DeleteClient(SelectedClient);
-        Clients.Remove(SelectedClient);
     }
     #endregion
 
@@ -202,7 +199,7 @@ public class MainWindowViewModel : ViewModel
         if (SelectedClient is null) return;
 
         OperationsWindow operationWindow = new OperationsWindow();
-        OperationsWindowViewModel viewModel = new OperationsWindowViewModel(SelectedClient, Bank);
+        OperationsWindowViewModel viewModel = new OperationsWindowViewModel(SelectedClient, Bank, this);
         operationWindow.DataContext = viewModel;
         operationWindow.Show();
 

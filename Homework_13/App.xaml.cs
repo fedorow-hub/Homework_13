@@ -30,7 +30,6 @@ public partial class App : Application
         services.AddSingleton<IDataAccess, DataAccessProxy>();
 
         services.AddSingleton<BankRepository>();
-        services.AddSingleton<Client>();
 
         services.AddSingleton<DataAccess>();
     }

@@ -14,6 +14,7 @@ public class OperationsWindowViewModel : ViewModel
 {
     private readonly Client _currentClient;
     private readonly BankRepository _bank;
+    private readonly MainWindowViewModel _mainWindowViewModel;
 
     public Client CurrentClient { get; set; }
 
@@ -23,11 +24,13 @@ public class OperationsWindowViewModel : ViewModel
     {
 
     }
-    public OperationsWindowViewModel(Client currentClient, BankRepository bank)
+    public OperationsWindowViewModel(Client currentClient, 
+        BankRepository bank, MainWindowViewModel mainWindowViewModel)
     {
         //_clients = clients;
         _currentClient = currentClient;
         _bank = bank;
+        _mainWindowViewModel = mainWindowViewModel;
 
         #region Pages
         _addAndWithdrawals = new AddAndWithdrawalsPage();     
@@ -104,7 +107,7 @@ public class OperationsWindowViewModel : ViewModel
     private void OnExitCommandExecute(object p)
     {
         MainWindow mainWindow = new MainWindow();
-        //mainWindow.DataContext = new MainWindowViewModel();
+        mainWindow.DataContext = _mainWindowViewModel;
         mainWindow.Show();
 
         if (p is Window window)
