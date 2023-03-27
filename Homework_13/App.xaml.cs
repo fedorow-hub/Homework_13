@@ -1,4 +1,5 @@
 ﻿using BankDAL.DataAccess;
+using BankDAL.DataOperations;
 using Homework_13.Models.Bank;
 using Homework_13.Models.Client;
 using Homework_13.ViewModels;
@@ -32,6 +33,7 @@ public partial class App : Application
         services.AddSingleton<BankRepository>();
 
         services.AddSingleton<DataAccess>();
+        services.AddSingleton<ClientDAL>();
     }
 
     protected override async void OnStartup(StartupEventArgs e)

@@ -16,9 +16,7 @@
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="FontAwesome5" Version="2.1.11" />
     <PackageReference Include="MaterialDesignThemes" Version="4.6.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 

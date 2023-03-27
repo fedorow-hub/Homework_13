@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using BankDAL.DataOperations;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,9 +19,14 @@ public class BankRepository : IEnumerable<Client.Client>
     /// </summary>
     private readonly string _path;
 
-    public BankRepository()
+    private readonly ClientDAL _clientDAL;
+
+    
+    public BankRepository(ClientDAL clientDAL)
     {
         _path = "bank.json";
+        _clientDAL = clientDAL;
+        var _someClients = _clientDAL.GetAllClients();
 
         if (File.Exists(_path)) // если файл существует, подгружаем данные
         {
