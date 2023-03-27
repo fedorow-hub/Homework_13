@@ -9,7 +9,8 @@ public class Client
     private string lastname;
     private string patronymic;
     private PhoneNumber phoneNumber;
-    private Passport seriesAndNumberOfPassport;
+    private PassportSerie passportSerie;
+    private PassportNumber passportNumber;
 
     public Guid Id { get { return id; } set { id = value; } }
 
@@ -21,21 +22,28 @@ public class Client
 
     public PhoneNumber PhoneNumber { get { return phoneNumber; } set { phoneNumber = value; } }
 
-    public Passport SeriesAndNumberOfPassport
+    public PassportSerie PassportSerie
     {
-        get { return seriesAndNumberOfPassport; }
-        set { seriesAndNumberOfPassport = value; }
+        get { return passportSerie; }
+        set { passportSerie = value; }
+    }
+
+    public PassportNumber PassportNumber
+    {
+        get { return passportNumber; }
+        set { passportNumber = value; }
     }
 
     public Client() { }
 
     public Client(string firstname, string lastname, string patronymic,
-        PhoneNumber phoneNumber, Passport seriesAndNumberOfPassport)
+        PhoneNumber phoneNumber, PassportSerie passportSerie, PassportNumber passportNumber)
     {
         this.firstname = firstname;
         this.lastname = lastname;
         this.patronymic = patronymic;
         this.phoneNumber = phoneNumber;
-        this.seriesAndNumberOfPassport = seriesAndNumberOfPassport;
+        this.passportSerie = passportSerie;
+        this.passportNumber = passportNumber;
     }
 }

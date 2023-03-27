@@ -40,40 +40,34 @@
             <Border Grid.Row="0" Grid.Column="1" Margin="0,5" Style="{StaticResource BorderToTextBox}" 
                     BorderBrush="{Binding BorderLastName, Converter={StaticResource InputValueValidationConvertor}}">
                 <TextBox Width="450" Cursor="Arrow" FontSize="18"  
-                     Text="{Binding Lastname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     IsEnabled="{Binding EnableLastName}"/>
+                     Text="{Binding Lastname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </Border>
             <TextBlock Grid.Row="1" Grid.Column="0" Text="Имя:" Margin="10,0" FontSize="20" Foreground="Gray"/>
             <Border Grid.Row="1" Grid.Column="1" Margin="0,5" Style="{StaticResource BorderToTextBox}" BorderBrush="{Binding BorderFirstName, Converter={StaticResource InputValueValidationConvertor}}">
                 <TextBox Width="450" Cursor="Arrow" FontSize="18" 
-                     Text="{Binding Firstname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     IsEnabled="{Binding EnableFirstName}"/>
+                     Text="{Binding Firstname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </Border>
             <TextBlock Grid.Row="2" Grid.Column="0" Text="Отчество:" Margin="10,0" FontSize="20" Foreground="Gray"/>
             <Border Grid.Row="2" Grid.Column="1" Margin="0,5" Style="{StaticResource BorderToTextBox}" BorderBrush="{Binding BorderPatronymic, Converter={StaticResource InputValueValidationConvertor}}">
                 <TextBox Width="450" Cursor="Arrow" FontSize="18" 
-                     Text="{Binding Patronymic, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     IsEnabled="{Binding EnablePatronymic}"/>
+                     Text="{Binding Patronymic, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </Border>
             <TextBlock Grid.Row="3" Grid.Column="0" Text="Номер телефона:" Margin="10,0" FontSize="20" Foreground="Gray"/>
             <Border Grid.Row="3" Grid.Column="1" Margin="0,5" Style="{StaticResource BorderToTextBox}" BorderBrush="{Binding BorderPhoneNumber, Converter={StaticResource InputValueValidationConvertor}}">
                 <TextBox Width="450" Cursor="Arrow" FontSize="18" 
-                     Text="{Binding PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                     IsEnabled="{Binding EnablePhoneNumber}"/>
+                     Text="{Binding PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </Border>
             <TextBlock Grid.Row="4" Grid.Column="0" Text="Паспорт:" Margin="10,0" FontSize="20" Foreground="Gray"/>
             <StackPanel Grid.Row="4" Grid.Column="1" Margin="0,5" Orientation="Horizontal" >
                 <TextBlock Text="серия:" FontSize="20" Foreground="Gray"/>
                 <Border Style="{StaticResource BorderToTextBox}" BorderBrush="{Binding BorderPassportSerie, Converter={StaticResource InputValueValidationConvertor}}">
                     <TextBox Width="50" Cursor="Arrow" FontSize="18" 
-                     Text="{Binding PassportSerie, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                     IsEnabled="{Binding EnablePassportData}"/>
+                     Text="{Binding PassportSerie, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </Border>
                 <TextBlock Text="номер:" Margin="10,0" FontSize="20" Foreground="Gray"/>
                 <Border Style="{StaticResource BorderToTextBox}" BorderBrush="{Binding BorderPassportNumber, Converter={StaticResource InputValueValidationConvertor}}">
                     <TextBox Width="188" Cursor="Arrow" FontSize="18" 
-                     Text="{Binding PassportNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     IsEnabled="{Binding EnablePassportData}"/>
+                     Text="{Binding PassportNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </Border>
             </StackPanel>
         </Grid>

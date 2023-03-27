@@ -8,10 +8,10 @@ namespace Homework_13.ViewModels;
 
 public class AddAndWithdrawalsViewModel : ViewModel
 {
-    private ClientAccessInfo _currentClient;
+    private Client _currentClient;
     private BankRepository _bank;
 
-    public ClientAccessInfo CurrentClient
+    public Client CurrentClient
     {
         get => _currentClient;
         set => Set(ref _currentClient, value);
@@ -21,7 +21,7 @@ public class AddAndWithdrawalsViewModel : ViewModel
     {
 
     }
-    public AddAndWithdrawalsViewModel(ClientAccessInfo CurrentClient, BankRepository bank)
+    public AddAndWithdrawalsViewModel(Client CurrentClient, BankRepository bank)
     {
         _currentClient = CurrentClient;
         _bank = bank;

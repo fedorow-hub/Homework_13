@@ -2,7 +2,6 @@
 using Homework_13.Infrastructure.Commands;
 using Homework_13.Models.Bank;
 using Homework_13.Models.Client;
-using Homework_13.Models.Worker;
 using Homework_13.ViewModels.Base;
 using System;
 using System.Windows;
@@ -12,22 +11,18 @@ namespace Homework_13.ViewModels;
 
 public class ClientInfoViewModel : ViewModel
 {
-    private ClientAccessInfo currentClient;
+    private Client currentClient;
     private BankRepository bank;
-
-    private RoleDataAccess _dataAccess;
     
     public ClientInfoViewModel() { }
 
-    public ClientInfoViewModel(ClientAccessInfo clientInfo, BankRepository bank, RoleDataAccess dataAccess)
+    public ClientInfoViewModel(Client client, BankRepository bank)
     {
-        this.currentClient = clientInfo;
+        this.currentClient = client;
         this.bank = bank;
-        _dataAccess = dataAccess;
 
         FillFields(currentClient);
-        EnableFields(dataAccess);
-        CheckSaveClient(dataAccess);
+        CheckSaveClient();
 
         OutCommand = new LambdaCommand(OnOutCommandExecute, CanOutCommandExecute);
         SaveCommand = new LambdaCommand(OnSaveCommandExecute, CanSaveCommandExecute);
@@ -37,7 +32,7 @@ public class ClientInfoViewModel : ViewModel
     /// Заполнение данных
     /// </summary>
     /// <param name="clientInfo"></param>
-    private void FillFields(ClientAccessInfo clientInfo)
+    private void FillFields(Client clientInfo)
     {
         if (clientInfo is null)
             return;
@@ -45,55 +40,23 @@ public class ClientInfoViewModel : ViewModel
         _lastname = clientInfo.Lastname ?? String.Empty;
         _patronymic = clientInfo.Patronymic ?? String.Empty;
         _phoneNumber = clientInfo.PhoneNumber?.ToString() ?? String.Empty;
-        _passportSerie = clientInfo.PassportSerie ?? String.Empty;
-        _passportNumber = clientInfo.PassportNumber ?? String.Empty;
+        _passportSerie = clientInfo.PassportSerie?.ToString();
+        _passportNumber = clientInfo.PassportNumber?.ToString() ?? String.Empty;
     }
-
-    /// <summary>
-    /// Включение/отключения возможности ввода данных
-    /// </summary>
-    /// <param name="dataAccess"></param>
-    private void EnableFields(RoleDataAccess dataAccess)
-    {
-        _enableFirstName = dataAccess.EditFields.FirstName;
-        _enableLastName = dataAccess.EditFields.LastName;
-        _enablePatronymic = dataAccess.EditFields.MidleName;
-        _enablePassportData = dataAccess.EditFields.PassortData;
-        _enablePhoneNumber = dataAccess.EditFields.PhoneNumber;
-
-        _borderFirstName = InputHighlighting(_enableFirstName, _firstname.Length > 0);
-        _borderLastName = InputHighlighting(_enableLastName, _lastname.Length > 0);
-        _borderPatronymic = InputHighlighting(_enablePatronymic, _patronymic.Length > 0);
-        _borderPhoneNumber = InputHighlighting(_enablePhoneNumber, Models.Client.PhoneNumber.IsPhoneNumber(_phoneNumber));
-        if (dataAccess.EditFields.PassortData == true)
-        {
-            _borderPassportSerie = InputHighlighting(_enablePassportData, Passport.IsSeries(_passportSerie));
-            _borderPassportNumber = InputHighlighting(_enablePassportData, Passport.IsNumber(_passportNumber));
-        }
-    }
+      
 
     /// <summary>
     /// метод для блокирования кнопки сохранения, если введенные данные не валидны
     /// </summary>
     /// <param name="dataAccess"></param>
-    private void CheckSaveClient(RoleDataAccess dataAccess)
-    {
-        if (dataAccess.EditFields.PassortData == false)
-        {
-            EnableSaveClient = _borderFirstName != InputValueValidationEnum.Error
-                           && _borderLastName != InputValueValidationEnum.Error
-                           && _borderPatronymic != InputValueValidationEnum.Error
-                           && _borderPhoneNumber != InputValueValidationEnum.Error;
-        }
-        else
-        {
-            EnableSaveClient = _borderFirstName != InputValueValidationEnum.Error
-                           && _borderLastName != InputValueValidationEnum.Error
-                           && _borderPatronymic != InputValueValidationEnum.Error
-                           && _borderPassportSerie != InputValueValidationEnum.Error
-                           && _borderPassportNumber != InputValueValidationEnum.Error
-                           && _borderPhoneNumber != InputValueValidationEnum.Error;
-        }
+    private void CheckSaveClient()
+    {        
+        EnableSaveClient = _borderFirstName != InputValueValidationEnum.Error
+                        && _borderLastName != InputValueValidationEnum.Error
+                        && _borderPatronymic != InputValueValidationEnum.Error
+                        && _borderPassportSerie != InputValueValidationEnum.Error
+                        && _borderPassportNumber != InputValueValidationEnum.Error
+                        && _borderPhoneNumber != InputValueValidationEnum.Error;
     }
 
     /// <summary>
@@ -139,7 +102,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _borderFirstName, value);
-            CheckSaveClient(_dataAccess);
+            CheckSaveClient();
         }
     }
 
@@ -172,7 +135,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _borderLastName, value);
-            CheckSaveClient(_dataAccess);
+            CheckSaveClient();
         }
     }
 
@@ -205,7 +168,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _borderPatronymic, value);
-            CheckSaveClient(_dataAccess);
+            CheckSaveClient();
         }
     }
 
@@ -238,7 +201,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _borderPhoneNumber, value);
-            CheckSaveClient(_dataAccess);
+            CheckSaveClient();
         }
     }
 
@@ -252,7 +215,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _passportSerie, value);
-            BorderPassportSerie = InputHighlighting(_enablePassportData, Passport.IsSeries(_passportSerie));
+            BorderPassportSerie = InputHighlighting(_enablePassportData, Models.Client.PassportSerie.IsSeries(_passportSerie));
         }
     }
 
@@ -263,7 +226,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _passportNumber, value);
-            BorderPassportNumber = InputHighlighting(_enablePassportData, Passport.IsNumber(_passportNumber));
+            BorderPassportNumber = InputHighlighting(_enablePassportData, Models.Client.PassportNumber.IsNumber(_passportNumber));
         }
     }
 
@@ -280,11 +243,8 @@ public class ClientInfoViewModel : ViewModel
         get => _borderPassportSerie;
         set
         {
-            Set(ref _borderPassportSerie, value);
-            if (_dataAccess.EditFields.PassortData == true)
-            {
-                CheckSaveClient(_dataAccess);
-            }
+            Set(ref _borderPassportSerie, value);            
+            CheckSaveClient();            
         }
     }
 
@@ -294,11 +254,8 @@ public class ClientInfoViewModel : ViewModel
         get => _borderPassportNumber;
         set
         {
-            Set(ref _borderPassportNumber, value);
-            if (_dataAccess.EditFields.PassortData == true)
-            {
-                CheckSaveClient(_dataAccess);
-            }
+            Set(ref _borderPassportNumber, value);            
+            CheckSaveClient();            
         }
     }
 
@@ -329,9 +286,8 @@ public class ClientInfoViewModel : ViewModel
 
     private void OnSaveCommandExecute(object p)
     {
-        var client = new ClientAccessInfo(new Client(_firstname, _lastname, _patronymic,
-            new PhoneNumber(_phoneNumber), _enablePassportData ? new Passport(int.Parse(_passportSerie), int.Parse(_passportNumber)) :
-            new Passport(currentClient.SeriesAndNumberOfPassport.Serie, currentClient.SeriesAndNumberOfPassport.Number)));
+        var client = new Client(_firstname, _lastname, _patronymic,
+            new PhoneNumber(_phoneNumber), new PassportSerie(_passportSerie), new PassportNumber(int.Parse(_passportNumber)));
 
         if (currentClient.Id == Guid.Empty) // новый клиент
         {

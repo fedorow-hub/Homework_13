@@ -1,19 +1,17 @@
-﻿using Homework_13.Models.Client;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
 
 namespace Homework_13.Models.Bank;
 
-public class BankRepository : IEnumerable<ClientAccessInfo>
+public class BankRepository : IEnumerable<Client.Client>
 {
-    private ObservableCollection<ClientAccessInfo>? _clients;
-    public ObservableCollection<ClientAccessInfo>? Clients => _clients;
+    private ObservableCollection<Client.Client>? _clients;
+    public ObservableCollection<Client.Client>? Clients => _clients;
 
     /// <summary>
     /// Файл репозитория
@@ -21,7 +19,7 @@ public class BankRepository : IEnumerable<ClientAccessInfo>
     string _path;
 
     public BankRepository(string path)
-    {       
+    {
 
         if (string.IsNullOrEmpty(path) || string.IsNullOrWhiteSpace(path))
         {
@@ -39,7 +37,7 @@ public class BankRepository : IEnumerable<ClientAccessInfo>
         NoDepartmentsForLoad();
     }
 
-    public void AddClient(ClientAccessInfo client)
+    public void AddClient(Client.Client client)
     {
         if (client is null)
             return;
@@ -48,7 +46,7 @@ public class BankRepository : IEnumerable<ClientAccessInfo>
         Save();
     }
 
-    public void EditClient(ClientAccessInfo client)
+    public void EditClient(Client.Client client)
     {
         if (_clients.Any(c => c.Id == client.Id))
         {
@@ -57,7 +55,7 @@ public class BankRepository : IEnumerable<ClientAccessInfo>
         Save();
     }
 
-    public void DeleteClient(ClientAccessInfo client)
+    public void DeleteClient(Client.Client client)
     {
         if (_clients.Any(c => c.Id == client.Id))
         {
@@ -100,7 +98,7 @@ public class BankRepository : IEnumerable<ClientAccessInfo>
         //    PropertyNameCaseInsensitive = true
         //});
 
-        _clients = JsonConvert.DeserializeObject<ObservableCollection<ClientAccessInfo>>(data);
+        _clients = JsonConvert.DeserializeObject<ObservableCollection<Client.Client>>(data);
 
         if (_clients is null)
         {
@@ -114,9 +112,9 @@ public class BankRepository : IEnumerable<ClientAccessInfo>
     /// </summary>
     private void NoDepartmentsForLoad()
     {
-        _clients = new ObservableCollection<ClientAccessInfo>();
+        _clients = new ObservableCollection<Client.Client>();
     }
-    public IEnumerator<ClientAccessInfo> GetEnumerator()
+    public IEnumerator<Client.Client> GetEnumerator()
     {
         for (int i = 0; i < _clients.Count(); i++)
         {

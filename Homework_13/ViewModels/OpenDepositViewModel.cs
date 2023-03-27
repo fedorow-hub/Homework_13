@@ -6,10 +6,10 @@ namespace Homework_13.ViewModels;
 
 public class OpenDepositViewModel : ViewModel
 {
-    private ClientAccessInfo _currentClient;
+    private Client _currentClient;
     private BankRepository _bank;
 
-    public ClientAccessInfo CurrentClient
+    public Client CurrentClient
     {
         get => _currentClient;
         set => Set(ref _currentClient, value);
@@ -19,7 +19,7 @@ public class OpenDepositViewModel : ViewModel
 
 	}
 
-	public OpenDepositViewModel(ClientAccessInfo CurrentClient, BankRepository bank)
+	public OpenDepositViewModel(Client CurrentClient, BankRepository bank)
 	{
         _currentClient = CurrentClient;
         _bank = bank;

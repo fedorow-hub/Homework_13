@@ -2,7 +2,6 @@
 using Homework_13.Infrastructure.Commands;
 using Homework_13.Models.Bank;
 using Homework_13.Models.Client;
-using Homework_13.Models.Worker;
 using Homework_13.ViewModels.Base;
 using Homework_13.Views.AccountOperationWindow.Pages;
 using System.Windows;
@@ -13,11 +12,10 @@ namespace Homework_13.ViewModels;
 
 public class OperationsWindowViewModel : ViewModel
 {
-    private ClientAccessInfo _currentClient;
+    private Client _currentClient;
     private BankRepository _bank;
-    private Worker _worker;
 
-    public ClientAccessInfo CurrentClient { get; set; }
+    public Client CurrentClient { get; set; }
 
     //private readonly IClientDAL _clients;
 
@@ -25,12 +23,11 @@ public class OperationsWindowViewModel : ViewModel
     {
 
     }
-    public OperationsWindowViewModel(ClientAccessInfo currentClient, BankRepository bank, Worker worker)
+    public OperationsWindowViewModel(Client currentClient, BankRepository bank)
     {
         //_clients = clients;
         _currentClient = currentClient;
         _bank = bank;
-        _worker = worker;
 
         #region Pages
         _addAndWithdrawals = new AddAndWithdrawalsPage();     
@@ -107,7 +104,7 @@ public class OperationsWindowViewModel : ViewModel
     private void OnExitCommandExecute(object p)
     {
         MainWindow mainWindow = new MainWindow();
-        mainWindow.DataContext = new MainWindowViewModel(_worker);
+        mainWindow.DataContext = new MainWindowViewModel();
         mainWindow.Show();
 
         if (p is Window window)

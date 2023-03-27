@@ -122,8 +122,7 @@
         </Grid>
         <StatusBar DockPanel.Dock="Bottom" Height="40">
             <Canvas Width="790">
-                <TextBlock Text="Режим работы:" VerticalAlignment="Top" Canvas.Left="10" Canvas.Top="-8" HorizontalAlignment="Center" />
-                <TextBlock Text="{Binding Path=Worker}" VerticalAlignment="Center" HorizontalAlignment="Left" Width="123" Canvas.Left="99" Canvas.Top="-8"/>
+                
                 <Button Width="170" FontSize="20" Cursor="Hand" 
                         Command="{Binding OutLoggingCommand}" 
                         CommandParameter="{Binding ElementName=MainWind}" Canvas.Left="742" Canvas.Top="-16" HorizontalAlignment="Left" VerticalAlignment="Center">

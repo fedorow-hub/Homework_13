@@ -4,7 +4,6 @@ using Homework_13.Infrastructure.Commands;
 using Homework_13.Models.Bank;
 using Homework_13.Models.Client;
 using Homework_13.Models.Money;
-using Homework_13.Models.Worker;
 using Homework_13.ViewModels.Base;
 using Homework_13.Views;
 using System;
@@ -17,8 +16,6 @@ namespace Homework_13.ViewModels;
 public class MainWindowViewModel : ViewModel
 {
     public BankRepository Bank { get; private set; }
-
-    public Worker Worker { get; private set; }
 
     public string Date { get; private set; }
 
@@ -36,24 +33,22 @@ public class MainWindowViewModel : ViewModel
 
     IDataAccess _data = new DataAccessProxy(new DataAccess());
 
-    private ObservableCollection<ClientAccessInfo> clients;
+    private ObservableCollection<Client> clients;
 
-    public ObservableCollection<ClientAccessInfo> Clients
+    public ObservableCollection<Client> Clients
     {
         get => clients;
         set => Set(ref clients, value);
     }
 
     private readonly IClientDAL _clients;   
-
-    public MainWindowViewModel() { }
-
-    public MainWindowViewModel(Worker worker)
+        
+    public MainWindowViewModel()
     {                
         //_clients = clients;
         Bank = new BankRepository("bank.json");
-        Worker = worker;
-        Clients = GetClientsInfo();
+        
+        Clients = Bank.Clients;
 
         #region Currency
         string[] data = _data.GetAllData();
@@ -79,13 +74,7 @@ public class MainWindowViewModel : ViewModel
 
         OpenOperationWindowCommand = new LambdaCommand(OnOpenOperationWindowCommandExecute, CanOpenOperationWindowCommandExecute);
         #endregion
-
-        #region EnableRegion
-        _enableAddClient = Worker.DataAccess.Commands.AddClient;
-        _enableDelClient = Worker.DataAccess.Commands.DelClient;
-        _enableEditClient = Worker.DataAccess.Commands.EditClient;
-        _enableOperationAccounts = Worker.DataAccess.Commands.OperationAccount;
-        #endregion
+                
     }
 
 
@@ -93,25 +82,7 @@ public class MainWindowViewModel : ViewModel
     //{
     //    _clients.GetAllClients();
     //}
-
-    /// <summary>
-    /// Получение сведений о клиентах
-    /// представление зависит от работника
-    /// </summary>
-    /// <returns></returns>
-    public ObservableCollection<ClientAccessInfo> GetClientsInfo()
-    {
-        var clientsInfo = Bank.Clients;
-
-        var tempClients = new ObservableCollection<ClientAccessInfo>();
-
-        for (int i = 0; i < clientsInfo.Count; i++)
-        {
-            tempClients.Add(Worker.GetClientInfo(clientsInfo[i]));
-        }
-
-        return tempClients;
-    }
+        
     /// <summary>
     /// Метод возвращает нужный вид и цвет иконки динамики курса валют
     /// </summary>
@@ -142,9 +113,9 @@ public class MainWindowViewModel : ViewModel
     private bool CanOutLoggingCommandExecute(object p) => true;
 
     private void OnOutLoggingCommandExecute(object p)
-    {   
-        //LoginWindow loginWindow = new LoginWindow();
-        //loginWindow.Show();
+    {
+        LoginWindow loginWindow = new LoginWindow();
+        loginWindow.Show();
 
         if (p is Window window)
         {
@@ -157,16 +128,12 @@ public class MainWindowViewModel : ViewModel
 
     public ICommand AddClientCommand { get; }
 
-    private bool CanAddClientCommandExecute(object p)
-    {
-        if (_enableAddClient == true)
-            return true;
-        else return false;
-    }
+    private bool CanAddClientCommandExecute(object p) => true; 
+    
     private void OnAddClientCommandExecute(object p)
     {        
         ClientInfoWindow infoWindow = new ClientInfoWindow();
-        ClientInfoViewModel viewModel = new ClientInfoViewModel(new ClientAccessInfo(), Bank, Worker.DataAccess);
+        ClientInfoViewModel viewModel = new ClientInfoViewModel(new Client(), Bank);
         infoWindow.DataContext = viewModel;
         infoWindow.Show();
     }
@@ -210,7 +177,7 @@ public class MainWindowViewModel : ViewModel
         if (SelectedClient is null) return;
 
         ClientInfoWindow infoWindow = new ClientInfoWindow();
-        ClientInfoViewModel viewModel = new ClientInfoViewModel(SelectedClient, Bank, Worker.DataAccess);
+        ClientInfoViewModel viewModel = new ClientInfoViewModel(SelectedClient, Bank);
         infoWindow.DataContext = viewModel;
         infoWindow.Show();
     }
@@ -222,10 +189,9 @@ public class MainWindowViewModel : ViewModel
 
     private bool CanOpenOperationWindowCommandExecute(object p)
     {
-        if (SelectedClient is null || _enableOperationAccounts == false)
+        if (SelectedClient is null)
             return false;
         return true;
-
     }
 
     private void OnOpenOperationWindowCommandExecute(object p)
@@ -233,7 +199,7 @@ public class MainWindowViewModel : ViewModel
         if (SelectedClient is null) return;
 
         OperationsWindow operationWindow = new OperationsWindow();
-        OperationsWindowViewModel viewModel = new OperationsWindowViewModel(SelectedClient, Bank, Worker);
+        OperationsWindowViewModel viewModel = new OperationsWindowViewModel(SelectedClient, Bank);
         operationWindow.DataContext = viewModel;
         operationWindow.Show();
 
@@ -242,7 +208,6 @@ public class MainWindowViewModel : ViewModel
             window.Close();
         }
     }
-
     #endregion
 
 
@@ -250,11 +215,11 @@ public class MainWindowViewModel : ViewModel
 
     #region SelectedClient
 
-    private ClientAccessInfo _SelectedClient;
+    private Client _SelectedClient;
     /// <summary>
     /// Выбранный клиент
     /// </summary>
-    public ClientAccessInfo SelectedClient
+    public Client SelectedClient
     {
         get { return _SelectedClient; }
         set => Set(ref _SelectedClient, value);

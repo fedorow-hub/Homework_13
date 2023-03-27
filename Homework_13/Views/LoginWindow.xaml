@@ -15,20 +15,15 @@
     </Window.Resources>
     <Window.Background>
         <ImageBrush ImageSource="/Resources/Images/bank.jpg"></ImageBrush>
-    </Window.Background>    
+    </Window.Background>
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="200" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Width="256" Height="83" Margin="0,88,0,0">
-            <Button Content="Консультант" MinWidth="60" Cursor="Hand" Margin="0,0,0,17" 
-                    Command="{Binding SetConsultantMode}"
-                    CommandParameter="{Binding ElementName=LoginWindows}"/>
-            <Button Content="Менеджер" MinWidth="60" Cursor="Hand" 
-                    Command="{Binding SetManagerMode}"
-                    CommandParameter="{Binding ElementName=LoginWindows}"/>
-        </StackPanel>
+        <Button Content="Войти" MinWidth="60" Cursor="Hand" HorizontalAlignment="Center" VerticalAlignment="Top" Width="256" Grid.Row="0" 
+                    Command="{Binding ComeInCommand}"
+                    CommandParameter="{Binding ElementName=LoginWindows}" Margin="0,100,0,0"/>
         <Button Content="Выйти" Command="{Binding OutCommand}" 
                 CommandParameter="{Binding ElementName=LoginWindows}"
                 MinWidth="60" Cursor="Hand" HorizontalAlignment="Center" VerticalAlignment="Top" Width="256" Grid.Row="1"/>
