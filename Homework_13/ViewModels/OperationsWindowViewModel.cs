@@ -33,22 +33,22 @@ public class OperationsWindowViewModel : ViewModel
         _mainWindowViewModel = mainWindowViewModel;
 
         #region Pages
-        _addAndWithdrawals = new AddAndWithdrawalsPage();     
-        _addAndWithdrawals.DataContext = new AddAndWithdrawalsViewModel(_currentClient, _bank);
-
+        _addAndWithdrawals = new AddAndWithdrawalsPage();
+        _betweenTheirAccounts = new BetweenTheirAccountPage();
         _openDeposit = new OpenDepositPage();
-        _openDeposit.DataContext = new OpenDepositViewModel(_currentClient, _bank);
 
         CurrentPage = new EmptyPage();
         #endregion
 
         ExitCommand = new LambdaCommand(OnExitCommandExecute, CanExitCommandExecute);
-        SetAddAndWithdrawalsViewCommand = new LambdaCommand(OnSetAddAndWithdrawalsExecuted, CanSetAddAndWithdrawalsViewExecute);
+        AddAndWithdrawalsCommand = new LambdaCommand(OnAddAndWithdrawalsCommandExecuted, CanAddAndWithdrawalsCommandExecute);
+        BetweenTheirAccountsCommand = new LambdaCommand(OnBetweenTheirAccountsCommandExecuted, CanBetweenTheirAccountsCommandExecute);
         OpenDepositCommand = new LambdaCommand(OnOpenDepositCommandExecuted, CanOpenDepositCommandViewExecute);
     }
 
     #region Pages
     private readonly Page _addAndWithdrawals;
+    private readonly Page _betweenTheirAccounts;
     private readonly Page _openDeposit;
 
     private Page _currentPage;
@@ -64,20 +64,35 @@ public class OperationsWindowViewModel : ViewModel
 
     #region Command
 
-    #region SetAddAndWithdrawalsViewCommand
-    public ICommand SetAddAndWithdrawalsViewCommand { get; }
-    private void OnSetAddAndWithdrawalsExecuted(object p)
+    #region AddAndWithdrawalsCommand
+    public ICommand AddAndWithdrawalsCommand { get; }
+    private void OnAddAndWithdrawalsCommandExecuted(object p)
     {
         CurrentPage = _addAndWithdrawals;
         _addAndWithdrawals.DataContext = new AddAndWithdrawalsViewModel(_currentClient, _bank);        
     }
-    private bool CanSetAddAndWithdrawalsViewExecute(object p)
+    private bool CanAddAndWithdrawalsCommandExecute(object p)
     {
         if (CurrentPage == _addAndWithdrawals)
             return false;
         return true;
     }
-        
+    #endregion
+
+    #region BetweenTheirAccounts
+
+    public ICommand BetweenTheirAccountsCommand { get; }
+    private void OnBetweenTheirAccountsCommandExecuted(object p)
+    {
+        CurrentPage = _betweenTheirAccounts;
+        _betweenTheirAccounts.DataContext = new BetweenTheirAccountsViewModel(_currentClient, _bank);
+    }
+    private bool CanBetweenTheirAccountsCommandExecute(object p)
+    {
+        if (CurrentPage == _betweenTheirAccounts)
+            return false;
+        return true;
+    }
     #endregion
 
 
