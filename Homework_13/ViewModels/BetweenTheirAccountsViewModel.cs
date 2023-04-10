@@ -23,7 +23,13 @@ namespace Homework_13.ViewModels
         {
             _currentClient = CurrentClient;
             _bank = bank;
-
         }
+
+        #region Эксперимент со свойством зависимости
+        private double _FluentCount;
+
+        public double FluentCount { get => _FluentCount; set => Set(ref _FluentCount, value); }
+        #endregion
+
     }
 }
