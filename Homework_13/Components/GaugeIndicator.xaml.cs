@@ -1,5 +1,7 @@
-﻿using System;
+﻿using BankDAL.Models;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,7 +58,8 @@ namespace Homework_13.Components
         /// <returns>Скорректированное значение свойства</returns>
         private static object OnCoerceValue(DependencyObject d, object baseValue)
         {
-            return baseValue;
+            var value = (double)baseValue;
+            return Math.Max(0, Math.Min(100, value));            
         }
 
         /// <summary>
@@ -68,12 +71,14 @@ namespace Homework_13.Components
         /// <returns></returns>
         private static bool OnValidateValue(object value)
         {
-            return true;
-        }
+            return true;            
+        }    
 
         /// <summary>
         /// 
         /// </summary>
+        [Category("Моя категория")]
+        [Description("Угол поворота стрелки")]
         public double Value
         {
             get => (double)GetValue(ValueProperty);
@@ -84,6 +89,8 @@ namespace Homework_13.Components
         public GaugeIndicator()
         {
             InitializeComponent();
-        }
+
+        }       
+
     }
 }

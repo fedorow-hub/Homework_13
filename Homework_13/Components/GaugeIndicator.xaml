@@ -8,8 +8,10 @@
              d:DesignHeight="100" d:DesignWidth="100">
     <Grid>
         <Path Stroke="Red" StrokeThickness="2" Data="M48,70 L50,25 L52,70 Z" Fill="Red" Visibility="Collapsed"/>
-        <Polygon Stroke="Red" StrokeThickness="2" Fill="Red" Points="48,70 50,25 52,70" Visibility="Collapsed"/><!--то же, но с исп. Poligon-->
-        <Polyline Stroke="Red" StrokeThickness="2" Points="48,70 50,25 52,70" Fill="Red" Visibility="Collapsed"/><!--то же, но с исп. Poliline-->
+        <Polygon Stroke="Red" StrokeThickness="2" Fill="Red" Points="48,70 50,25 52,70" Visibility="Collapsed"/>
+        <!--то же, но с исп. Poligon-->
+        <Polyline Stroke="Red" StrokeThickness="2" Points="48,70 50,25 52,70" Fill="Red" Visibility="Collapsed"/>
+        <!--то же, но с исп. Poliline-->
         <Line Stroke="Red" StrokeThickness="2"
               X2="{Binding ActualWidth, RelativeSource={RelativeSource Self}}"
               Y2="{Binding ActualWidth, RelativeSource={RelativeSource Self}}"
@@ -25,8 +27,9 @@
                     <Polyline.RenderTransform>
                         <TransformGroup>
                             <RotateTransform Angle="-50"/>
-                            <RotateTransform Angle="{Binding Value, RelativeSource={RelativeSource AncestorType=local:GaugeIndicator}}" x:Name="ArowRotator"/>
-                        </TransformGroup>                        
+                            <RotateTransform Angle="{Binding Value, RelativeSource={RelativeSource AncestorType={x:Type local:GaugeIndicator}}}" 
+                                             x:Name="ArowRotator"/>
+                        </TransformGroup>
                     </Polyline.RenderTransform>
                 </Polyline>
                 <Ellipse Width="15" Height="15" Fill="Black" Margin="42,63,42,22"/>

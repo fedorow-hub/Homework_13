@@ -42,7 +42,5 @@ public class LoginWindowViewModel : ViewModel
     }
     private bool CanOutCommandExecute(object p) => true;
     #endregion
-
-    
-    #endregion
+    #endregion    
 }
