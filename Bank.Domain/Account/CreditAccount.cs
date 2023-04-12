@@ -17,12 +17,34 @@ public class CreditAccount : Account
     /// </summary>
     public decimal MouthlyPayment { get; }
 
-    public CreditAccount(Guid clientId, string currency, byte termOfMonth, decimal amount) 
+    public CreditAccount(int id, int clientId, string currency, byte termOfMonth, decimal amount) 
+        : base(id, clientId, currency, amount)
+    {
+        AccountTerm = TimeOfCreated.AddMonths(termOfMonth);
+        LoanInterest = InterestRate.MaxRate;
+        MouthlyPayment = SetMonthlyPayment(termOfMonth);
+    }
+
+    private CreditAccount(int clientId, string currency, byte termOfMonth, decimal amount)
         : base(clientId, currency, amount)
     {
         AccountTerm = TimeOfCreated.AddMonths(termOfMonth);
         LoanInterest = InterestRate.MaxRate;
         MouthlyPayment = SetMonthlyPayment(termOfMonth);
+    }
+
+    /// <summary>
+    /// метод создания счета
+    /// </summary>
+    /// <param name="clientId"></param>
+    /// <param name="currency"></param>
+    /// <param name="termOfMonth"></param>
+    /// <param name="amount"></param>
+    /// <returns></returns>
+    public static CreditAccount CreateCreditAccount(int clientId, string currency, byte termOfMonth, decimal amount)
+    {
+        var newAccount = new CreditAccount(clientId, currency, termOfMonth, amount);
+        return newAccount;
     }
 
     /// <summary>

@@ -34,15 +34,21 @@ public abstract class Account : Entity
     /// </summary>
     public bool IsExistance { get; private set; }
 
-    public Account(int id, int clientId, string currency, decimal amount )
+    public Account(int clientId, string currency, decimal amount)        
     {
-        Id = id;
         ClientId = clientId;
         TimeOfCreated = DateTime.Today;
         Currency = Currency.Parse(currency);
-        Amount = amount;        
+        Amount = amount;
         IsExistance = true;
-    }      
+    }
+
+    public Account(int id, int clientId, string currency, decimal amount )
+        :this(clientId, currency, amount)
+    {
+        Id = id;
+    }     
+
 
     /// <summary>
     /// снятие денег со счета
