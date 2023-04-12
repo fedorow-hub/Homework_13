@@ -1,8 +1,7 @@
 ﻿namespace Bank.Domain.Client;
 
 public class Client : Entity
-{
-    public Guid Id { get; }
+{   
 
     public string Firstname { get; }
 
@@ -20,10 +19,10 @@ public class Client : Entity
 
     public bool IsExistance { get; private set; }
 
-    public Client(string firstname, string lastname, string patronymic, string phoneNumber, 
+    public Client(long id, string firstname, string lastname, string patronymic, string phoneNumber, 
         string seriePassport, string numberPassport, string totalIncome)
-    {
-        Id = Guid.NewGuid();
+        :base(id)
+    {        
         Firstname = firstname;
         Lastname = lastname;
         Patronymic = patronymic;
@@ -33,6 +32,8 @@ public class Client : Entity
         TotalIncomePerMounth = TotalIncomePerMounth.SetIncome(totalIncome);
         IsExistance = true;
     }
+
+
 
     /// <summary>
     /// метод редактирования данных клиента

@@ -3,12 +3,7 @@
 namespace Bank.Domain.Account;
 
 public abstract class Account : Entity
-{
-    /// <summary>
-    /// идентификационный номер счета
-    /// </summary>
-    public int Id { get; }
-
+{    
     /// <summary>
     /// идентификационный номер клиента, которому принадлежит счет
     /// </summary>
@@ -30,6 +25,21 @@ public abstract class Account : Entity
     public decimal Amount { get; protected set; }
 
     /// <summary>
+    /// процентная ставка
+    /// </summary>
+    public InterestRate InterestRate { get; protected set; } = InterestRate.MinRate;
+
+    /// <summary>
+    /// проценты по кредиту
+    /// </summary>
+    public InterestRate LoanInterest { get; protected set; } = InterestRate.MinRate;
+
+    /// <summary>
+    /// период действия счета в месяцах
+    /// </summary>
+    public DateTime AccountTerm { get; protected set; } = DateTime.MaxValue;
+
+    /// <summary>
     /// действующий или закрытый счет
     /// </summary>
     public bool IsExistance { get; private set; }
@@ -44,11 +54,14 @@ public abstract class Account : Entity
     }
 
     public Account(int id, int clientId, string currency, decimal amount )
-        :this(clientId, currency, amount)
+        :base(id)        
     {
-        Id = id;
+        ClientId = clientId;
+        TimeOfCreated = DateTime.Today;
+        Currency = Currency.Parse(currency);
+        Amount = amount;
+        IsExistance = true;
     }     
-
 
     /// <summary>
     /// снятие денег со счета

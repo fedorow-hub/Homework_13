@@ -1,16 +1,7 @@
 ﻿namespace Bank.Domain.Account;
 
 public class DepositAccount : Account
-{
-    /// <summary>
-    /// период действия счета в месяцах
-    /// </summary>
-    public DateTime AccountTerm { get; }
-
-    /// <summary>
-    /// процентная ставка
-    /// </summary>
-    public InterestRate InterestRate { get; }
+{        
     public DepositAccount(int id, int clientId, string currency, byte termOfMonth, decimal amount) 
         : base(id, clientId, currency, amount)        
     {
@@ -52,4 +43,15 @@ public class DepositAccount : Account
         }        
         return InterestRate.MiddleRate;                
     }
+    
+    /// <summary>
+    /// ежемесячная капиталлизация
+    /// </summary>
+    private void MounthlyCapitalization()
+    {
+        decimal mouthlyPercent = Amount * InterestRate.Id / 100 / 12;
+        Amount += mouthlyPercent;
+    }
+
+
 }

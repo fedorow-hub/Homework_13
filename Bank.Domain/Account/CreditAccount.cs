@@ -1,17 +1,7 @@
 ﻿namespace Bank.Domain.Account;
 
 public class CreditAccount : Account
-{
-    /// <summary>
-    /// срок кредита
-    /// </summary>
-    public DateTime AccountTerm { get; }
-
-    /// <summary>
-    /// проценты по кредиту
-    /// </summary>
-    public InterestRate LoanInterest { get; }
-
+{   
     /// <summary>
     /// ежемесячный платеж по кредиту
     /// </summary>
@@ -54,7 +44,7 @@ public class CreditAccount : Account
     /// <returns></returns>
     private decimal SetMonthlyPayment(byte termOfMonth)
     {        
-        decimal mouthlyPercent = Amount * InterestRate.MaxRate.Id/100/24;
+        decimal mouthlyPercent = Amount * LoanInterest.Id/100/24;
         return Amount / termOfMonth + mouthlyPercent;       
     }
 

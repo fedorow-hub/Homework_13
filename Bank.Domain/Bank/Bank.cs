@@ -4,12 +4,7 @@ using Bank.Domain.Root;
 namespace Bank.Domain.Bank;
 
 public class Bank : Entity
-{
-    /// <summary>
-    /// идентификационный номер банка
-    /// </summary>
-    public int Id { get; }
-
+{    
     /// <summary>
     /// название банка
     /// </summary>
@@ -25,10 +20,12 @@ public class Bank : Entity
     /// </summary>
     public decimal Capinal { get; private set; }
 
-    public Bank(int id, string name, decimal capital)
-        :this(name, capital)
+    public Bank(long id, string name, decimal capital)
+        :base(id)
     {
-        Id = id;        
+        Name = name;
+        Clients = new List<Client.Client>();
+        Capinal = capital;
     }
 
     private Bank(string name, decimal capital)

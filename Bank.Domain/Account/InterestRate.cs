@@ -4,7 +4,7 @@ namespace Bank.Domain.Account;
 
 public class InterestRate : Enumeration
 {
-    public static InterestRate MinRate = new(1, "1%");
+    public static InterestRate MinRate = new(0, "0%");
 
     public static InterestRate MiddleRate = new(5, "5%");
 
@@ -19,7 +19,7 @@ public class InterestRate : Enumeration
     public static InterestRate Parse(string value)
         => value?.ToUpper() switch
         {
-            "1%" => MinRate,
+            "0%" => MinRate,
             "5%" => MiddleRate,
             "10%" => MaxRate,
             "15%" => CreditRate,
