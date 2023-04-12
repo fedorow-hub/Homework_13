@@ -6,24 +6,22 @@ public class Client : Entity
 
     public string Firstname { get; }
 
-    public string Lastname { get; }
+    public string Lastname { get; private set; }
 
     public string Patronymic { get; }
 
-    public PhoneNumber PhoneNumber { get; }
+    public PhoneNumber PhoneNumber { get; private set; }
 
-    public PassportSerie PassportSerie { get; }
+    public PassportSerie PassportSerie { get; private set; }
 
-    public PassportNumber PassportNumber { get; }
+    public PassportNumber PassportNumber { get; private set; }
 
-    public TotalIncomePerMounth TotalIncomePerMounth { get; }
+    public TotalIncomePerMounth TotalIncomePerMounth { get; private set; }
 
-    public bool IsVip { get; set; }
-
-    public bool IsExistance { get; set; }
+    public bool IsExistance { get; private set; }
 
     public Client(string firstname, string lastname, string patronymic, string phoneNumber, 
-        string seriePassport, string numberPassport, string totalIncome, bool isVip = false, bool isExistance = true)
+        string seriePassport, string numberPassport, string totalIncome)
     {
         Id = Guid.NewGuid();
         Firstname = firstname;
@@ -33,7 +31,20 @@ public class Client : Entity
         PassportSerie = PassportSerie.SetSerie(seriePassport);
         PassportNumber = PassportNumber.SetNumber(numberPassport);
         TotalIncomePerMounth = TotalIncomePerMounth.SetIncome(totalIncome);
-        IsVip = IsVip;
-        IsExistance = isExistance;
+        IsExistance = true;
+    }
+
+    /// <summary>
+    /// метод редактирования данных клиента
+    /// </summary>
+    /// <param name="client"></param>
+    public void ChangeInfoClient(Client client)
+    {        
+        Lastname = client.Lastname;        
+        PhoneNumber = client.PhoneNumber;
+        PassportSerie = client.PassportSerie;
+        PassportNumber = client.PassportNumber;
+        TotalIncomePerMounth = client.TotalIncomePerMounth;
+        IsExistance = client.IsExistance;
     }
 }

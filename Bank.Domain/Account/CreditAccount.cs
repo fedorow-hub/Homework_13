@@ -17,7 +17,7 @@ public class CreditAccount : Account
     /// </summary>
     public decimal MouthlyPayment { get; }
 
-    public CreditAccount(Guid clientId, string currency, byte termOfMonth, decimal amount = 0) 
+    public CreditAccount(Guid clientId, string currency, byte termOfMonth, decimal amount) 
         : base(clientId, currency, amount)
     {
         AccountTerm = TimeOfCreated.AddMonths(termOfMonth);
@@ -34,5 +34,13 @@ public class CreditAccount : Account
     {        
         decimal mouthlyPercent = Amount * InterestRate.MaxRate.Id/100/24;
         return Amount / termOfMonth + mouthlyPercent;       
+    }
+
+    /// <summary>
+    /// метод ежемесячного платежа по кредиту
+    /// </summary>
+    public void LoanPayment()
+    {
+        Amount -= MouthlyPayment;
     }
 }

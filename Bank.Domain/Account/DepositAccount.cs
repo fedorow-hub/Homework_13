@@ -11,7 +11,7 @@ public class DepositAccount : Account
     /// процентная ставка
     /// </summary>
     public InterestRate InterestRate { get; }
-    public DepositAccount(Guid clientId, string currency, byte termOfMonth, decimal amount = 0) 
+    public DepositAccount(Guid clientId, string currency, byte termOfMonth, decimal amount) 
         : base(clientId, currency, amount)
     {
         AccountTerm = TimeOfCreated.AddMonths(termOfMonth);

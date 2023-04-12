@@ -1,12 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Bank.Domain.Account;
 
-namespace Bank.Domain.Account
+public class PlainAccount : Account
 {
-    internal class PlainAccount
+    /// <summary>
+    /// процентная ставка
+    /// </summary>
+    public InterestRate InterestRate { get; }
+
+    public PlainAccount(Guid clientId, string currency, decimal amount = 0) 
+        : base(clientId, currency, amount)
     {
+        InterestRate = InterestRate.MinRate;
+    }
+
+    /// <summary>
+    /// пополнение счета
+    /// </summary>
+    /// <param name="money"></param>
+    public void AddMoneyToAccount(decimal money)
+    {
+        Amount += money;
     }
 }

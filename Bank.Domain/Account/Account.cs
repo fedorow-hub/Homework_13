@@ -7,12 +7,12 @@ public abstract class Account : Entity
     /// <summary>
     /// идентификационный номер счета
     /// </summary>
-    public Guid Id { get; }
+    public int Id { get; }
 
     /// <summary>
     /// идентификационный номер клиента, которому принадлежит счет
     /// </summary>
-    public Guid ClientId { get; }
+    public int ClientId { get; }
 
     /// <summary>
     /// дата и время создания счета
@@ -27,31 +27,22 @@ public abstract class Account : Entity
     /// <summary>
     /// сумма, лежащая на счете
     /// </summary>
-    public decimal Amount { get; private set; }
+    public decimal Amount { get; protected set; }
 
     /// <summary>
     /// действующий или закрытый счет
     /// </summary>
     public bool IsExistance { get; private set; }
 
-    public Account(Guid clientId, string currency, decimal amount = 0 )
+    public Account(int id, int clientId, string currency, decimal amount )
     {
-        Id = Guid.NewGuid();
+        Id = id;
         ClientId = clientId;
         TimeOfCreated = DateTime.Today;
         Currency = Currency.Parse(currency);
         Amount = amount;        
         IsExistance = true;
-    }  
-
-    /// <summary>
-    /// пополнение счета
-    /// </summary>
-    /// <param name="money"></param>
-    public void AddMoneyToAccount(decimal money)
-    {
-        Amount += money;
-    }
+    }      
 
     /// <summary>
     /// снятие денег со счета
