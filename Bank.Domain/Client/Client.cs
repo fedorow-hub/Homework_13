@@ -33,8 +33,6 @@ public class Client : Entity
         IsExistance = true;
     }
 
-
-
     /// <summary>
     /// метод редактирования данных клиента
     /// </summary>

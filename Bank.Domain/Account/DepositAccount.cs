@@ -46,12 +46,11 @@ public class DepositAccount : Account
     
     /// <summary>
     /// ежемесячная капиталлизация
+    /// (пока не знаю как ее подключить из сущности счета)
     /// </summary>
     private void MounthlyCapitalization()
     {
         decimal mouthlyPercent = Amount * InterestRate.Id / 100 / 12;
         Amount += mouthlyPercent;
     }
-
-
 }
