@@ -1,22 +1,85 @@
-﻿namespace Bank.Domain.Account;
+﻿using Bank.Domain.Root;
 
-public class Account : Entity
+namespace Bank.Domain.Account;
+
+public abstract class Account : Entity
 {
-    public Guid Id { get; set; }
+    /// <summary>
+    /// идентификационный номер счета
+    /// </summary>
+    public Guid Id { get; }
 
-    public Guid ClientId { get; set; }
+    /// <summary>
+    /// идентификационный номер клиента, которому принадлежит счет
+    /// </summary>
+    public Guid ClientId { get; }
 
-    public Currency Currency { get; set; }
+    /// <summary>
+    /// дата и время создания счета
+    /// </summary>
+    public DateTime TimeOfCreated { get; }
 
-    public decimal Amount { get; set; }
+    /// <summary>
+    /// валюта счета
+    /// </summary>
+    public Currency Currency { get; }
 
-    public TypeOfAccount TypeOfAccount { get; set; }
+    /// <summary>
+    /// сумма, лежащая на счете
+    /// </summary>
+    public decimal Amount { get; private set; }
 
-    public DateTime AccountTerm { get; set; }
+    /// <summary>
+    /// действующий или закрытый счет
+    /// </summary>
+    public bool IsExistance { get; private set; }
 
-    public InterestRate InterestRate { get; set; }
+    public Account(Guid clientId, string currency, decimal amount = 0 )
+    {
+        Id = Guid.NewGuid();
+        ClientId = clientId;
+        TimeOfCreated = DateTime.Today;
+        Currency = Currency.Parse(currency);
+        Amount = amount;        
+        IsExistance = true;
+    }  
 
-    public bool IsExistance { get; set; } = true;
+    /// <summary>
+    /// пополнение счета
+    /// </summary>
+    /// <param name="money"></param>
+    public void AddMoneyToAccount(decimal money)
+    {
+        Amount += money;
+    }
 
-    public decimal MounthlyPayment { get; set; } = 0;
+    /// <summary>
+    /// снятие денег со счета
+    /// </summary>
+    /// <param name="money"></param>
+    public void WithdrawalMoneyFromAccount(decimal money)
+    {
+        if (Amount >= money)
+        {
+            Amount -= money;
+        }
+        else throw new DomainExeption("Недостаточно средств на счете");        
+    }
+
+    /// <summary>
+    /// закрытие счета
+    /// </summary>
+    /// <exception cref="DomainExeption"></exception>
+    public void CloseAccount()
+    {
+        if(!IsExistance)
+        {
+            throw new DomainExeption("Данный счет не доступен");
+        }
+        else if(Amount > 0) 
+        {
+            throw new DomainExeption("На счете имеются денежные средства");
+        }        
+        IsExistance = false;        
+    }
 }
