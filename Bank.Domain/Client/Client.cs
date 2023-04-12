@@ -17,8 +17,6 @@ public class Client : Entity
 
     public TotalIncomePerMounth TotalIncomePerMounth { get; private set; }
 
-    public bool IsExistance { get; private set; }
-
     public Client(long id, string firstname, string lastname, string patronymic, string phoneNumber, 
         string seriePassport, string numberPassport, string totalIncome)
         :base(id)
@@ -29,8 +27,7 @@ public class Client : Entity
         PhoneNumber = PhoneNumber.SetNumber(phoneNumber);
         PassportSerie = PassportSerie.SetSerie(seriePassport);
         PassportNumber = PassportNumber.SetNumber(numberPassport);
-        TotalIncomePerMounth = TotalIncomePerMounth.SetIncome(totalIncome);
-        IsExistance = true;
+        TotalIncomePerMounth = TotalIncomePerMounth.SetIncome(totalIncome);        
     }
 
     /// <summary>
@@ -43,7 +40,6 @@ public class Client : Entity
         PhoneNumber = client.PhoneNumber;
         PassportSerie = client.PassportSerie;
         PassportNumber = client.PassportNumber;
-        TotalIncomePerMounth = client.TotalIncomePerMounth;
-        IsExistance = client.IsExistance;
+        TotalIncomePerMounth = client.TotalIncomePerMounth;        
     }
 }
