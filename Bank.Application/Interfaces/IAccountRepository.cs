@@ -8,6 +8,7 @@ public interface IAccountRepository
     Task CreatePlainAccount(PlainAccountCreateDTO plainAccount, CancellationToken cancellationToken);
     Task CreateDepositAccount(DepositAccountCreateDTO plainAccount, CancellationToken cancellationToken);
     Task CreateCreditAccount(CreditAccountCreateDTO plainAccount, CancellationToken cancellationToken);
+    Task DeleteAccount(long id, string TypeOfAccount, CancellationToken cancellationToken);
     //Task UpdateClient(ClientUpdateDTO client, CancellationToken cancellationToken);
     //Task DeleteClient(long id, CancellationToken cancellationToken);
     //Task<ClientListVM> GetListClient();
