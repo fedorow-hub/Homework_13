@@ -2,17 +2,13 @@
 
 public sealed class PlainAccount : Account
 {
-    /// <summary>
-    /// процентная ставка
-    /// </summary>
-    public InterestRate InterestRate { get; }
-
-    public PlainAccount(int id, int clientId, string currency, decimal amount = 0) 
+    
+    public PlainAccount(int id, long clientId, string currency, decimal amount = 0) 
         : base(id, clientId, currency, amount)
     {        
     }
 
-    private PlainAccount(int clientId, string currency, decimal amount = 0) 
+    private PlainAccount(long clientId, string currency, decimal amount = 0) 
         : base(clientId, currency, amount) 
     {        
     }
@@ -24,7 +20,7 @@ public sealed class PlainAccount : Account
     /// <param name="currency"></param>
     /// <param name="amount"></param>
     /// <returns></returns>
-    public static PlainAccount CreatePlaneAccount(int clientId, string currency, decimal amount = 0)
+    public static PlainAccount CreatePlaneAccount(long clientId, string currency, decimal amount = 0)
     {
         var newAccount = new PlainAccount(clientId, currency, amount);
         return newAccount;

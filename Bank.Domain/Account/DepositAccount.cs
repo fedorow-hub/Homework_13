@@ -1,19 +1,24 @@
 ﻿namespace Bank.Domain.Account;
 
 public class DepositAccount : Account
-{        
-    public DepositAccount(int id, int clientId, string currency, byte termOfMonth, decimal amount) 
+{
+    /// <summary>
+    /// процентная ставка
+    /// </summary>
+    public InterestRate InterestRate { get; protected set; } 
+
+    public DepositAccount(int id, long clientId, string currency, byte termOfMonth, decimal amount) 
         : base(id, clientId, currency, amount)        
     {
         AccountTerm = TimeOfCreated.AddMonths(termOfMonth);
-        InterestRate = GetInterestRate(termOfMonth);
+        InterestRate = SetInterestRate(termOfMonth);
     }
 
-    private DepositAccount(int clientId, string currency, byte termOfMonth, decimal amount)
+    private DepositAccount(long clientId, string currency, byte termOfMonth, decimal amount)
         : base(clientId, currency, amount)
     {
         AccountTerm = TimeOfCreated.AddMonths(termOfMonth);
-        InterestRate = GetInterestRate(termOfMonth);
+        InterestRate = SetInterestRate(termOfMonth);
     }
 
     /// <summary>
@@ -24,18 +29,18 @@ public class DepositAccount : Account
     /// <param name="termOfMonth"></param>
     /// <param name="amount"></param>
     /// <returns></returns>
-    public static DepositAccount CreateDepositAccount(int clientId, string currency, byte termOfMonth, decimal amount)
+    public static DepositAccount CreateDepositAccount(long clientId, string currency, byte termOfMonth, decimal amount)
     {
         var newAccount = new DepositAccount(clientId, currency, termOfMonth, amount);
         return newAccount;
     }
 
     /// <summary>
-    /// получение значения процентной ставки
+    /// установка значения процентной ставки
     /// </summary>
     /// <param name="termOfMonth">срок действия счета в месяцах</param>
     /// <returns></returns>
-    private InterestRate GetInterestRate(byte termOfMonth)
+    private InterestRate SetInterestRate(byte termOfMonth)
     {
         if(Currency == Currency.Rubble && termOfMonth >= 12)
         {

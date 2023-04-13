@@ -9,11 +9,16 @@ public class CreditAccount : Account
     /// </summary>
     public decimal MouthlyPayment { get; }
 
+    /// <summary>
+    /// проценты по кредиту
+    /// </summary>
+    public InterestRate LoanInterest { get; protected set; }
+
     public CreditAccount(int id, long clientId, string currency, byte termOfMonth, decimal amount) 
         : base(id, clientId, currency, amount)
     {
         AccountTerm = TimeOfCreated.AddMonths(termOfMonth);
-        LoanInterest = InterestRate.MaxRate;
+        LoanInterest = SetLoanInterest();
         MouthlyPayment = SetMonthlyPayment(termOfMonth);
     }
 
@@ -21,7 +26,7 @@ public class CreditAccount : Account
         : base(clientId, currency, amount)
     {
         AccountTerm = TimeOfCreated.AddMonths(termOfMonth);
-        LoanInterest = InterestRate.MaxRate;
+        LoanInterest = SetLoanInterest();
         MouthlyPayment = SetMonthlyPayment(termOfMonth);
     }
 
@@ -52,6 +57,18 @@ public class CreditAccount : Account
     {        
         decimal mouthlyPercent = Amount * LoanInterest.Id/100/24;
         return Amount / termOfMonth + mouthlyPercent;       
+    }
+
+    private InterestRate SetLoanInterest()
+    {
+        if (Currency == Currency.Rubble )
+        {
+            return InterestRate.MaxRate;
+        }
+        else
+        {
+            return InterestRate.MiddleRate;
+        }        
     }
 
     /// <summary>

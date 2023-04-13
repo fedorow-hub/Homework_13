@@ -1,12 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Bank.Application.Interfaces;
+using MediatR;
 
-namespace Bank.Application.Clients.Queries.GetClientList
+namespace Bank.Application.Clients.Queries.GetClientList;
+
+public class GetClientListQueryHandler : IRequestHandler<GetClientListQuery, ClientListVM>
 {
-    internal class GetClientListQueryHandler
+    private readonly IClientRepository _clientsDbContext;
+
+    public GetClientListQueryHandler(IClientRepository clientsDbContext)
     {
+        _clientsDbContext = clientsDbContext;
+    }
+
+    public async Task<ClientListVM> Handle(GetClientListQuery request, CancellationToken cancellationToken)
+    {
+        var clientsQuery = await _clientsDbContext.GetListClient();
+
+        return clientsQuery;
     }
 }

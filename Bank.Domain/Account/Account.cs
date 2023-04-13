@@ -25,17 +25,7 @@ public abstract class Account : Entity
     public decimal Amount { get; protected set; }
 
     /// <summary>
-    /// процентная ставка
-    /// </summary>
-    public InterestRate InterestRate { get; protected set; } = InterestRate.MinRate;
-
-    /// <summary>
-    /// проценты по кредиту
-    /// </summary>
-    public InterestRate LoanInterest { get; protected set; } = InterestRate.MinRate;
-
-    /// <summary>
-    /// период действия счета в месяцах
+    /// дата, до которой действует счет
     /// </summary>
     public DateTime AccountTerm { get; protected set; } = DateTime.MaxValue;
 
