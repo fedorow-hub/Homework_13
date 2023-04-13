@@ -7,7 +7,7 @@ public abstract class Account : Entity
     /// <summary>
     /// идентификационный номер клиента, которому принадлежит счет
     /// </summary>
-    public int ClientId { get; }
+    public long ClientId { get; }
 
     /// <summary>
     /// дата и время создания счета
@@ -44,7 +44,7 @@ public abstract class Account : Entity
     /// </summary>
     public bool IsExistance { get; private set; }
 
-    public Account(int clientId, string currency, decimal amount)        
+    public Account(long clientId, string currency, decimal amount)        
     {
         ClientId = clientId;
         TimeOfCreated = DateTime.Today;
@@ -53,7 +53,7 @@ public abstract class Account : Entity
         IsExistance = true;
     }
 
-    public Account(int id, int clientId, string currency, decimal amount )
+    public Account(int id, long clientId, string currency, decimal amount )
         :base(id)        
     {
         ClientId = clientId;

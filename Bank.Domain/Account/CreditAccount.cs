@@ -1,4 +1,6 @@
-﻿namespace Bank.Domain.Account;
+﻿using Bank.Domain.Root;
+
+namespace Bank.Domain.Account;
 
 public class CreditAccount : Account
 {   
@@ -7,7 +9,7 @@ public class CreditAccount : Account
     /// </summary>
     public decimal MouthlyPayment { get; }
 
-    public CreditAccount(int id, int clientId, string currency, byte termOfMonth, decimal amount) 
+    public CreditAccount(int id, long clientId, string currency, byte termOfMonth, decimal amount) 
         : base(id, clientId, currency, amount)
     {
         AccountTerm = TimeOfCreated.AddMonths(termOfMonth);
@@ -15,7 +17,7 @@ public class CreditAccount : Account
         MouthlyPayment = SetMonthlyPayment(termOfMonth);
     }
 
-    private CreditAccount(int clientId, string currency, byte termOfMonth, decimal amount)
+    private CreditAccount(long clientId, string currency, byte termOfMonth, decimal amount)
         : base(clientId, currency, amount)
     {
         AccountTerm = TimeOfCreated.AddMonths(termOfMonth);
@@ -31,9 +33,13 @@ public class CreditAccount : Account
     /// <param name="termOfMonth"></param>
     /// <param name="amount"></param>
     /// <returns></returns>
-    public static CreditAccount CreateCreditAccount(int clientId, string currency, byte termOfMonth, decimal amount)
+    public static CreditAccount CreateCreditAccount(Client.Client client, string currency, byte termOfMonth, decimal amount)
     {
-        var newAccount = new CreditAccount(clientId, currency, termOfMonth, amount);
+        if(client.TotalIncomePerMounth.Income/2 < amount / termOfMonth)
+        {
+            throw new DomainExeption("Ежемесячные платежи по кредиту превышают половину месячного дохода");
+        }
+        var newAccount = new CreditAccount(client.Id, currency, termOfMonth, amount);
         return newAccount;
     }
 

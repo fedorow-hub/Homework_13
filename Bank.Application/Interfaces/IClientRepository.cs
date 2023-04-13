@@ -10,5 +10,5 @@ public interface IClientRepository
     Task CreateClient(ClientCreateDTO client, CancellationToken cancellationToken);
     Task UpdateClient(ClientUpdateDTO client, CancellationToken cancellationToken);
     Task DeleteClient(long id, CancellationToken cancellationToken); 
-    Task<ClientLookUpDTO> GetListClient(CancellationToken cancellationToken);
+    Task<ClientListVM> GetListClient();
 }
