@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
 
-namespace Bank.Application.Clients.Commands.DeleteClient
+namespace Bank.Application.Clients.Commands.DeleteClient;
+
+public class DeleteClientCommand : IRequest
 {
-    internal class DeleteClientCommand
-    {
-    }
+    public long Id { get; set; }
 }

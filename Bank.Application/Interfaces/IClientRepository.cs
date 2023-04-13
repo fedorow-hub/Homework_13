@@ -1,13 +1,14 @@
 ﻿using Bank.Application.Clients.Commands.CreateClient;
-using System.Collections.Generic;
+using Bank.Application.Clients.Commands.UpdateClient;
+using Bank.Application.Clients.Queries.GetClientList;
+using Bank.Domain.Client;
 
 namespace Bank.Application.Interfaces;
 
 public interface IClientRepository
 {
-    List<Client> Clients { get; set; }
-    Task<long> CreateClient(ClientDetailsDTO client, CancellationToken cancellationToken);
-    Task UpdateClient(ClientDetailsDTO client, CancellationToken cancellationToken);
-    Task DeleteClient(long id);
-    Task SaveChangesAsync();
+    Task CreateClient(ClientCreateDTO client, CancellationToken cancellationToken);
+    Task UpdateClient(ClientUpdateDTO client, CancellationToken cancellationToken);
+    Task DeleteClient(long id, CancellationToken cancellationToken); 
+    Task<ClientLookUpDTO> GetListClient(CancellationToken cancellationToken);
 }
