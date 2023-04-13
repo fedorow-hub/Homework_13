@@ -1,24 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace BankDAL.DataAccess;
 
 public class DataAccessProxy : IDataAccess
 {
     string _path;
-        
+
     string[] _data;
 
     private DataAccess _dataAccess;
 
     public DataAccessProxy(DataAccess dataAccess)
     {
-        _dataAccess= dataAccess;
+        _dataAccess = dataAccess;
         _path = "dataCash.json";
 
         if (File.Exists(_path)) // если файл существует, подгружаем данные
@@ -29,10 +23,10 @@ public class DataAccessProxy : IDataAccess
         // если файл не существует, создаем новый пустой фаил
         File.Create(_path);
     }
-    
+
     public string[] GetAllData()
-    {   
-        if(_data != null)
+    {
+        if (_data != null)
         {
             if (Convert.ToDateTime(_data[0]).ToShortDateString() == DateTime.Now.Date.ToShortDateString())
             {
@@ -50,8 +44,8 @@ public class DataAccessProxy : IDataAccess
             _data = _dataAccess.GetAllData();
             Save();
             return _data;
-        }           
-        
+        }
+
     }
 
     /// <summary>

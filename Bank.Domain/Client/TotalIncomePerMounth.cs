@@ -13,7 +13,7 @@ public class TotalIncomePerMounth : ValueObject
     public static TotalIncomePerMounth SetIncome(string number)
     {        
         bool success = decimal.TryParse(number,  out decimal result);
-        if(success)
+        if(success && result > 0)
         {            
             return new TotalIncomePerMounth(result);
         }
