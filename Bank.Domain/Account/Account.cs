@@ -74,7 +74,7 @@ public abstract class Account : Entity
     /// пополнение счета
     /// </summary>
     /// <param name="money"></param>
-    public void AddMoneyToAccount(decimal money)
+    public virtual void AddMoneyToAccount(decimal money)
     {
         Amount += money;
     }
@@ -83,7 +83,7 @@ public abstract class Account : Entity
     /// снятие денег со счета
     /// </summary>
     /// <param name="money"></param>
-    public void WithdrawalMoneyFromAccount(decimal money)
+    public virtual void WithdrawalMoneyFromAccount(decimal money)
     {
         if (Amount >= money)
         {

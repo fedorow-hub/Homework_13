@@ -7,7 +7,7 @@ public class CreditAccount : Account
     /// <summary>
     /// ежемесячный платеж по кредиту
     /// </summary>
-    public decimal MouthlyPayment { get; }
+    public decimal MouthlyPayment { get; private set; }
 
     /// <summary>
     /// проценты по кредиту
@@ -77,5 +77,19 @@ public class CreditAccount : Account
     public void LoanPayment()
     {
         Amount -= MouthlyPayment;
+    }
+
+    public override void AddMoneyToAccount(decimal money)
+    {
+        Amount -= money;
+        byte remainingMonths = Convert.ToByte(Math.Ceiling(Convert.ToDouble(AccountTerm.Subtract(DateTime.UtcNow).Days/30)));
+        MouthlyPayment = SetMonthlyPayment(remainingMonths);
+    }
+
+    public override void WithdrawalMoneyFromAccount(decimal money)
+    {
+        Amount += money;
+        byte remainingMonths = Convert.ToByte(Math.Ceiling(Convert.ToDouble(AccountTerm.Subtract(DateTime.UtcNow).Days / 30)));
+        MouthlyPayment = SetMonthlyPayment(remainingMonths);
     }
 }

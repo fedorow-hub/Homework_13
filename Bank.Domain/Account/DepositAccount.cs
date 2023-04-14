@@ -57,5 +57,5 @@ public class DepositAccount : Account
     {
         decimal mouthlyPercent = Amount * InterestRate.Id / 100 / 12;
         Amount += mouthlyPercent;
-    }
+    }  
 }

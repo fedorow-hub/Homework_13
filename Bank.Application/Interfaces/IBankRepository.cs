@@ -6,4 +6,5 @@ public interface IBankRepository
 {
     Task Createbank(SomeBank bank);
     Task<SomeBank> GetBank();
+    Task ChangeCapital(SomeBank bank);
 }
