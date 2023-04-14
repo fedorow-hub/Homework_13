@@ -1,4 +1,5 @@
 ﻿using Bank.Application.Interfaces;
+using Bank.Domain.Account;
 using MediatR;
 
 namespace Bank.Application.Accounts.Commands.DeleteAccount;
@@ -13,6 +14,9 @@ internal class DeleteAccountCommandHandler : IRequestHandler<DeleteAccountComman
     }
     public async Task Handle(DeleteAccountCommand request, CancellationToken cancellationToken)
     {
-        await _accountRepository.DeleteAccount(request.Id, request.TypeOfAccount.Name, cancellationToken);        
+        Account concteteAccount = await _accountRepository.GetConcreteAccount(request.Id, request.TypeOfAccount, cancellationToken);
+        concteteAccount.CloseAccount();
+
+        await _accountRepository.SaveChangesAccount(concteteAccount, cancellationToken);        
     }
 }

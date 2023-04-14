@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Accounts\Commands\AddWithdrawalMoney\" />
+    <Folder Include="Accounts\Commands\WithdrawalMoney\" />
     <Folder Include="Clients\Queries\GetClientDetails\" />
   </ItemGroup>
 
