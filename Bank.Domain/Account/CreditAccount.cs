@@ -14,8 +14,8 @@ public class CreditAccount : Account
     /// </summary>
     public InterestRate LoanInterest { get; protected set; }
 
-    public CreditAccount(int id, long clientId, string currency, byte termOfMonth, decimal amount) 
-        : base(id, clientId, currency, amount)
+    public CreditAccount(int id, long clientId, string currency, byte termOfMonth, decimal amount, DateTime timeOfCreated) 
+        : base(id, clientId, currency, amount, timeOfCreated)
     {
         AccountTerm = TimeOfCreated.AddMonths(termOfMonth);
         LoanInterest = SetLoanInterest();

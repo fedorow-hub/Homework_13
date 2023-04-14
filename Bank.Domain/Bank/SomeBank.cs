@@ -1,10 +1,9 @@
-﻿using Bank.Domain.Account;
-using Bank.Domain.Root;
+﻿using Bank.Domain.Root;
 
 namespace Bank.Domain.Bank;
 
-public class Bank : Entity
-{    
+public class SomeBank : Entity
+{
     /// <summary>
     /// название банка
     /// </summary>
@@ -20,31 +19,46 @@ public class Bank : Entity
     /// </summary>
     public decimal Capinal { get; private set; }
 
-    public Bank(long id, string name, decimal capital)
-        :base(id)
+    /// <summary>
+    /// дата создания банка
+    /// </summary>
+    public DateTime DateOfCreation { get; private set; }
+
+    /// <summary>
+    /// одиночный объект банка
+    /// </summary>
+    private static SomeBank uniqueInstanceOfBank;
+
+    public SomeBank(long id, string name, decimal capital, DateTime dateOfCreation)
+        : base(id)
     {
         Name = name;
         Clients = new List<Client.Client>();
         Capinal = capital;
+        DateOfCreation = dateOfCreation;
     }
 
-    private Bank(string name, decimal capital)
+    private SomeBank(string name, decimal capital)
     {
         Name = name;
         Clients = new List<Client.Client>();
         Capinal = capital;
+        DateOfCreation = DateTime.Now;
     }
 
     /// <summary>
-    /// метод создания банка
+    /// метод создания одиночного объекта банка
     /// </summary>
     /// <param name="name"></param>
     /// <param name="capital"></param>
     /// <returns></returns>
-    public static Bank CreateBank(string name, decimal capital)
+    public static SomeBank CreateBank(string name, decimal capital)
     {
-        var newBank = new Bank(name, capital);
-        return newBank;
+        if (uniqueInstanceOfBank == null)
+        {
+            uniqueInstanceOfBank = new SomeBank(name, capital);
+        }
+        return uniqueInstanceOfBank;
     }
 
     /// <summary>

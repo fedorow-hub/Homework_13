@@ -13,6 +13,6 @@ internal class DeleteAccountCommandHandler : IRequestHandler<DeleteAccountComman
     }
     public async Task Handle(DeleteAccountCommand request, CancellationToken cancellationToken)
     {
-        await _accountRepository.DeleteAccount(request.Id, request.TypeOfAccount, cancellationToken);        
+        await _accountRepository.DeleteAccount(request.Id, request.TypeOfAccount.Name, cancellationToken);        
     }
 }

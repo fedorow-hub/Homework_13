@@ -7,10 +7,12 @@ namespace Bank.Application.Accounts.Commands.CreateAccount.CreatePlainAccount;
 public class CreateDepositAccountCommandHandler : IRequestHandler<CreateDepositAccountCommand>
 {
     private readonly IAccountRepository _accountRepository;
+    private readonly IBankRepository _bankRepository;
 
-    public CreateDepositAccountCommandHandler(IAccountRepository accountRepository)
+    public CreateDepositAccountCommandHandler(IAccountRepository accountRepository, IBankRepository bankRepository)
     {
         _accountRepository = accountRepository;
+        _bankRepository = bankRepository;
     }
     public async Task Handle(CreateDepositAccountCommand request, CancellationToken cancellationToken)
     {
@@ -25,7 +27,11 @@ public class CreateDepositAccountCommandHandler : IRequestHandler<CreateDepositA
             TimeOfCreated = depositAccount.TimeOfCreated,
             IsExistance = depositAccount.IsExistance
         };
-        
+
+        var bank = await _bankRepository.GetBank();
+        bank.AddMoneyToCapital(request.Amount);
+
         await _accountRepository.CreateDepositAccount(accountDTO, cancellationToken);
+        await _bankRepository.ChangeCapital(bank);
     }
 }

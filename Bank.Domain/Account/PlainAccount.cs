@@ -1,10 +1,12 @@
-﻿namespace Bank.Domain.Account;
+﻿using Bank.Domain.Root;
+
+namespace Bank.Domain.Account;
 
 public sealed class PlainAccount : Account
 {
     
-    public PlainAccount(int id, long clientId, string currency, decimal amount = 0) 
-        : base(id, clientId, currency, amount)
+    public PlainAccount(int id, long clientId, string currency, DateTime timeOfCreated, decimal amount = 0) 
+        : base(id, clientId, currency, amount, timeOfCreated)
     {        
     }
 
@@ -24,14 +26,5 @@ public sealed class PlainAccount : Account
     {
         var newAccount = new PlainAccount(clientId, currency, amount);
         return newAccount;
-    }
-
-    /// <summary>
-    /// пополнение счета
-    /// </summary>
-    /// <param name="money"></param>
-    public void AddMoneyToAccount(decimal money)
-    {
-        Amount += money;
-    }
+    }    
 }

@@ -43,29 +43,16 @@ public abstract class Account : Entity
         IsExistance = true;
     }
 
-    public Account(int id, long clientId, string currency, decimal amount )
+    public Account(int id, long clientId, string currency, decimal amount, DateTime timeOfCreated)
         :base(id)        
     {
         ClientId = clientId;
-        TimeOfCreated = DateTime.Today;
+        TimeOfCreated = timeOfCreated;
         Currency = Currency.Parse(currency);
         Amount = amount;
         IsExistance = true;
     }     
-
-    /// <summary>
-    /// снятие денег со счета
-    /// </summary>
-    /// <param name="money"></param>
-    public void WithdrawalMoneyFromAccount(decimal money)
-    {
-        if (Amount >= money)
-        {
-            Amount -= money;
-        }
-        else throw new DomainExeption("Недостаточно средств на счете");        
-    }
-
+       
     /// <summary>
     /// закрытие счета
     /// </summary>
@@ -81,5 +68,27 @@ public abstract class Account : Entity
             throw new DomainExeption("На счете имеются денежные средства");
         }        
         IsExistance = false;        
+    }
+
+    /// <summary>
+    /// пополнение счета
+    /// </summary>
+    /// <param name="money"></param>
+    public void AddMoneyToAccount(decimal money)
+    {
+        Amount += money;
+    }
+
+    /// <summary>
+    /// снятие денег со счета
+    /// </summary>
+    /// <param name="money"></param>
+    public void WithdrawalMoneyFromAccount(decimal money)
+    {
+        if (Amount >= money)
+        {
+            Amount -= money;
+        }
+        else throw new DomainExeption("Недостаточно средств на счете");
     }
 }
