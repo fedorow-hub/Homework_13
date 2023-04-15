@@ -1,4 +1,5 @@
-﻿using Bank.Application.Accounts.Commands.CreateAccount.CreateCreditAccount;
+﻿using Bank.Application.Accounts;
+using Bank.Application.Accounts.Commands.CreateAccount.CreateCreditAccount;
 using Bank.Application.Accounts.Commands.CreateAccount.CreatePlainAccount;
 using Bank.Domain.Account;
 
@@ -11,5 +12,7 @@ public interface IAccountRepository
     Task CreateCreditAccount(CreditAccountCreateDTO plainAccount, CancellationToken cancellationToken);    
     Task<Account> GetConcreteAccount(long id, TypeOfAccount typeOfAccount, CancellationToken cancellationToken);
     Task SaveChangesAccount(Account account, CancellationToken cancellationToken);
-    Task TransactionBetweenAccounts(Account accountFrom, Account accountDestination);    
+    Task TransactionBetweenAccounts(Account accountFrom, Account accountDestination);
+    
+    Task<AccountListVM> GetAccountsConcreteClient(long clientId, CancellationToken cancellationToken);
 }
