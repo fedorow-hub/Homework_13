@@ -29,7 +29,7 @@ public class ExchangeRateService : IExchangeRateService
         }
     }
 
-    public string[] GetExchangeRate()
+    private string[] GetAllData()
     {
         string[] data = new string[5];
 
@@ -50,5 +50,45 @@ public class ExchangeRateService : IExchangeRateService
         data[4] = lineWithEuroPreviousRate.Substring(24, 6).Replace(".", ",");
 
         return data;
+    }
+
+    private decimal ParsingData(string value)
+    {
+        bool success = decimal.TryParse(value, out decimal rate);
+        if (success)
+        {
+            return rate;
+        }
+        else throw new Exception("Не удалась конвертация строки в тип decimal");
+    }
+
+    public decimal GetDollarExchangeRate()
+    {
+        string value = GetAllData()[1];
+        return ParsingData(value);        
+    }
+
+    public bool IsUSDRateGrow()
+    {
+        string currentRate = GetAllData()[1];
+        string previousRate = GetAllData()[2];
+        if(ParsingData(currentRate) > ParsingData(previousRate))
+            return true;
+        else return false;
+    }
+
+    public decimal GetEuroExchangeRate()
+    {
+        string value = GetAllData()[3];
+        return ParsingData(value);
+    }
+
+    public bool IsEuroRateGrow()
+    {
+        string currentRate = GetAllData()[3];
+        string previousRate = GetAllData()[4];
+        if (ParsingData(currentRate) > ParsingData(previousRate))
+            return true;
+        else return false;
     }
 }

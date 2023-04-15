@@ -3,6 +3,9 @@ using System.Text.Json;
 
 namespace Bank.DAL.ExchangeRateService;
 
+/// <summary>
+/// временная реализация proxy без записи в кэш
+/// </summary>
 public class ExchangeRateServiceProxy : IExchangeRateService
 {
     string _path;
@@ -25,28 +28,48 @@ public class ExchangeRateServiceProxy : IExchangeRateService
         File.Create(_path);
     }
 
-    public string[] GetExchangeRate()
+    public decimal GetDollarExchangeRate()
     {
-        if (_data != null)
-        {
-            if (Convert.ToDateTime(_data[0]).ToShortDateString() == DateTime.Now.Date.ToShortDateString())
-            {
-                return _data;
-            }
-            else
-            {
-                _data = _exchangeRateService.GetExchangeRate();
-                Save();
-                return _data;
-            }
-        }
-        else
-        {
-            _data = _exchangeRateService.GetExchangeRate();
-            Save();
-            return _data;
-        }
+        return _exchangeRateService.GetDollarExchangeRate();
+    }
 
+    public decimal GetEuroExchangeRate()
+    {
+        return _exchangeRateService.GetEuroExchangeRate();
+    }
+
+    //public string[] GetExchangeRate()
+    //{
+    //    if (_data != null)
+    //    {
+    //        if (Convert.ToDateTime(_data[0]).ToShortDateString() == DateTime.Now.Date.ToShortDateString())
+    //        {
+    //            return _data;
+    //        }
+    //        else
+    //        {
+    //            _data = _exchangeRateService.GetExchangeRate();
+    //            Save();
+    //            return _data;
+    //        }
+    //    }
+    //    else
+    //    {
+    //        _data = _exchangeRateService.GetExchangeRate();
+    //        Save();
+    //        return _data;
+    //    }
+
+    //}
+
+    public bool IsEuroRateGrow()
+    {
+        return _exchangeRateService.IsEuroRateGrow();
+    }
+
+    public bool IsUSDRateGrow()
+    {
+        return _exchangeRateService.IsUSDRateGrow();
     }
 
     /// <summary>

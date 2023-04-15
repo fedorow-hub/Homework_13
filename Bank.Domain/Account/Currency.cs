@@ -20,7 +20,7 @@ public class Currency : Enumeration
         {
             "Dollar" => Dollar,
             "Euro" => Euro,
-            "Plain" => Rubble,
+            "Rubble" => Rubble,
             _ => throw new DomainExeption("Unknown currency")
         };
 }

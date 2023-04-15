@@ -22,7 +22,7 @@ public abstract class Account : Entity
     /// <summary>
     /// курс валюты
     /// </summary>
-    public decimal ExchangeRates { get; protected set; } = 1;
+    public decimal ExchangeRates { get; set; } = 1;
 
     /// <summary>
     /// сумма, лежащая на счете

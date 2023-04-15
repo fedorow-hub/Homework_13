@@ -6,10 +6,7 @@
 [Serializable]
 public class DomainExeption : Exception
 {
-    public DomainExeption()
-    {
-        
-    }
+    public DomainExeption() { }
     public DomainExeption(string description)
         :base(description) { }
 
