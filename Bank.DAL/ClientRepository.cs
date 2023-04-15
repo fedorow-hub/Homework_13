@@ -1,5 +1,6 @@
 ﻿using Bank.Application.Clients.Commands.CreateClient;
 using Bank.Application.Clients.Commands.UpdateClient;
+using Bank.Application.Clients.Queries.GetClientList;
 using Bank.Application.Interfaces;
 
 namespace Bank.DAL;
@@ -17,6 +18,11 @@ public class ClientRepository : IClientRepository
     }
 
     public Task GetListClient(CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<ClientListVM> GetListClient()
     {
         throw new NotImplementedException();
     }

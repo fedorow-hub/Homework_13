@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
 
-namespace Bank.Application.Clients.Queries.GetClientDetails
+namespace Bank.Application.Clients.Queries.GetClientDetails;
+
+public record GetClientDetaialsQuery : IRequest<ClientDetailsVM>
 {
-    internal class GetClientDetaialsQuery
-    {
-    }
+    public long ClientId { get; init; }
 }

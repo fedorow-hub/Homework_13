@@ -1,4 +1,5 @@
-﻿using BankDAL.DataAccess;
+﻿using Bank.DAL.ExchangeRateService;
+using BankDAL.DataAccess;
 using BankDAL.DataOperations;
 using Homework_13.Models.Bank;
 using Homework_13.Models.Client;
@@ -28,11 +29,14 @@ public partial class App : Application
         services.AddSingleton<MainWindowViewModel>();
         services.AddSingleton<LoginWindowViewModel>();
 
-        services.AddSingleton<IDataAccess, DataAccessProxy>();
+        //services.AddSingleton<IDataAccess, DataAccessProxy>();
+        //services.AddSingleton<DataAccess>();
+        services.AddSingleton<IExchangeRateService, ExchangeRateServiceProxy>();
+        services.AddSingleton<ExchangeRateService>();
 
         services.AddSingleton<BankRepository>();
 
-        services.AddSingleton<DataAccess>();
+        
         services.AddSingleton<ClientDAL>();
     }
 

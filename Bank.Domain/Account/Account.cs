@@ -20,6 +20,11 @@ public abstract class Account : Entity
     public Currency Currency { get; }
 
     /// <summary>
+    /// курс валюты
+    /// </summary>
+    public decimal ExchangeRates { get; protected set; } = 1;
+
+    /// <summary>
     /// сумма, лежащая на счете
     /// </summary>
     public decimal Amount { get; protected set; }
@@ -90,5 +95,13 @@ public abstract class Account : Entity
             Amount -= money;
         }
         else throw new DomainExeption("Недостаточно средств на счете");
+    }
+
+    /// <summary>
+    /// установка курса валюты
+    /// </summary>
+    public void SetExchangeRates(decimal currentExchangeRates)
+    {
+        ExchangeRates = currentExchangeRates;
     }
 }

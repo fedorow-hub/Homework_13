@@ -6,10 +6,12 @@ namespace Bank.Application.Accounts.Commands.TransactionBetweenAccounts;
 public class TransactionBetweenAccountCommandHandler : IRequestHandler<TransactionBetweenAccountCommand>
 {
     private readonly IAccountRepository _accountRepository;
+    private readonly IExchangeRateService _exchangeRateService;
 
-    public TransactionBetweenAccountCommandHandler(IAccountRepository accountRepository)
+    public TransactionBetweenAccountCommandHandler(IAccountRepository accountRepository, IExchangeRateService exchangeRateService)
     {
         _accountRepository = accountRepository;
+        _exchangeRateService = exchangeRateService;
     }
     public async Task Handle(TransactionBetweenAccountCommand request, CancellationToken cancellationToken)
     {
