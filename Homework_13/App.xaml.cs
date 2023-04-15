@@ -1,8 +1,8 @@
-﻿using Bank.DAL.ExchangeRateService;
+﻿using Bank.Application.Interfaces;
+using Bank.DAL.ExchangeRateService;
 using BankDAL.DataAccess;
 using BankDAL.DataOperations;
 using Homework_13.Models.Bank;
-using Homework_13.Models.Client;
 using Homework_13.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,22 +21,20 @@ public partial class App : Application
     public static bool IsDesignMode { get; private set; } = true;
 
     private static IHost _host;
-    public static IHost Host => 
+    public static IHost Host =>
         _host ??= Program.CreateHostBuilder(Environment.GetCommandLineArgs()).Build();
     public static void ConfigureServices(HostBuilderContext host, IServiceCollection services)
     {
         //сюда добавляем необходимые сервисы
         services.AddSingleton<MainWindowViewModel>();
         services.AddSingleton<LoginWindowViewModel>();
-
-        //services.AddSingleton<IDataAccess, DataAccessProxy>();
-        //services.AddSingleton<DataAccess>();
+                
         services.AddSingleton<IExchangeRateService, ExchangeRateServiceProxy>();
         services.AddSingleton<ExchangeRateService>();
 
         services.AddSingleton<BankRepository>();
 
-        
+
         services.AddSingleton<ClientDAL>();
     }
 
@@ -57,8 +55,8 @@ public partial class App : Application
         _host = null;
     }
 
-    public static string CurrentDirectory => IsDesignMode 
-        ? Path.GetDirectoryName(GetSourceCodePath()) 
+    public static string CurrentDirectory => IsDesignMode
+        ? Path.GetDirectoryName(GetSourceCodePath())
         : Environment.CurrentDirectory;
 
     private static string GetSourceCodePath([CallerFilePath] string Path = null) => Path;

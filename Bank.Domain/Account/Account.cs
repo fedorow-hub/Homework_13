@@ -48,7 +48,7 @@ public abstract class Account : Entity
         IsExistance = true;
     }
 
-    public Account(int id, long clientId, string currency, decimal amount, DateTime timeOfCreated)
+    public Account(long id, long clientId, string currency, decimal amount, DateTime timeOfCreated)
         :base(id)        
     {
         ClientId = clientId;

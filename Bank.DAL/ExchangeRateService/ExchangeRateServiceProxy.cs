@@ -28,6 +28,11 @@ public class ExchangeRateServiceProxy : IExchangeRateService
         File.Create(_path);
     }
 
+    public string GetDate()
+    {
+        return _exchangeRateService.GetDate();
+    }
+
     public decimal GetDollarExchangeRate()
     {
         return _exchangeRateService.GetDollarExchangeRate();

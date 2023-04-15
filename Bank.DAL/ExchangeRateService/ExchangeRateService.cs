@@ -52,6 +52,11 @@ public class ExchangeRateService : IExchangeRateService
         return data;
     }
 
+    public string GetDate()
+    {
+        return Convert.ToDateTime(GetAllData()[0]).ToShortDateString();
+    }
+
     private decimal ParsingData(string value)
     {
         bool success = decimal.TryParse(value, out decimal rate);

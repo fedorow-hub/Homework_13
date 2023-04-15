@@ -17,6 +17,11 @@ public class ClientRepository : IClientRepository
         throw new NotImplementedException();
     }
 
+    public Task<ClientLookUpDTO> GetClient(long id, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task GetListClient(CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
@@ -28,6 +33,11 @@ public class ClientRepository : IClientRepository
     }
 
     public Task UpdateClient(ClientUpdateDTO client, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    Task<ClientListVM> IClientRepository.GetListClient(CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }

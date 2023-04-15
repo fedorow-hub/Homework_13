@@ -5,10 +5,10 @@ public class DepositAccount : Account
     /// <summary>
     /// процентная ставка
     /// </summary>
-    public InterestRate InterestRate { get; protected set; } 
+    public InterestRate InterestRate { get; protected set; }
 
-    public DepositAccount(int id, long clientId, string currency, byte termOfMonth, decimal amount) 
-        : base(id, clientId, currency, amount)        
+    public DepositAccount(long id, long clientId, string currency, byte termOfMonth, decimal amount, DateTime timeOfCreated) 
+        : base(id, clientId, currency, amount, timeOfCreated)        
     {
         AccountTerm = TimeOfCreated.AddMonths(termOfMonth);
         InterestRate = SetInterestRate(termOfMonth);

@@ -1,12 +1,9 @@
-﻿using BankDAL.DataAccess;
-using BankDAL.DataOperations;
+﻿using Bank.Application.Interfaces;
 using Homework_13.Infrastructure.Commands;
 using Homework_13.Models.Bank;
 using Homework_13.Models.Client;
-using Homework_13.Models.Money;
 using Homework_13.ViewModels.Base;
 using Homework_13.Views;
-using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
@@ -39,32 +36,29 @@ public class MainWindowViewModel : ViewModel
         set => Set(ref clients, value);
     }
 
-    private readonly IDataAccess _dataAccess;
+    private readonly IExchangeRateService _exchangeRateService;
     private readonly BankRepository _bankRepository;
-            
-    public MainWindowViewModel(IDataAccess dataAccess, 
+
+    public MainWindowViewModel(IExchangeRateService exchangeRateService,
         BankRepository bankRepository)
-    {         
-        _dataAccess = dataAccess;
+    {
+        _exchangeRateService = exchangeRateService;
         _bankRepository = bankRepository;
+
         Bank = _bankRepository;
-        
+
         Clients = Bank.Clients;
 
         #region Currency
-        string[] data = _dataAccess.GetAllData();
-        Date = Convert.ToDateTime(data[0]).ToShortDateString();
-        DollarCurrentRate = Convert.ToDecimal(data[1]);
-        Dollar.Rate = DollarCurrentRate;
-        DollarPreviousRate = Convert.ToDecimal(data[2]);
-        EuroCurrentRate = Convert.ToDecimal(data[3]);
-        Euro.Rate = EuroCurrentRate;
-        EuroPreviousRate = Convert.ToDecimal(data[4]);
 
-        IconDollar = GetStileIcon(DollarCurrentRate, DollarPreviousRate).Item1;
-        ColorDollar = GetStileIcon(DollarCurrentRate, DollarPreviousRate).Item2;
-        IconEuro = GetStileIcon(EuroCurrentRate, EuroPreviousRate).Item1;
-        ColorEuro = GetStileIcon(EuroCurrentRate, EuroPreviousRate).Item2;
+        Date = _exchangeRateService.GetDate();
+        DollarCurrentRate = _exchangeRateService.GetDollarExchangeRate();
+        EuroCurrentRate = _exchangeRateService.GetEuroExchangeRate();
+
+        IconDollar = GetStileIcon(_exchangeRateService.IsUSDRateGrow()).Item1;
+        ColorDollar = GetStileIcon(_exchangeRateService.IsUSDRateGrow()).Item2;
+        IconEuro = GetStileIcon(_exchangeRateService.IsEuroRateGrow()).Item1;
+        ColorEuro = GetStileIcon(_exchangeRateService.IsEuroRateGrow()).Item2;
         #endregion
 
         #region commands
@@ -75,7 +69,7 @@ public class MainWindowViewModel : ViewModel
 
         OpenOperationWindowCommand = new LambdaCommand(OnOpenOperationWindowCommandExecute, CanOpenOperationWindowCommandExecute);
         #endregion
-                
+
     }
 
 
@@ -83,23 +77,23 @@ public class MainWindowViewModel : ViewModel
     //{
     //    _clients.GetAllClients();
     //}
-        
+
     /// <summary>
     /// Метод возвращает нужный вид и цвет иконки динамики курса валют
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="obj"></param>
     /// <returns></returns>
-    private (string icon, string color) GetStileIcon(decimal currentRate, decimal previousRate)
+    private (string icon, string color) GetStileIcon(bool isGrow)
     {
         string icon = "";
         string color = "";
-        if (currentRate > previousRate)
+        if (isGrow)
         {
             icon = "Solid_SortUp";
             color = "Green";
         }
-        else if (currentRate < previousRate)
+        else
         {
             icon = "Solid_SortDown";
             color = "Red";
@@ -129,10 +123,10 @@ public class MainWindowViewModel : ViewModel
 
     public ICommand AddClientCommand { get; }
 
-    private bool CanAddClientCommandExecute(object p) => true; 
-    
+    private bool CanAddClientCommandExecute(object p) => true;
+
     private void OnAddClientCommandExecute(object p)
-    {        
+    {
         ClientInfoWindow infoWindow = new ClientInfoWindow();
         ClientInfoViewModel viewModel = new ClientInfoViewModel(new Client(), Bank); ;
         infoWindow.DataContext = viewModel;
