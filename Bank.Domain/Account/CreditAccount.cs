@@ -2,7 +2,7 @@
 
 namespace Bank.Domain.Account;
 
-public class CreditAccount : Account
+public sealed class CreditAccount : Account
 {   
     /// <summary>
     /// ежемесячный платеж по кредиту

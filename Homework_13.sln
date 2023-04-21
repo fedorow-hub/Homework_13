@@ -13,11 +13,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{0CBF0465-5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bank.Domain", "Bank.Domain\Bank.Domain.csproj", "{9DBE0981-ACA0-432A-B224-C1F3EC0D8C2C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bank.Application", "Bank.Application\Bank.Application.csproj", "{01025929-18A0-41AF-8C40-940F7ABAA0DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bank.Application", "Bank.Application\Bank.Application.csproj", "{01025929-18A0-41AF-8C40-940F7ABAA0DA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{38C1E94B-ED26-4015-AADD-AE15FF84F580}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bank.DAL", "Bank.DAL\Bank.DAL.csproj", "{3F7A1601-3733-4EB2-9BA6-DCE0755C16E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bank.DAL", "Bank.DAL\Bank.DAL.csproj", "{3F7A1601-3733-4EB2-9BA6-DCE0755C16E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientForInfrastructure", "ClientForInfrastructure\ClientForInfrastructure.csproj", "{B322DB6E-5433-4401-A962-1B20649936FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +51,10 @@ Global
 		{3F7A1601-3733-4EB2-9BA6-DCE0755C16E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F7A1601-3733-4EB2-9BA6-DCE0755C16E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F7A1601-3733-4EB2-9BA6-DCE0755C16E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B322DB6E-5433-4401-A962-1B20649936FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B322DB6E-5433-4401-A962-1B20649936FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B322DB6E-5433-4401-A962-1B20649936FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B322DB6E-5433-4401-A962-1B20649936FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

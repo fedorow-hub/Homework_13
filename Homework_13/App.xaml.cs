@@ -1,6 +1,6 @@
-﻿using Bank.Application.Interfaces;
+﻿using Bank.Application;
+using Bank.Application.Interfaces;
 using Bank.DAL.ExchangeRateService;
-using BankDAL.DataAccess;
 using BankDAL.DataOperations;
 using Homework_13.Models.Bank;
 using Homework_13.ViewModels;
@@ -26,6 +26,8 @@ public partial class App : Application
     public static void ConfigureServices(HostBuilderContext host, IServiceCollection services)
     {
         //сюда добавляем необходимые сервисы
+        services.AddApplication();
+        
         services.AddSingleton<MainWindowViewModel>();
         services.AddSingleton<LoginWindowViewModel>();
                 

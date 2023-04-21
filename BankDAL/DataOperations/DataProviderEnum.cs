@@ -4,7 +4,8 @@
 public enum DataProviderEnum
 {
     SqlServer,
-    #if PC
-    OleDb
-    #endif        
-}    
+#if PC
+    OleDb,
+#endif
+    None
+}

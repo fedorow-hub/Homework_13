@@ -2,7 +2,7 @@
 
 namespace Bank.Domain.Account;
 
-public class TypeOfAccount : Enumeration
+public sealed class TypeOfAccount : Enumeration
 {
     public static TypeOfAccount Deposit = new(1, "Deposit");
 

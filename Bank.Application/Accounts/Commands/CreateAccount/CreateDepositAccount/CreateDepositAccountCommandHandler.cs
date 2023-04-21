@@ -14,7 +14,7 @@ public class CreateDepositAccountCommandHandler : IRequestHandler<CreateDepositA
         _accountRepository = accountRepository;
         _bankRepository = bankRepository;
     }
-    public async Task Handle(CreateDepositAccountCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(CreateDepositAccountCommand request, CancellationToken cancellationToken)
     {
         var depositAccount = DepositAccount.CreateDepositAccount(request.ClientId, request.Currency, request.TermOfMonth, request.Amount);
         var accountDTO = new DepositAccountCreateDTO
@@ -33,5 +33,6 @@ public class CreateDepositAccountCommandHandler : IRequestHandler<CreateDepositA
 
         await _accountRepository.CreateDepositAccount(accountDTO, cancellationToken);
         await _bankRepository.ChangeCapital(bank);
+        return Unit.Value;
     }
 }

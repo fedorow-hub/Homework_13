@@ -1,6 +1,6 @@
 ﻿namespace Bank.Domain.Client;
 
-public class Client : Entity
+public sealed class Client : Entity
 {   
 
     public string Firstname { get; }

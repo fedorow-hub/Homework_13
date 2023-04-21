@@ -2,7 +2,7 @@
 
 namespace Bank.Domain.Account;
 
-public class InterestRate : Enumeration
+public sealed class InterestRate : Enumeration
 {
     public static InterestRate MinRate = new(0, "0%");
 

@@ -11,8 +11,9 @@ public class DeleteClientCommandHandler : IRequestHandler<DeleteClientCommand>
     {
         _clientsDbContext = clientsDbContext;
     }
-    public async Task Handle(DeleteClientCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(DeleteClientCommand request, CancellationToken cancellationToken)
     {
         await _clientsDbContext.DeleteClient(request.Id, cancellationToken);
+        return Unit.Value;
     }
 }

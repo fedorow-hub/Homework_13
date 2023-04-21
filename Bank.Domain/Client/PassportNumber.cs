@@ -1,6 +1,6 @@
 ﻿namespace Bank.Domain.Client;
 
-public class PassportNumber : ValueObject
+public sealed class PassportNumber : ValueObject
 {    
     public const int MinNumberValue = 100;
     public const int MaxNumberValue = 999999;

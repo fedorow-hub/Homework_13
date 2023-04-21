@@ -14,7 +14,6 @@ public static class Program
         app.Run();
     }
 
-
     public static IHostBuilder CreateHostBuilder(string[] Args) =>
         Host.CreateDefaultBuilder(Args)
             .UseContentRoot(App.CurrentDirectory)

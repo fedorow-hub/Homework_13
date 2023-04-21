@@ -2,7 +2,7 @@
 
 namespace Bank.Domain.Client;
 
-public class TotalIncomePerMounth : ValueObject
+public sealed class TotalIncomePerMounth : ValueObject
 {
     public decimal Income { get; }
     private TotalIncomePerMounth(decimal income)
@@ -28,6 +28,5 @@ public class TotalIncomePerMounth : ValueObject
     public override string ToString()
     {
         return $"{Income}";
-    }
-    
+    }    
 }

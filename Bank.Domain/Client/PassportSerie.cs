@@ -1,6 +1,6 @@
 ﻿namespace Bank.Domain.Client;
 
-public class PassportSerie : ValueObject
+public sealed class PassportSerie : ValueObject
 {
     public string Serie { get; }
     private PassportSerie(string serie)

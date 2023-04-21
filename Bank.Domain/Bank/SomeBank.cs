@@ -2,7 +2,7 @@
 
 namespace Bank.Domain.Bank;
 
-public class SomeBank : Entity
+public sealed class SomeBank : Entity
 {
     /// <summary>
     /// название банка

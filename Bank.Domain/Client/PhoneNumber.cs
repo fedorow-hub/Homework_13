@@ -2,7 +2,7 @@
 
 namespace Bank.Domain.Client;
 
-public class PhoneNumber : ValueObject
+public sealed class PhoneNumber : ValueObject
 {
     public string Number { get; }
     private PhoneNumber(string number)

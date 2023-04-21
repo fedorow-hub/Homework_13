@@ -17,7 +17,7 @@ public abstract class ValueObject
     }
 
     protected abstract IEnumerable<Object> GetEqalityComponents();
-    public override bool Equals(object obj)
+    public sealed override bool Equals(object obj)
     {
         if(obj == null || obj.GetType() != GetType())
         {
@@ -28,9 +28,13 @@ public abstract class ValueObject
         return GetEqalityComponents().SequenceEqual(other.GetEqalityComponents());
     }
 
-    public override int GetHashCode()
+    public sealed override int GetHashCode()
         => GetEqalityComponents()
         .Select(x => x != null ? x.GetHashCode() : 0)
         .Aggregate((x, y) => x ^ y);
-        
+
+    public override string ToString()
+    {
+        return base.ToString();
+    }
 }

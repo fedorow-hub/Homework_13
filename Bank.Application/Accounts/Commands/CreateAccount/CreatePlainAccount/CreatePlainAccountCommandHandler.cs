@@ -12,7 +12,7 @@ public class CreatePlainAccountCommandHandler : IRequestHandler<CreatePlainAccou
     {
         _accountRepository = accountRepository;
     }
-    public async Task Handle(CreatePlainAccountCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(CreatePlainAccountCommand request, CancellationToken cancellationToken)
     {
         var plainAccount = PlainAccount.CreatePlaneAccount(request.ClientId, request.Currency, request.Amount);
         var accountDTO = new PlainAccountCreateDTO
@@ -22,5 +22,8 @@ public class CreatePlainAccountCommandHandler : IRequestHandler<CreatePlainAccou
             Amount = plainAccount.Amount,
         };
         await _accountRepository.CreatePlainAccount(accountDTO, cancellationToken);
+        return Unit.Value;
     }
+
+
 }

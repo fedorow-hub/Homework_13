@@ -12,11 +12,12 @@ internal class DeleteAccountCommandHandler : IRequestHandler<DeleteAccountComman
     {
         _accountRepository = accountRepository;
     }
-    public async Task Handle(DeleteAccountCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(DeleteAccountCommand request, CancellationToken cancellationToken)
     {
         Account concteteAccount = await _accountRepository.GetConcreteAccount(request.Id, request.TypeOfAccount, cancellationToken);
         concteteAccount.CloseAccount();
 
-        await _accountRepository.SaveChangesAccount(concteteAccount, cancellationToken);        
+        await _accountRepository.SaveChangesAccount(concteteAccount, cancellationToken);
+        return Unit.Value;
     }
 }

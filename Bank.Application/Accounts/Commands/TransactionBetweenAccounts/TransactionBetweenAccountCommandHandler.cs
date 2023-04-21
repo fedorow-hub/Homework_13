@@ -14,7 +14,7 @@ public class TransactionBetweenAccountCommandHandler : IRequestHandler<Transacti
         _accountRepository = accountRepository;
         _exchangeRateService = exchangeRateService;
     }
-    public async Task Handle(TransactionBetweenAccountCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(TransactionBetweenAccountCommand request, CancellationToken cancellationToken)
     {
         var accountFrom = await _accountRepository.GetConcreteAccount(request.FromAccountId, request.TypeOfAccountFrom, cancellationToken);
         if (accountFrom.Currency.Name == "Dollar")
@@ -29,7 +29,7 @@ public class TransactionBetweenAccountCommandHandler : IRequestHandler<Transacti
         else accountFrom.ExchangeRates = 1;
 
         accountFrom.WithdrawalMoneyFromAccount(request.Amount);
-        
+
         var accountDestination = await _accountRepository.GetConcreteAccount(request.DestinationAccountId, request.TypeOfAccountDestination, cancellationToken);
 
         if (accountDestination.Currency.Name == "Dollar")
@@ -43,22 +43,24 @@ public class TransactionBetweenAccountCommandHandler : IRequestHandler<Transacti
         }
         else accountDestination.ExchangeRates = 1;
 
-        if(accountFrom.Currency.Name == "Rubble")
+        if (accountFrom.Currency.Name == "Rubble")
         {
-            if(accountDestination.Currency.Name == "Rubble")
+            if (accountDestination.Currency.Name == "Rubble")
             {
                 accountDestination.AddMoneyToAccount(request.Amount);
-            } else
+            }
+            else
             {
                 accountDestination.AddMoneyToAccount(request.Amount / accountDestination.ExchangeRates);
             }
-        } else if(accountFrom.Currency.Name == "Dollar")
+        }
+        else if (accountFrom.Currency.Name == "Dollar")
         {
             if (accountDestination.Currency.Name == "Dollar")
             {
                 accountDestination.AddMoneyToAccount(request.Amount);
             }
-            else if(accountDestination.Currency.Name == "Rubble")
+            else if (accountDestination.Currency.Name == "Rubble")
             {
                 accountDestination.AddMoneyToAccount(request.Amount * accountDestination.ExchangeRates);
             }
@@ -80,9 +82,8 @@ public class TransactionBetweenAccountCommandHandler : IRequestHandler<Transacti
             else
             {
                 accountDestination.AddMoneyToAccount(request.Amount * accountFrom.ExchangeRates / accountDestination.ExchangeRates);
-            }
+            }            
         }
-
-        await _accountRepository.TransactionBetweenAccounts(accountFrom, accountDestination);        
+        return Unit.Value;
     }
 }

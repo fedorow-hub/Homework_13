@@ -1,6 +1,6 @@
 ﻿namespace Bank.Domain.Account;
 
-public class DepositAccount : Account
+public sealed class DepositAccount : Account
 {
     /// <summary>
     /// процентная ставка

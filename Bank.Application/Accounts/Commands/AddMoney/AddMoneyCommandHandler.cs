@@ -15,7 +15,7 @@ public class AddMoneyCommandHandler : IRequestHandler<AddMoneyCommand>
         _accountRepository = accountRepository;
         _bankRepository = bankRepository;
     }
-    public async Task Handle(AddMoneyCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(AddMoneyCommand request, CancellationToken cancellationToken)
     {
         Account concreteAccount = await _accountRepository.GetConcreteAccount(request.Id, request.AccountType, cancellationToken);
         concreteAccount.AddMoneyToAccount(request.Amount);
@@ -25,5 +25,8 @@ public class AddMoneyCommandHandler : IRequestHandler<AddMoneyCommand>
 
         await _accountRepository.SaveChangesAccount(concreteAccount, cancellationToken);
         await _bankRepository.ChangeCapital(bank);
+        return Unit.Value;
     }
+
+
 }

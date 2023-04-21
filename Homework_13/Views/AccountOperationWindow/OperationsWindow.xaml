@@ -57,7 +57,7 @@
                             <DropShadowEffect ShadowDepth="2"/>
                         </fa:ImageAwesome.Effect>
                     </fa:ImageAwesome>
-                    <TextBlock Text="Открытие депозита" FontSize="14"/>
+                    <TextBlock Text="Открытие счета" FontSize="14"/>
                 </StackPanel>
             </Button>
             <Button Margin="5" Height="40"  
@@ -69,7 +69,7 @@
                             <DropShadowEffect ShadowDepth="2"/>
                         </fa:ImageAwesome.Effect>
                     </fa:ImageAwesome>
-                    <TextBlock Text="Закрытие депозита" FontSize="14"/>
+                    <TextBlock Text="Закрытие счета" FontSize="14"/>
                 </StackPanel>
             </Button>
             <Button Margin="5" Height="40"  

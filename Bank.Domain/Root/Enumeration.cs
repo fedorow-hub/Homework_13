@@ -12,7 +12,7 @@ public abstract class Enumeration : IComparable
         Id = id;
     }
 
-    public override string ToString()
+    public sealed override string ToString()
     {
         return Name;
     }
@@ -24,7 +24,7 @@ public abstract class Enumeration : IComparable
         .Select(f=>f.GetValue(null))
         .Cast<T>();
 
-    public override bool Equals(object? obj)
+    public sealed override bool Equals(object? obj)
     {
         if(obj is not Enumeration otherValue)
         {
@@ -40,7 +40,7 @@ public abstract class Enumeration : IComparable
         return Name == other.Name && Id == other.Id;
     }
 
-    public override int GetHashCode()
+    public sealed override int GetHashCode()
     {
         return HashCode.Combine(Name, Id);
     }

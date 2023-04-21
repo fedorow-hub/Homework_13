@@ -18,9 +18,7 @@ public class MainWindowViewModel : ViewModel
 
     #region Currency
     public decimal DollarCurrentRate { get; private set; }
-    public decimal DollarPreviousRate { get; private set; }
     public decimal EuroCurrentRate { get; private set; }
-    public decimal EuroPreviousRate { get; private set; }
 
     public string IconDollar { get; private set; }
     public string ColorDollar { get; private set; }
@@ -69,14 +67,7 @@ public class MainWindowViewModel : ViewModel
 
         OpenOperationWindowCommand = new LambdaCommand(OnOpenOperationWindowCommandExecute, CanOpenOperationWindowCommandExecute);
         #endregion
-
     }
-
-
-    //private ObservableCollection<ClientAccessInfo> GetClients()
-    //{
-    //    _clients.GetAllClients();
-    //}
 
     /// <summary>
     /// Метод возвращает нужный вид и цвет иконки динамики курса валют

@@ -2,11 +2,14 @@
 using Bank.Application.Clients.Commands.UpdateClient;
 using Bank.Application.Clients.Queries.GetClientList;
 using Bank.Application.Interfaces;
+using Microsoft.Data.Sqlite;
 
 namespace Bank.DAL;
 
 public class ClientRepository : IClientRepository
 {
+    private SqliteConnection DBConnection = new SqliteConnection("");
+
     public Task CreateClient(ClientCreateDTO client, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();

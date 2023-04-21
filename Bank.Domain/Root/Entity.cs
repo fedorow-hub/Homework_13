@@ -21,7 +21,7 @@ public abstract class Entity
         => Id == default;
     protected Entity() { }
     protected Entity(long id) => Id = id;
-    public override bool Equals(object obj)
+    public sealed override bool Equals(object obj)
     {
         if (obj is not Entity entity)        
             return false;
@@ -42,6 +42,6 @@ public abstract class Entity
     public static bool operator !=(Entity a, Entity b)
         => !(a == b);
 
-    public override int GetHashCode()
+    public sealed override int GetHashCode()
         => (GetType().ToString() + Id).GetHashCode();
 }

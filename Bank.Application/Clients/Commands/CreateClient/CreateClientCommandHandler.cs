@@ -12,7 +12,7 @@ public class CreateClientCommandHandler : IRequestHandler<CreateClientCommand>
         _clientsDbContext = clientsDbContext;
     }
 
-    public async Task Handle(CreateClientCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(CreateClientCommand request, CancellationToken cancellationToken)
     {
         var client = new ClientCreateDTO
         {
@@ -25,6 +25,7 @@ public class CreateClientCommandHandler : IRequestHandler<CreateClientCommand>
             TotalIncomePerMounth = request.TotalIncomePerMounth
         };
 
-        await _clientsDbContext.CreateClient(client, cancellationToken);       
+        await _clientsDbContext.CreateClient(client, cancellationToken); 
+        return Unit.Value;
     }
 }

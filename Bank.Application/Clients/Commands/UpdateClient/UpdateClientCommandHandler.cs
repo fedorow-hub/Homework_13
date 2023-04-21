@@ -12,7 +12,7 @@ public class UpdateClientCommandHandler : IRequestHandler<UpdateClientCommand>
         _clientsDbContext = clientsDbContext;
     }
 
-    public async Task Handle(UpdateClientCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(UpdateClientCommand request, CancellationToken cancellationToken)
     {
         var client = new ClientUpdateDTO
         {
@@ -27,5 +27,6 @@ public class UpdateClientCommandHandler : IRequestHandler<UpdateClientCommand>
         };
 
         await _clientsDbContext.UpdateClient(client, cancellationToken);
+        return Unit.Value;
     }
 }

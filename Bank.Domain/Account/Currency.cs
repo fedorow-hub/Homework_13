@@ -2,7 +2,7 @@
 
 namespace Bank.Domain.Account;
 
-public class Currency : Enumeration
+public sealed class Currency : Enumeration
 {
     public static Currency Dollar = new(1, "Dollar");
 
