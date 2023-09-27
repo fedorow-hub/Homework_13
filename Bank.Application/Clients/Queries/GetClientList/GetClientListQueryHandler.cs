@@ -12,9 +12,9 @@ public class GetClientListQueryHandler : IRequestHandler<GetClientListQuery, Cli
         _clientsDbContext = clientsDbContext;
     }
 
-    public async Task<ClientListVM> Handle(GetClientListQuery request, CancellationToken cancellationToken)
+    public Task<ClientListVM> Handle(GetClientListQuery request, CancellationToken cancellationToken)
     {
-        var clientsQuery = await _clientsDbContext.GetListClient(cancellationToken);
+        var clientsQuery = _clientsDbContext.GetListClient(cancellationToken);        
 
         return clientsQuery;
     }
