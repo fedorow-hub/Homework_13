@@ -6,7 +6,7 @@ namespace Bank.Application.Clients.Commands.UpdateClient;
 
 public class ClientUpdateDTO
 {
-    public long Id { get; set; }
+    public Guid Id { get; set; }
     public string Firstname { get; set; }
 
     public string Lastname { get; set; }

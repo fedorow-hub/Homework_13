@@ -12,11 +12,19 @@ public class CreateBankCommandHandler : IRequestHandler<CreateBankCommand>
     {
         _bankRepository = bankRepository;
     }
-    public async Task<Unit> Handle(CreateBankCommand request, CancellationToken cancellationToken)
+    //public async Task<Unit> Handle(CreateBankCommand request, CancellationToken cancellationToken)
+    //{
+    //    var bank = SomeBank.CreateBank(request.Name, request.Capital);
+
+    //    await _bankRepository.Createbank(bank);
+    //    return Unit.Value;
+    //}
+
+    public async Task Handle(CreateBankCommand request, CancellationToken cancellationToken)
     {
         var bank = SomeBank.CreateBank(request.Name, request.Capital);
 
         await _bankRepository.Createbank(bank);
-        return Unit.Value;
+        return;
     }
 }

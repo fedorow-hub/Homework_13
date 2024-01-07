@@ -12,7 +12,24 @@ public class CreateClientCommandHandler : IRequestHandler<CreateClientCommand>
         _clientsDbContext = clientsDbContext;
     }
 
-    public async Task<Unit> Handle(CreateClientCommand request, CancellationToken cancellationToken)
+    //public async Task<Unit> Handle(CreateClientCommand request, CancellationToken cancellationToken)
+    //{
+    //    var client = new ClientCreateDTO
+    //    {
+    //        Firstname = request.Firstname,
+    //        Lastname = request.Lastname,
+    //        Patronymic = request.Patronymic,
+    //        PhoneNumber = request.PhoneNumber,
+    //        PassportSerie = request.PassportSerie,
+    //        PassportNumber = request.PassportNumber,
+    //        TotalIncomePerMounth = request.TotalIncomePerMounth
+    //    };
+
+    //    await _clientsDbContext.CreateClient(client, cancellationToken); 
+    //    return Unit.Value;
+    //}
+
+    public async Task Handle(CreateClientCommand request, CancellationToken cancellationToken)
     {
         var client = new ClientCreateDTO
         {
@@ -25,7 +42,7 @@ public class CreateClientCommandHandler : IRequestHandler<CreateClientCommand>
             TotalIncomePerMounth = request.TotalIncomePerMounth
         };
 
-        await _clientsDbContext.CreateClient(client, cancellationToken); 
-        return Unit.Value;
+        await _clientsDbContext.CreateClient(client, cancellationToken);
+        return;
     }
 }

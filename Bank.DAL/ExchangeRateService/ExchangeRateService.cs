@@ -4,7 +4,12 @@ namespace Bank.DAL.ExchangeRateService;
 
 public class ExchangeRateService : IExchangeRateService
 {
-    private const string data_url = "https://www.cbr-xml-daily.ru/daily_json.js";
+    private static string data_url;
+
+    public ExchangeRateService(string urlExchangeService)
+    {
+        data_url = urlExchangeService;
+    }
 
     private static async Task<Stream> GetDataStream()
     {

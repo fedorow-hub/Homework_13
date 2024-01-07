@@ -1,5 +1,6 @@
-﻿using Homework_13.Models.Bank;
-using Homework_13.Models.Client;
+﻿using Bank.Domain.Client;
+using Homework_13.Models.Bank;
+//using Homework_13.Models.Client;
 using Homework_13.ViewModels.Base;
 
 namespace Homework_13.ViewModels;

@@ -7,22 +7,12 @@ public abstract class Account : Entity
     /// <summary>
     /// идентификационный номер клиента, которому принадлежит счет
     /// </summary>
-    public long ClientId { get; }
+    public Guid ClientId { get; }
 
     /// <summary>
     /// дата и время создания счета
     /// </summary>
     public DateTime TimeOfCreated { get; }
-
-    /// <summary>
-    /// валюта счета
-    /// </summary>
-    public Currency Currency { get; }
-
-    /// <summary>
-    /// курс валюты
-    /// </summary>
-    public decimal ExchangeRates { get; set; } = 1;
 
     /// <summary>
     /// сумма, лежащая на счете
@@ -39,21 +29,19 @@ public abstract class Account : Entity
     /// </summary>
     public bool IsExistance { get; private set; }
 
-    public Account(long clientId, string currency, decimal amount)        
+    public Account(Guid clientId, decimal amount)        
     {
         ClientId = clientId;
         TimeOfCreated = DateTime.Today;
-        Currency = Currency.Parse(currency);
         Amount = amount;
         IsExistance = true;
     }
 
-    public Account(long id, long clientId, string currency, decimal amount, DateTime timeOfCreated)
+    public Account(Guid id, Guid clientId, decimal amount, DateTime timeOfCreated)
         :base(id)        
     {
         ClientId = clientId;
         TimeOfCreated = timeOfCreated;
-        Currency = Currency.Parse(currency);
         Amount = amount;
         IsExistance = true;
     }     
@@ -95,13 +83,5 @@ public abstract class Account : Entity
             Amount -= money;
         }
         else throw new DomainExeption("Недостаточно средств на счете");
-    }
-
-    /// <summary>
-    /// установка курса валюты
-    /// </summary>
-    public void SetExchangeRates(decimal currentExchangeRates)
-    {
-        ExchangeRates = currentExchangeRates;
     }
 }

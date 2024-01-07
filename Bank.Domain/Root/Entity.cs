@@ -5,7 +5,7 @@ namespace Bank.Domain;
 public abstract class Entity
 {
     private int? _requestedHashCode;
-    public virtual long Id { get; private set; }
+    public virtual Guid Id { get; private set; }
 
     private readonly List<INotification> _domainEvents = new();
 
@@ -20,7 +20,7 @@ public abstract class Entity
     public bool IsTransient()
         => Id == default;
     protected Entity() { }
-    protected Entity(long id) => Id = id;
+    protected Entity(Guid id) => Id = id;
     public sealed override bool Equals(object obj)
     {
         if (obj is not Entity entity)        

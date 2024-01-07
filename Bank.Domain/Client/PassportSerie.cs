@@ -17,7 +17,7 @@ public sealed class PassportSerie : ValueObject
         return new PassportSerie(serie);
     }
         
-    private static bool IsSeries(string value)
+    public static bool IsSeries(string value)
     {        
         if (value.Length < 2 || value.Length > 4)
         {

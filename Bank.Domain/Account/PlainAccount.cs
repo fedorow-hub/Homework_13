@@ -2,13 +2,13 @@
 
 public sealed class PlainAccount : Account
 {
-    public PlainAccount(int id, long clientId, string currency, DateTime timeOfCreated, decimal amount = 0)
-        : base(id, clientId, currency, amount, timeOfCreated)
+    public PlainAccount(Guid id, Guid clientId, DateTime timeOfCreated, decimal amount = 0)
+        : base(id, clientId, amount, timeOfCreated)
     {
     }
 
-    private PlainAccount(long clientId, string currency, decimal amount = 0)
-        : base(clientId, currency, amount)
+    private PlainAccount(Guid clientId, decimal amount = 0)
+        : base(clientId, amount)
     {
     }
 
@@ -19,9 +19,9 @@ public sealed class PlainAccount : Account
     /// <param name="currency"></param>
     /// <param name="amount"></param>
     /// <returns></returns>
-    public static PlainAccount CreatePlaneAccount(long clientId, string currency, decimal amount = 0)
+    public static PlainAccount CreatePlaneAccount(Guid clientId, decimal amount = 0)
     {
-        var newAccount = new PlainAccount(clientId, currency, amount);
+        var newAccount = new PlainAccount(clientId, amount);
         return newAccount;
     }
 }

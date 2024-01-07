@@ -4,7 +4,7 @@ namespace Bank.Application.Accounts.Commands.CreateAccount.CreatePlainAccount;
 
 public record CreatePlainAccountCommand : IRequest
 {
-    public long ClientId { get; init; }
+    public Guid ClientId { get; init; }
 
     public string Currency { get; init; }
 

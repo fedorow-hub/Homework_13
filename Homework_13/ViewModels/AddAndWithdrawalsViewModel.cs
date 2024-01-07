@@ -1,8 +1,9 @@
 ﻿using Homework_13.Infrastructure.Commands;
 using Homework_13.Models.Bank;
-using Homework_13.Models.Client;
+//using Homework_13.Models.Client;
 using Homework_13.ViewModels.Base;
 using System.Windows.Input;
+using Bank.Domain.Client;
 
 namespace Homework_13.ViewModels;
 

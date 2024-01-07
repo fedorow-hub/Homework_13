@@ -27,16 +27,9 @@ public sealed class SomeBank : Entity
     /// <summary>
     /// одиночный объект банка
     /// </summary>
-    private static SomeBank uniqueInstanceOfBank;
+    private static volatile SomeBank uniqueInstanceOfBank;
 
-    public SomeBank(long id, string name, decimal capital, DateTime dateOfCreation)
-        : base(id)
-    {
-        Name = name;
-        Clients = new List<Client.Client>();
-        Capinal = capital;
-        DateOfCreation = dateOfCreation;
-    }
+    private static readonly object _syncRoot = new object();
 
     private SomeBank(string name, decimal capital)
     {
@@ -56,7 +49,11 @@ public sealed class SomeBank : Entity
     {
         if (uniqueInstanceOfBank == null)
         {
-            uniqueInstanceOfBank = new SomeBank(name, capital);
+            lock (_syncRoot)
+            {
+                uniqueInstanceOfBank = new SomeBank(name, capital);
+            }
+            
         }
         return uniqueInstanceOfBank;
     }
@@ -82,5 +79,15 @@ public sealed class SomeBank : Entity
             Capinal -= money;
         }
         else throw new DomainExeption("Недостаточно средств банка");
+    }
+
+    public void AddClient(Client.Client client)
+    {
+        Clients.Add(client);
+    }
+
+    public void RemoveClient(Client.Client client)
+    {
+        Clients.Remove(client);
     }
 }

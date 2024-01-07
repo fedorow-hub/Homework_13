@@ -5,7 +5,7 @@ namespace Bank.Application.Accounts.Commands.CreateAccount.CreatePlainAccount;
 
 public record DepositAccountCreateDTO
 {
-    public long ClientId { get; init; }
+    public Guid ClientId { get; init; }
 
     public string Currency { get; init; }
 

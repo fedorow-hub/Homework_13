@@ -2,7 +2,7 @@
 
 public record PlainAccountCreateDTO
 {
-    public long ClientId { get; init; }
+    public Guid ClientId { get; init; }
 
     public string Currency { get; init; }
 

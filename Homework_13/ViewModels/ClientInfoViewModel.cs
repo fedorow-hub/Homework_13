@@ -1,8 +1,12 @@
-﻿using Homework_13.Infrastructure;
+﻿using Bank.Application.Clients.Commands.CreateClient;
+using Bank.Application.Clients.Commands.UpdateClient;
+using Bank.Application.Interfaces;
+using Bank.Domain.Client;
+using Homework_13.Infrastructure;
 using Homework_13.Infrastructure.Commands;
 using Homework_13.Models.Bank;
-using Homework_13.Models.Client;
 using Homework_13.ViewModels.Base;
+using MediatR;
 using System;
 using System.Windows;
 using System.Windows.Input;
@@ -11,17 +15,19 @@ namespace Homework_13.ViewModels;
 
 public class ClientInfoViewModel : ViewModel
 {
+    private IMediator _mediator;
     public Client currentClient;
     private readonly BankRepository bank;
     
     public ClientInfoViewModel() { }
 
-    public ClientInfoViewModel(Client client, BankRepository bank)
+    public ClientInfoViewModel(Client client, BankRepository bank, IMediator mediator)
     {
+        _mediator = mediator;
         this.currentClient = client;
         this.bank = bank;
 
-        FillFields(currentClient);
+        FillFields(client);
         CheckSaveClient();
 
         OutCommand = new LambdaCommand(OnOutCommandExecute, CanOutCommandExecute);
@@ -32,7 +38,7 @@ public class ClientInfoViewModel : ViewModel
     /// Заполнение данных
     /// </summary>
     /// <param name="clientInfo"></param>
-    private void FillFields(Client clientInfo)
+    private void FillFields(Bank.Domain.Client.Client clientInfo)
     {
         if (clientInfo is null)
             return;
@@ -52,11 +58,19 @@ public class ClientInfoViewModel : ViewModel
     private void CheckSaveClient()
     {        
         EnableSaveClient = _borderFirstName != InputValueValidationEnum.Error
+                        && _firstname != ""
                         && _borderLastName != InputValueValidationEnum.Error
+                        && _lastname != ""
                         && _borderPatronymic != InputValueValidationEnum.Error
+                        && _patronymic != ""
                         && _borderPassportSerie != InputValueValidationEnum.Error
+                        && _passportSerie != ""
                         && _borderPassportNumber != InputValueValidationEnum.Error
-                        && _borderPhoneNumber != InputValueValidationEnum.Error;
+                        && _passportNumber != ""
+                        && _borderPhoneNumber != InputValueValidationEnum.Error
+                        && _phoneNumber != ""
+                        && _borderTotalIncomePerMonth != InputValueValidationEnum.Error
+                        && _totalIncomePerMonth != "";
     }
 
     /// <summary>
@@ -183,7 +197,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _phoneNumber, value);
-            BorderPhoneNumber = InputHighlighting(_enablePhoneNumber, Models.Client.PhoneNumber.IsPhoneNumber(_phoneNumber));
+            BorderPhoneNumber = InputHighlighting(_enablePhoneNumber, Bank.Domain.Client.PhoneNumber.IsPhoneNumber(_phoneNumber));
         }
     }
 
@@ -215,7 +229,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _passportSerie, value);
-            BorderPassportSerie = InputHighlighting(_enablePassportData, Models.Client.PassportSerie.IsSeries(_passportSerie));
+            BorderPassportSerie = InputHighlighting(_enablePassportData, Bank.Domain.Client.PassportSerie.IsSeries(_passportSerie));
         }
     }
 
@@ -226,7 +240,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _passportNumber, value);
-            BorderPassportNumber = InputHighlighting(_enablePassportData, Models.Client.PassportNumber.IsNumber(_passportNumber));
+            BorderPassportNumber = InputHighlighting(_enablePassportData, Bank.Domain.Client.PassportNumber.IsNumber(_passportNumber));
         }
     }
 
@@ -261,6 +275,39 @@ public class ClientInfoViewModel : ViewModel
 
     #endregion
 
+    #region TotalIncomePerMonth
+    private string _totalIncomePerMonth;
+
+    public string TotalIncomePerMonth
+    {
+        get => _totalIncomePerMonth;
+        set
+        {
+            Set(ref _totalIncomePerMonth, value);
+            BorderTotalIncomePerMonth = InputHighlighting(_enableTotalIncomePerMonth, TotalIncomePerMounth.IsIncome(_totalIncomePerMonth));
+        }
+    }
+
+    private bool _enableTotalIncomePerMonth;
+    public bool EnableTotalIncomePerMonth
+    {
+        get => _enablePhoneNumber;
+        set => Set(ref _enablePhoneNumber, value);
+    }
+
+    private InputValueValidationEnum _borderTotalIncomePerMonth;
+    public InputValueValidationEnum BorderTotalIncomePerMonth
+    {
+        get => _borderTotalIncomePerMonth;
+        set
+        {
+            Set(ref _borderTotalIncomePerMonth, value);
+            CheckSaveClient();
+        }
+    }
+
+    #endregion
+
     #endregion      
 
     #region Commands
@@ -284,19 +331,39 @@ public class ClientInfoViewModel : ViewModel
 
     private bool CanSaveCommandExecute(object p) => true;
 
-    private void OnSaveCommandExecute(object p)
+    private async void OnSaveCommandExecute(object p)
     {
-        var client = new Client(_firstname, _lastname, _patronymic,
-            new PhoneNumber(_phoneNumber), new PassportSerie(_passportSerie), new PassportNumber(int.Parse(_passportNumber)));
-
         if (currentClient.Id == Guid.Empty) // новый клиент
         {
-            bank.AddClient(client);
+            var command = new CreateClientCommand
+            {
+                Firstname = _firstname,
+                Lastname = _lastname,
+                Patronymic = _patronymic,
+                PhoneNumber = _phoneNumber,
+                PassportSerie = _passportSerie,
+                PassportNumber = _passportNumber,
+                TotalIncomePerMounth = Convert.ToDecimal(_totalIncomePerMonth)
+            };
+            await _mediator.Send(command);
+            //bank.AddClient(client);
         }
         else
         {
-            client.Id = currentClient.Id;
-            bank.EditClient(client);
+            var command = new UpdateClientCommand
+            {
+                Id = currentClient.Id,
+                Firstname = _firstname,
+                Lastname = _lastname,
+                Patronymic = _patronymic,
+                PhoneNumber = _phoneNumber,
+                PassportSerie = _passportSerie,
+                PassportNumber = _passportNumber,
+                TotalIncomePerMounth = Convert.ToDecimal(_totalIncomePerMonth)
+            };
+            await _mediator.Send(command);
+            
+            //bank.EditClient(client);
         }
 
         if (p is Window window)

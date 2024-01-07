@@ -14,16 +14,16 @@ public sealed class CreditAccount : Account
     /// </summary>
     public InterestRate LoanInterest { get; protected set; }
 
-    public CreditAccount(int id, long clientId, string currency, byte termOfMonth, decimal amount, DateTime timeOfCreated) 
-        : base(id, clientId, currency, amount, timeOfCreated)
+    public CreditAccount(Guid id, Guid clientId, byte termOfMonth, decimal amount, DateTime timeOfCreated) 
+        : base(id, clientId, amount, timeOfCreated)
     {
         AccountTerm = TimeOfCreated.AddMonths(termOfMonth);
         LoanInterest = SetLoanInterest();
         MouthlyPayment = SetMonthlyPayment(termOfMonth);
     }
 
-    private CreditAccount(long clientId, string currency, byte termOfMonth, decimal amount)
-        : base(clientId, currency, amount)
+    private CreditAccount(Guid clientId, byte termOfMonth, decimal amount)
+        : base(clientId, amount)
     {
         AccountTerm = TimeOfCreated.AddMonths(termOfMonth);
         LoanInterest = SetLoanInterest();
@@ -38,13 +38,13 @@ public sealed class CreditAccount : Account
     /// <param name="termOfMonth"></param>
     /// <param name="amount"></param>
     /// <returns></returns>
-    public static CreditAccount CreateCreditAccount(Client.Client client, string currency, byte termOfMonth, decimal amount)
+    public static CreditAccount CreateCreditAccount(Client.Client client, byte termOfMonth, decimal amount)
     {
         if(client.TotalIncomePerMounth.Income/2 < amount / termOfMonth)
         {
             throw new DomainExeption("Ежемесячные платежи по кредиту превышают половину месячного дохода");
         }
-        var newAccount = new CreditAccount(client.Id, currency, termOfMonth, amount);
+        var newAccount = new CreditAccount(client.Id, termOfMonth, amount);
         return newAccount;
     }
 
@@ -61,22 +61,7 @@ public sealed class CreditAccount : Account
 
     private InterestRate SetLoanInterest()
     {
-        if (Currency == Currency.Rubble )
-        {
-            return InterestRate.MaxRate;
-        }
-        else
-        {
-            return InterestRate.MiddleRate;
-        }        
-    }
-
-    /// <summary>
-    /// метод ежемесячного платежа по кредиту
-    /// </summary>
-    public void LoanPayment()
-    {
-        Amount -= MouthlyPayment;
+        return InterestRate.MaxRate;
     }
 
     public override void AddMoneyToAccount(decimal money)

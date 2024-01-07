@@ -15,7 +15,20 @@ public class WithdrawalMoneyFromAccounCommandHandler : IRequestHandler<Withdrawa
         _accountRepository = accountRepository;
         _bankRepository = bankRepository;
     }
-    public async Task<Unit> Handle(WithdrawalMoneyFromAccountCommand request, CancellationToken cancellationToken)
+    //public async Task<Unit> Handle(WithdrawalMoneyFromAccountCommand request, CancellationToken cancellationToken)
+    //{
+    //    Account concreteAccount = await _accountRepository.GetConcreteAccount(request.Id, request.AccountType, cancellationToken);
+    //    concreteAccount.WithdrawalMoneyFromAccount(request.Amount);
+
+    //    SomeBank bank = await _bankRepository.GetBank();
+    //    bank.WithdrawalMoneyFromCapital(request.Amount);
+
+    //    await _accountRepository.SaveChangesAccount(concreteAccount, cancellationToken);
+    //    await _bankRepository.ChangeCapital(bank);
+    //    return Unit.Value;
+    //}
+
+    public async Task Handle(WithdrawalMoneyFromAccountCommand request, CancellationToken cancellationToken)
     {
         Account concreteAccount = await _accountRepository.GetConcreteAccount(request.Id, request.AccountType, cancellationToken);
         concreteAccount.WithdrawalMoneyFromAccount(request.Amount);
@@ -25,6 +38,6 @@ public class WithdrawalMoneyFromAccounCommandHandler : IRequestHandler<Withdrawa
 
         await _accountRepository.SaveChangesAccount(concreteAccount, cancellationToken);
         await _bankRepository.ChangeCapital(bank);
-        return Unit.Value;
+        return;
     }
 }

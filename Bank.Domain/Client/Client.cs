@@ -1,13 +1,12 @@
 ﻿namespace Bank.Domain.Client;
 
 public sealed class Client : Entity
-{   
-
-    public string Firstname { get; }
+{  
+    public string Firstname { get; private set; }
 
     public string Lastname { get; private set; }
 
-    public string Patronymic { get; }
+    public string Patronymic { get; private set; }
 
     public PhoneNumber PhoneNumber { get; private set; }
 
@@ -17,7 +16,11 @@ public sealed class Client : Entity
 
     public TotalIncomePerMounth TotalIncomePerMounth { get; private set; }
 
-    public Client(long id, string firstname, string lastname, string patronymic, string phoneNumber, 
+    public List<Account.Account> Accounts { get; private set; }
+
+    public Client() { }
+
+    public Client(Guid id, string firstname, string lastname, string patronymic, string phoneNumber, 
         string seriePassport, string numberPassport, string totalIncome)
         :base(id)
     {        
@@ -27,19 +30,18 @@ public sealed class Client : Entity
         PhoneNumber = PhoneNumber.SetNumber(phoneNumber);
         PassportSerie = PassportSerie.SetSerie(seriePassport);
         PassportNumber = PassportNumber.SetNumber(numberPassport);
-        TotalIncomePerMounth = TotalIncomePerMounth.SetIncome(totalIncome);        
+        TotalIncomePerMounth = TotalIncomePerMounth.SetIncome(totalIncome);
+        Accounts = new List<Account.Account>();
     }
 
     /// <summary>
-    /// метод редактирования данных клиента
+    /// метод добавления нового счета клиенту
     /// </summary>
-    /// <param name="client"></param>
-    public void ChangeInfoClient(Client client)
-    {        
-        Lastname = client.Lastname;        
-        PhoneNumber = client.PhoneNumber;
-        PassportSerie = client.PassportSerie;
-        PassportNumber = client.PassportNumber;
-        TotalIncomePerMounth = client.TotalIncomePerMounth;        
+    /// <param name="account"></param>
+    public bool AddAccountToClient(Account.Account account)
+    {
+        //здесь можно реализовать логику ограничения на создание нового счета
+        Accounts.Add(account);
+        return true;
     }
 }

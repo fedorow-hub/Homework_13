@@ -19,9 +19,11 @@ public class ClientDetailsVM : IMapWith<Client>
 
     public string PassportNumber { get; set; }
 
-    public List<Account> Accounts { get; set; } = new List<Account>();
+    public string TotalIncomePerMounth { get; set; }
 
-public void Mapping(Profile profile)
+    public List<Account> Accounts { get; set; }
+
+    public void Mapping(Profile profile)
     {
         profile.CreateMap<Client, ClientDetailsVM>()
             .ForMember(clientVm => clientVm.Firstname,
@@ -35,6 +37,11 @@ public void Mapping(Profile profile)
             .ForMember(clientVm => clientVm.PassportSerie,
                 opt => opt.MapFrom(client => client.PassportSerie.Serie))
             .ForMember(clientVm => clientVm.PassportNumber,
-                opt => opt.MapFrom(client => client.PassportNumber.Number));
+                opt => opt.MapFrom(client => client.PassportNumber.Number))
+            .ForMember(clientVm => clientVm.TotalIncomePerMounth,
+                opt => opt.MapFrom(client => client.TotalIncomePerMounth))
+            .ForMember(clientVm => clientVm.Accounts,
+                opt => opt.MapFrom(client => client.Accounts));
+
     }
 }

@@ -8,7 +8,7 @@
         xmlns:vm="clr-namespace:Homework_13.ViewModels" 
         xmlns:c="clr-namespace:Homework_13.Infrastructure.Convertors"
         mc:Ignorable="d"
-        Title="Карта клиента" Height="350" Width="600" WindowStartupLocation="CenterScreen"
+        Title="Карта клиента" Height="390" Width="605" WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
     <Window.DataContext>
         <vm:ClientInfoViewModel />
@@ -26,6 +26,7 @@
         </StackPanel.Resources>
         <Grid>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -70,6 +71,11 @@
                      Text="{Binding PassportNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </Border>
             </StackPanel>
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="Месячный доход:" Margin="10,0" FontSize="20" Foreground="Gray"/>
+            <Border Grid.Row="5" Grid.Column="1" Margin="0,5" Style="{StaticResource BorderToTextBox}" BorderBrush="{Binding BorderTotalIncomePerMonth, Converter={StaticResource InputValueValidationConvertor}}">
+                <TextBox Width="450" Cursor="Arrow" FontSize="18" 
+                Text="{Binding TotalIncomePerMonth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </Border>
         </Grid>
         <StackPanel Orientation="Horizontal" Width="320" Margin="5,20">
             <Button Content="Сохранить" Margin="0,0,20,0" Width="150"

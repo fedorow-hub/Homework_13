@@ -1,4 +1,5 @@
 ﻿using Homework_13.Infrastructure.Commands;
+using Homework_13.Models.Bank;
 using Homework_13.ViewModels.Base;
 using System.Windows;
 using System.Windows.Input;

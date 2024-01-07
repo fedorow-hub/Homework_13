@@ -4,7 +4,7 @@ namespace Bank.Application.Clients.Commands.UpdateClient;
 
 public record UpdateClientCommand : IRequest
 {
-    public long Id { get; init; }
+    public Guid Id { get; init; }
 
     public string Firstname { get; init; }
 

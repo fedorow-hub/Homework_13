@@ -6,9 +6,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Homework_13"
         xmlns:fa="http://schemas.fontawesome.com/icons/"
-        xmlns:vm="clr-namespace:Homework_13.ViewModels" d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
+        xmlns:vm="clr-namespace:Homework_13.ViewModels" 
+        d:DataContext="{Binding MainWindowModel, Source={StaticResource Locator}}"
         mc:Ignorable="d"
-        Title="Bank" Height="464" Width="950" WindowStartupLocation="CenterScreen"
+        Title="{Binding Path=Title}" Height="464" Width="950" WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
    
     <DockPanel Margin="0,0,0,-6">

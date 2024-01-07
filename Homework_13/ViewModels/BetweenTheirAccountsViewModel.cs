@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Bank.Domain.Client;
 
-using Homework_13.Models.Client;
+//using Homework_13.Models.Client;
 
 namespace Homework_13.ViewModels
 {

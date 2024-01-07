@@ -1,12 +1,13 @@
-﻿using BankDAL.DataOperations;
+﻿
 using Homework_13.Infrastructure.Commands;
 using Homework_13.Models.Bank;
-using Homework_13.Models.Client;
+//using Homework_13.Models.Client;
 using Homework_13.ViewModels.Base;
 using Homework_13.Views.AccountOperationWindow.Pages;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Bank.Domain.Client;
 
 namespace Homework_13.ViewModels;
 

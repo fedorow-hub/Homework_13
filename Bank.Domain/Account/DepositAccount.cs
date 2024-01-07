@@ -7,18 +7,18 @@ public sealed class DepositAccount : Account
     /// </summary>
     public InterestRate InterestRate { get; protected set; }
 
-    public DepositAccount(long id, long clientId, string currency, byte termOfMonth, decimal amount, DateTime timeOfCreated) 
-        : base(id, clientId, currency, amount, timeOfCreated)        
+    public DepositAccount(Guid id, Guid clientId, byte termOfMonth, decimal amount, DateTime timeOfCreated) 
+        : base(id, clientId, amount, timeOfCreated)        
     {
         AccountTerm = TimeOfCreated.AddMonths(termOfMonth);
-        InterestRate = SetInterestRate(termOfMonth);
+        InterestRate = SetInterestRate();
     }
 
-    private DepositAccount(long clientId, string currency, byte termOfMonth, decimal amount)
-        : base(clientId, currency, amount)
+    private DepositAccount(Guid clientId, byte termOfMonth, decimal amount)
+        : base(clientId, amount)
     {
         AccountTerm = TimeOfCreated.AddMonths(termOfMonth);
-        InterestRate = SetInterestRate(termOfMonth);
+        InterestRate = SetInterestRate();
     }
 
     /// <summary>
@@ -29,9 +29,9 @@ public sealed class DepositAccount : Account
     /// <param name="termOfMonth"></param>
     /// <param name="amount"></param>
     /// <returns></returns>
-    public static DepositAccount CreateDepositAccount(long clientId, string currency, byte termOfMonth, decimal amount)
+    public static DepositAccount CreateDepositAccount(Guid clientId, byte termOfMonth, decimal amount)
     {
-        var newAccount = new DepositAccount(clientId, currency, termOfMonth, amount);
+        var newAccount = new DepositAccount(clientId, termOfMonth, amount);
         return newAccount;
     }
 
@@ -40,13 +40,9 @@ public sealed class DepositAccount : Account
     /// </summary>
     /// <param name="termOfMonth">срок действия счета в месяцах</param>
     /// <returns></returns>
-    private InterestRate SetInterestRate(byte termOfMonth)
+    private InterestRate SetInterestRate()
     {
-        if(Currency == Currency.Rubble && termOfMonth >= 12)
-        {
-            return InterestRate.MaxRate;
-        }        
-        return InterestRate.MiddleRate;                
+        return InterestRate.MaxRate;
     }
     
     /// <summary>

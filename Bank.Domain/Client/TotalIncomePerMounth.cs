@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace Bank.Domain.Client;
+﻿namespace Bank.Domain.Client;
 
 public sealed class TotalIncomePerMounth : ValueObject
 {
@@ -11,14 +9,32 @@ public sealed class TotalIncomePerMounth : ValueObject
     }
 
     public static TotalIncomePerMounth SetIncome(string number)
-    {        
-        bool success = decimal.TryParse(number,  out decimal result);
-        if(success && result > 0)
-        {            
+    {
+        bool success = decimal.TryParse(number, out decimal result);
+        if (success && result > 0)
+        {
             return new TotalIncomePerMounth(result);
         }
         throw new ArgumentException($"Сумма \"{nameof(number)}\" не является корректной суммой дохода");
-    }           
+    }
+
+
+    public static bool IsIncome(string value)
+    {
+        int number;
+
+        if (!int.TryParse(value, out number))
+            return false;
+
+        if (number < 0)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+
 
     protected override IEnumerable<object> GetEqalityComponents()
     {
@@ -28,5 +44,5 @@ public sealed class TotalIncomePerMounth : ValueObject
     public override string ToString()
     {
         return $"{Income}";
-    }    
+    }
 }

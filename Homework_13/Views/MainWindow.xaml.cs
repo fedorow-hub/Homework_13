@@ -1,4 +1,5 @@
-﻿using Homework_13.Models.Client;
+﻿//using Homework_13.Models.Client;
+using Bank.Domain.Client;
 using System;
 using System.Windows;
 using System.Windows.Controls;

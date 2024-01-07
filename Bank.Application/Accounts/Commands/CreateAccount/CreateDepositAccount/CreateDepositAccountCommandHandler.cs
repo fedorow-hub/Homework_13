@@ -14,13 +14,34 @@ public class CreateDepositAccountCommandHandler : IRequestHandler<CreateDepositA
         _accountRepository = accountRepository;
         _bankRepository = bankRepository;
     }
-    public async Task<Unit> Handle(CreateDepositAccountCommand request, CancellationToken cancellationToken)
+    //public async Task<Unit> Handle(CreateDepositAccountCommand request, CancellationToken cancellationToken)
+    //{
+    //    var depositAccount = DepositAccount.CreateDepositAccount(request.ClientId, request.Currency, request.TermOfMonth, request.Amount);
+    //    var accountDTO = new DepositAccountCreateDTO
+    //    {
+    //        ClientId = depositAccount.ClientId,
+    //        Currency = depositAccount.Currency.Name,
+    //        Amount = depositAccount.Amount,
+    //        AccountTerm = depositAccount.AccountTerm,
+    //        InterestRate = depositAccount.InterestRate.Name,
+    //        TimeOfCreated = depositAccount.TimeOfCreated,
+    //        IsExistance = depositAccount.IsExistance
+    //    };
+
+    //    var bank = await _bankRepository.GetBank();
+    //    bank.AddMoneyToCapital(request.Amount);
+
+    //    await _accountRepository.CreateDepositAccount(accountDTO, cancellationToken);
+    //    await _bankRepository.ChangeCapital(bank);
+    //    return Unit.Value;
+    //}
+
+    public async Task Handle(CreateDepositAccountCommand request, CancellationToken cancellationToken)
     {
-        var depositAccount = DepositAccount.CreateDepositAccount(request.ClientId, request.Currency, request.TermOfMonth, request.Amount);
+        var depositAccount = DepositAccount.CreateDepositAccount(request.ClientId, request.TermOfMonth, request.Amount);
         var accountDTO = new DepositAccountCreateDTO
         {
             ClientId = depositAccount.ClientId,
-            Currency = depositAccount.Currency.Name,
             Amount = depositAccount.Amount,
             AccountTerm = depositAccount.AccountTerm,
             InterestRate = depositAccount.InterestRate.Name,
@@ -33,6 +54,6 @@ public class CreateDepositAccountCommandHandler : IRequestHandler<CreateDepositA
 
         await _accountRepository.CreateDepositAccount(accountDTO, cancellationToken);
         await _bankRepository.ChangeCapital(bank);
-        return Unit.Value;
+        return;
     }
 }

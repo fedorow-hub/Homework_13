@@ -1,7 +1,9 @@
 ﻿using Bank.Application.Clients.Commands.CreateClient;
 using Bank.Application.Clients.Commands.UpdateClient;
+using Bank.Application.Clients.Queries.GetClientDetails;
 using Bank.Application.Clients.Queries.GetClientList;
 using Bank.Application.Interfaces;
+using Bank.Domain.Client;
 using Microsoft.Data.Sqlite;
 
 namespace Bank.DAL;
@@ -15,12 +17,12 @@ public class ClientRepository : IClientRepository
         throw new NotImplementedException();
     }
 
-    public Task DeleteClient(long id, CancellationToken cancellationToken)
+    public Task DeleteClient(Guid id, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
 
-    public Task<ClientLookUpDTO> GetClient(long id, CancellationToken cancellationToken)
+    public Task<ClientDetailsVM> GetClient(Guid id, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }

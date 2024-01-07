@@ -2,12 +2,10 @@
 using Bank.Application.Interfaces;
 using Homework_13.Infrastructure.Commands;
 using Homework_13.Models.Bank;
-using Homework_13.Models.Client;
 using Homework_13.ViewModels.Base;
 using Homework_13.Views;
+using Bank.Domain.Client;
 using MediatR;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,8 +16,7 @@ namespace Homework_13.ViewModels;
 public class MainWindowViewModel : ViewModel
 {
     private IMediator _mediator;
-    public BankRepository Bank { get; private set; }
-
+    //public BankRepository Bank { get; private set; }
     public string Date { get; private set; }
 
     #region Currency
@@ -43,12 +40,15 @@ public class MainWindowViewModel : ViewModel
     private readonly IExchangeRateService _exchangeRateService;
     private readonly BankRepository _bankRepository;
 
+    public string Title { get; set; }
+
     public MainWindowViewModel(IExchangeRateService exchangeRateService,
         BankRepository bankRepository, IMediator mediator)
     {
         _exchangeRateService = exchangeRateService;
         _bankRepository = bankRepository;
         _mediator = mediator;
+        Title = "Альфа Банк";
 
         //Bank = _bankRepository;
         
@@ -76,10 +76,10 @@ public class MainWindowViewModel : ViewModel
         #endregion
     }
 
-    private Task<ClientListVM> GetAllClients()
+    private async Task<ClientListVM> GetAllClients()
     {
         var query = new GetClientListQuery();
-        var result = _mediator.Send(query);
+        var result = await _mediator.Send(query);
 
         return result;
     }
@@ -134,7 +134,7 @@ public class MainWindowViewModel : ViewModel
     private void OnAddClientCommandExecute(object p)
     {
         ClientInfoWindow infoWindow = new ClientInfoWindow();
-        ClientInfoViewModel viewModel = new ClientInfoViewModel(new Client(), Bank); ;
+        ClientInfoViewModel viewModel = new ClientInfoViewModel(new Client(), _bankRepository, _mediator);
         infoWindow.DataContext = viewModel;
         infoWindow.Show();
     }
@@ -155,9 +155,9 @@ public class MainWindowViewModel : ViewModel
 
     private void OnDeleteClientCommandExecute(object p)
     {
-        if (SelectedClient is null) return;
+        //if (SelectedClient is null) return;
 
-        Bank.DeleteClient(SelectedClient);
+        //Bank.DeleteClient(SelectedClient);
     }
     #endregion
 
@@ -177,7 +177,7 @@ public class MainWindowViewModel : ViewModel
         if (SelectedClient is null) return;
 
         ClientInfoWindow infoWindow = new ClientInfoWindow();
-        ClientInfoViewModel viewModel = new ClientInfoViewModel(SelectedClient, Bank);
+        ClientInfoViewModel viewModel = new ClientInfoViewModel(SelectedClient, _bankRepository, _mediator);
         infoWindow.DataContext = viewModel;
         infoWindow.Show();
     }
@@ -199,7 +199,7 @@ public class MainWindowViewModel : ViewModel
         if (SelectedClient is null) return;
 
         OperationsWindow operationWindow = new OperationsWindow();
-        OperationsWindowViewModel viewModel = new OperationsWindowViewModel(SelectedClient, Bank, this);
+        OperationsWindowViewModel viewModel = new OperationsWindowViewModel(SelectedClient, _bankRepository, this);
         operationWindow.DataContext = viewModel;
         operationWindow.Show();
 
