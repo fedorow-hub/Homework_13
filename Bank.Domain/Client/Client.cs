@@ -41,6 +41,39 @@ public sealed class Client : Entity
         Bank = bank;
     }
 
+    #region Методы замены полей класса
+    public void ChangeFirstname(string name)
+    {
+        Firstname = Firstname.SetName(name);
+    }
+    public void ChangeLastname(string name)
+    {
+        Lastname = Lastname.SetName(name);
+    }
+    public void ChangePatronymic(string name)
+    {
+        Patronymic = Patronymic.SetName(name);
+    }
+    public void ChangePhoneNumber(string number)
+    {
+        PhoneNumber = PhoneNumber.SetNumber(number);
+    }
+    public void ChangePassportSerie(string number)
+    {
+        PassportSerie = PassportSerie.SetSerie(number);
+    }
+    public void ChangePassportNumber(string number)
+    {
+        PassportNumber = PassportNumber.SetNumber(number);
+    }
+    public void ChangeTotalIncomePerMounth(string number)
+    {
+        TotalIncomePerMounth = TotalIncomePerMounth.SetIncome(number);
+    }
+
+    #endregion
+
+
     /// <summary>
     /// метод добавления нового счета клиенту
     /// </summary>

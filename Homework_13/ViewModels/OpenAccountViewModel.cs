@@ -1,28 +1,24 @@
 ﻿using Bank.Domain.Client;
-using Homework_13.Models.Bank;
-//using Homework_13.Models.Client;
 using Homework_13.ViewModels.Base;
 
 namespace Homework_13.ViewModels;
 
-public class OpenDepositViewModel : ViewModel
+public class OpenAccountViewModel : ViewModel
 {
     private Client _currentClient;
-    private BankRepository _bank;
 
     public Client CurrentClient
     {
         get => _currentClient;
         set => Set(ref _currentClient, value);
     }
-    public OpenDepositViewModel()
+    public OpenAccountViewModel()
 	{
 
 	}
 
-	public OpenDepositViewModel(Client CurrentClient, BankRepository bank)
+	public OpenAccountViewModel(Client CurrentClient)
 	{
         _currentClient = CurrentClient;
-        _bank = bank;
     }
 }

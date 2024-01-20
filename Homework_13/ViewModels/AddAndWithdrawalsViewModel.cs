@@ -1,18 +1,16 @@
-﻿using Homework_13.Infrastructure.Commands;
-using Homework_13.Models.Bank;
-//using Homework_13.Models.Client;
+﻿using Bank.Application.Clients.Queries.GetClientList;
+using Bank.Domain.Client;
+using Homework_13.Infrastructure.Commands;
 using Homework_13.ViewModels.Base;
 using System.Windows.Input;
-using Bank.Domain.Client;
 
 namespace Homework_13.ViewModels;
 
 public class AddAndWithdrawalsViewModel : ViewModel
 {
-    private Client _currentClient;
-    //private BankRepository _bank;
+    private ClientLookUpDTO _currentClient;
 
-    public Client CurrentClient
+    public ClientLookUpDTO CurrentClient
     {
         get => _currentClient;
         set => Set(ref _currentClient, value);
@@ -22,10 +20,9 @@ public class AddAndWithdrawalsViewModel : ViewModel
     {
 
     }
-    public AddAndWithdrawalsViewModel(Client CurrentClient)
+    public AddAndWithdrawalsViewModel(ClientLookUpDTO CurrentClient)
     {
         _currentClient = CurrentClient;
-        //_bank = bank;
 
         OpenAccountCommand = new LambdaCommand(OnOpenAccountCommandExecute, CanOpenAccountCommandExecute);
     }
@@ -39,7 +36,7 @@ public class AddAndWithdrawalsViewModel : ViewModel
 
     private void OnOpenAccountCommandExecute(object p)
     {
-        
+
     }
     #endregion
 

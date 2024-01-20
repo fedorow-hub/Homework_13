@@ -1,20 +1,18 @@
 ﻿
 using Homework_13.Infrastructure.Commands;
-using Homework_13.Models.Bank;
-//using Homework_13.Models.Client;
 using Homework_13.ViewModels.Base;
 using Homework_13.Views.AccountOperationWindow.Pages;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Bank.Domain.Client;
+using Bank.Application.Clients.Queries.GetClientList;
 
 namespace Homework_13.ViewModels;
 
 public class OperationsWindowViewModel : ViewModel
 {
-    private readonly Client _currentClient;
-    //private readonly BankRepository _bank;
+    private readonly ClientLookUpDTO _currentClient;
     private readonly MainWindowViewModel _mainWindowViewModel;
 
     public Client CurrentClient { get; set; }
@@ -25,7 +23,7 @@ public class OperationsWindowViewModel : ViewModel
     {
 
     }
-    public OperationsWindowViewModel(Client currentClient, 
+    public OperationsWindowViewModel(ClientLookUpDTO currentClient, 
         MainWindowViewModel mainWindowViewModel)
     {
         //_clients = clients;
@@ -36,7 +34,7 @@ public class OperationsWindowViewModel : ViewModel
         #region Pages
         _addAndWithdrawals = new AddAndWithdrawalsPage();
         _betweenTheirAccounts = new BetweenTheirAccountPage();
-        _openDeposit = new OpenDepositPage();
+        _openDeposit = new OpenAccountPage();
 
         CurrentPage = new EmptyPage();
         #endregion
@@ -44,7 +42,7 @@ public class OperationsWindowViewModel : ViewModel
         ExitCommand = new LambdaCommand(OnExitCommandExecute, CanExitCommandExecute);
         AddAndWithdrawalsCommand = new LambdaCommand(OnAddAndWithdrawalsCommandExecuted, CanAddAndWithdrawalsCommandExecute);
         BetweenTheirAccountsCommand = new LambdaCommand(OnBetweenTheirAccountsCommandExecuted, CanBetweenTheirAccountsCommandExecute);
-        OpenDepositCommand = new LambdaCommand(OnOpenDepositCommandExecuted, CanOpenDepositCommandViewExecute);
+        OpenAccountCommand = new LambdaCommand(OnOpenAccountCommandExecuted, CanOpenAccountCommandExecute);
     }
 
     #region Pages
@@ -97,23 +95,20 @@ public class OperationsWindowViewModel : ViewModel
     #endregion
 
 
-    #region OpenDepositCommand
-    public ICommand OpenDepositCommand { get; }
-    private void OnOpenDepositCommandExecuted(object p)
+    #region OpenAccountCommand
+    public ICommand OpenAccountCommand { get; }
+    private void OnOpenAccountCommandExecuted(object p)
     {
         CurrentPage = _openDeposit;
         _addAndWithdrawals.DataContext = new AddAndWithdrawalsViewModel(_currentClient);
     }
-    private bool CanOpenDepositCommandViewExecute(object p)
+    private bool CanOpenAccountCommandExecute(object p)
     {
         if (CurrentPage == _openDeposit)
             return false;
         return true;
     }
     #endregion
-    
-
-
 
     #region ExitCommand
     public ICommand ExitCommand { get; }

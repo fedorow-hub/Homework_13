@@ -4,7 +4,6 @@ namespace Bank.Domain;
 
 public abstract class Entity
 {
-    //private int? _requestedHashCode;
     public virtual Guid Id { get; }
 
     private readonly List<INotification> _domainEvents = new();

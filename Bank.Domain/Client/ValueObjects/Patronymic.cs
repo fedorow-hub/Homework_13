@@ -1,43 +1,42 @@
-﻿namespace Bank.Domain.Client.ValueObjects
+﻿namespace Bank.Domain.Client.ValueObjects;
+
+public class Patronymic : ValueObject
 {
-    public class Patronymic : ValueObject
+    public string Name { get; }
+
+    private Patronymic(string name)
     {
-        public string Name { get; }
+        Name = name;
+    }
 
-        private Patronymic(string name)
+    public static Patronymic SetName(string name)
+    {
+        if (IsName(name))
         {
-            Name = name;
+            return new Patronymic(name);
         }
+        throw new ArgumentException($"Отчество \"{nameof(name)}\" не корректно");
+    }
 
-        public static Patronymic SetName(string name)
+    public static bool IsName(string name)
+    {
+        if(name.Length > 0)
         {
-            if (IsName(name))
+            if (char.IsUpper(name[0]) && name.Length > 2)
             {
-                return new Patronymic(name);
+                return true;
             }
-            throw new ArgumentException($"Отчество \"{nameof(name)}\" не корректно");
-        }
+        }            
+        return false;
+    }
 
-        public static bool IsName(string name)
-        {
-            if(name.Length > 0)
-            {
-                if (char.IsUpper(name[0]) && name.Length > 2)
-                {
-                    return true;
-                }
-            }            
-            return false;
-        }
+    protected override IEnumerable<object> GetEqalityComponents()
+    {
+        yield return Name;
+    }
 
-        protected override IEnumerable<object> GetEqalityComponents()
-        {
-            yield return Name;
-        }
-
-        public override string ToString()
-        {
-            return $"{Name}";
-        }
+    public override string ToString()
+    {
+        return $"{Name}";
     }
 }

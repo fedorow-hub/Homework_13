@@ -3,14 +3,13 @@ using Bank.Domain.Client;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace Bank.Application.Interfaces
+namespace Bank.Application.Interfaces;
+
+public interface IApplicationDbContext
 {
-    public interface IApplicationDbContext
-    {
-        DbSet<SomeBank> Bank { get; set; }
+    DbSet<SomeBank> Bank { get; set; }
 
-        DbSet<Client> Clients { get; set; }
+    DbSet<Client> Clients { get; set; }
 
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
-    }
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

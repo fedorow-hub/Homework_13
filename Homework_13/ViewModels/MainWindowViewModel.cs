@@ -1,16 +1,17 @@
 ﻿using Bank.Application.Bank.Commands;
+using Bank.Application.Clients.Commands.CreateClient;
+using Bank.Application.Clients.Commands.DeleteClient;
 using Bank.Application.Clients.Queries.GetClientList;
 using Bank.Application.Interfaces;
-using Bank.DAL;
 using Bank.Domain.Bank;
 using Bank.Domain.Client;
+using Bank.Domain.Client.ValueObjects;
 using Homework_13.Infrastructure.Commands;
 using Homework_13.ViewModels.Base;
 using Homework_13.Views;
 using MediatR;
 using System;
 using System.Collections.ObjectModel;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -41,16 +42,24 @@ public class MainWindowViewModel : ViewModel
     }
 
     private readonly IExchangeRateService _exchangeRateService;
-    //private readonly BankRepository _bankRepository;
 
-    public string Title { get; set; }
+    #region Title
+
+    private string _title;
+    
+    public string Title
+    {
+        get { return _title; }
+        set => Set(ref _title, value);
+    }
+    #endregion
 
     public MainWindowViewModel(IExchangeRateService exchangeRateService, IMediator mediator)
     {
         _exchangeRateService = exchangeRateService;
         _mediator = mediator;   
 
-        Title = GetExistBankOrCreateAsync().Result.Name;
+        Title = $"Банк {GetExistBankOrCreateAsync().Result.Name}, капитал банка: {GetExistBankOrCreateAsync().Result.Capital} руб.";
 
         Clients = new ObservableCollection<ClientLookUpDTO>(GetAllClients().Result.Clients);
         #region Currency
@@ -79,7 +88,7 @@ public class MainWindowViewModel : ViewModel
     {
         var createBankCommand = new CreateBankCommand
         {
-            Name = "Рога и копыта",
+            Name = "Сбер",
             Capital = 100000000,
             DateOfCreation = DateTime.Now
         };
@@ -147,7 +156,7 @@ public class MainWindowViewModel : ViewModel
     private void OnAddClientCommandExecute(object p)
     {
         ClientInfoWindow infoWindow = new ClientInfoWindow();
-        ClientInfoViewModel viewModel = new ClientInfoViewModel(new Client(), _mediator);
+        ClientInfoViewModel viewModel = new ClientInfoViewModel(new ClientLookUpDTO(), _mediator);
         infoWindow.DataContext = viewModel;
         infoWindow.Show();
     }
@@ -168,9 +177,13 @@ public class MainWindowViewModel : ViewModel
 
     private void OnDeleteClientCommandExecute(object p)
     {
-        //if (SelectedClient is null) return;
+        if (SelectedClient is null) return;
 
-        //Bank.DeleteClient(SelectedClient);
+        var command = new DeleteClientCommand
+        {
+            Id = SelectedClient.Id,            
+        };
+        _mediator.Send(command);
     }
     #endregion
 
@@ -228,11 +241,11 @@ public class MainWindowViewModel : ViewModel
 
     #region SelectedClient
 
-    private Client _SelectedClient;
+    private ClientLookUpDTO _SelectedClient;
     /// <summary>
     /// Выбранный клиент
     /// </summary>
-    public Client SelectedClient
+    public ClientLookUpDTO SelectedClient
     {
         get { return _SelectedClient; }
         set => Set(ref _SelectedClient, value);

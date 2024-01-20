@@ -1,21 +1,21 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿//using Newtonsoft.Json;
+//using System;
 
-namespace Homework_13.Infrastructure.Convertors;
+//namespace Homework_13.Infrastructure.Convertors;
 
-public class JsonInterfaceConvertor<T> : JsonConverter
-{
-    public override bool CanConvert(Type objectType) => true;
+//public class JsonInterfaceConvertor<T> : JsonConverter
+//{
+//    public override bool CanConvert(Type objectType) => true;
 
-    public override object ReadJson(JsonReader reader,
-     Type objectType, object existingValue, JsonSerializer serializer)
-    {
-        return serializer.Deserialize<T>(reader);
-    }
+//    public override object ReadJson(JsonReader reader,
+//     Type objectType, object existingValue, JsonSerializer serializer)
+//    {
+//        return serializer.Deserialize<T>(reader);
+//    }
 
-    public override void WriteJson(JsonWriter writer,
-        object value, JsonSerializer serializer)
-    {
-        serializer.Serialize(writer, value);
-    }
-}
+//    public override void WriteJson(JsonWriter writer,
+//        object value, JsonSerializer serializer)
+//    {
+//        serializer.Serialize(writer, value);
+//    }
+//}

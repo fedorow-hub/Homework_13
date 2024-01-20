@@ -1,5 +1,4 @@
-﻿
-namespace Bank.DAL;
+﻿namespace Bank.DAL;
 
 public class DbInitializer
 {

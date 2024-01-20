@@ -3,13 +3,11 @@ using Bank.Application.Common.Mapping;
 using Bank.Application.Interfaces;
 using Bank.DAL;
 using Bank.DAL.ExchangeRateService;
-//using Homework_13.Models.Bank;
 using Homework_13.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using System.Reflection;
@@ -53,14 +51,11 @@ public partial class App : Application
 
         services.AddSingleton<IExchangeRateService>(new ExchangeRateService(urlExchangeServise));
 
-        //services.AddSingleton<Bank.DAL.BankRepository>();
-
         services.AddAutoMapper(config =>
         {
             config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
             config.AddProfile(new AssemblyMappingProfile(typeof(IApplicationDbContext).Assembly));
         });
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
     }
 
     protected override async void OnStartup(StartupEventArgs e)

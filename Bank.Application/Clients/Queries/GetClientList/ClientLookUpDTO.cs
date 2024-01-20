@@ -6,6 +6,7 @@ namespace Bank.Application.Clients.Queries.GetClientList;
 
 public class ClientLookUpDTO : IMapWith<Client>
 {
+    public Guid Id { get; set; }
     public string Firstname { get; set; }
 
     public string Lastname { get; set; }
@@ -18,9 +19,13 @@ public class ClientLookUpDTO : IMapWith<Client>
 
     public string PassportNumber { get; set; }
 
+    public string TotalIncomePerMounth { get; set; }
+
     public void Mapping(Profile profile)
     {
         profile.CreateMap<Client, ClientLookUpDTO>()
+            .ForMember(clientDTO => clientDTO.Id,
+                opt => opt.MapFrom(client => client.Id))
             .ForMember(clientDTO => clientDTO.Firstname,
                 opt => opt.MapFrom(client => client.Firstname))
             .ForMember(clientDTO => clientDTO.Lastname,
@@ -32,6 +37,8 @@ public class ClientLookUpDTO : IMapWith<Client>
             .ForMember(clientDTO => clientDTO.PassportSerie,
                 opt => opt.MapFrom(client => client.PassportSerie.Serie))
             .ForMember(clientDTO => clientDTO.PassportNumber,
-                opt => opt.MapFrom(client => client.PassportNumber.Number));
+                opt => opt.MapFrom(client => client.PassportNumber.Number))
+            .ForMember(clientDTO => clientDTO.TotalIncomePerMounth,
+                opt => opt.MapFrom(client => client.TotalIncomePerMounth.Income));
     }
 }

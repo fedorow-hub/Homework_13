@@ -19,7 +19,7 @@ public class GetClientListQueryHandler : IRequestHandler<GetClientListQuery, Cli
 
     public async Task<ClientListVM> Handle(GetClientListQuery request, CancellationToken cancellationToken)
     {
-        var clientsQuery = await _dbContext.Clients
+        var clientsQuery = await _dbContext.Clients.AsNoTracking()
             .ProjectTo<ClientLookUpDTO>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
 

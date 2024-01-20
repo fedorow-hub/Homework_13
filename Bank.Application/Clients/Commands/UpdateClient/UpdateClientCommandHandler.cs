@@ -1,66 +1,31 @@
-﻿using Bank.Application.Clients.Queries.GetClientDetails;
-using Bank.Application.Clients.Queries.GetClientList;
-using Bank.Application.Common.Exeptions;
-using Bank.Application.Interfaces;
-using Bank.Domain.Client;
+﻿using Bank.Application.Interfaces;
 using MediatR;
 
 namespace Bank.Application.Clients.Commands.UpdateClient;
 
 public class UpdateClientCommandHandler : IRequestHandler<UpdateClientCommand>
 {
-    private readonly IClientRepository _clientsDbContext;
+    private readonly IApplicationDbContext _context;
 
-    public UpdateClientCommandHandler(IClientRepository clientsDbContext)
+    public UpdateClientCommandHandler(IApplicationDbContext context)
     {
-        _clientsDbContext = clientsDbContext;
+        _context = context;
     }
-
-    //public async Task<Unit> Handle(UpdateClientCommand request, CancellationToken cancellationToken)
-    //{
-    //    var targetClient = await _clientsDbContext.GetClient(request.Id, cancellationToken);
-    //    if (targetClient == null) 
-    //    {
-    //        throw new NotFoundException(nameof(Client), request.Id);
-    //    }
-                
-    //    var client = new ClientUpdateDTO
-    //    {
-    //        Id = request.Id,
-    //        Firstname = request.Firstname,
-    //        Lastname = request.Lastname,
-    //        Patronymic = request.Patronymic,
-    //        PhoneNumber = request.PhoneNumber,
-    //        PassportSerie = request.PassportSerie,
-    //        PassportNumber = request.PassportNumber,
-    //        TotalIncomePerMounth = request.TotalIncomePerMounth
-    //    };
-
-    //    await _clientsDbContext.UpdateClient(client, cancellationToken);
-    //    return Unit.Value;
-    //}
 
     public async Task Handle(UpdateClientCommand request, CancellationToken cancellationToken)
     {
-        var targetClient = await _clientsDbContext.GetClient(request.Id, cancellationToken);
-        if (targetClient == null)
-        {
-            throw new NotFoundException(nameof(Client), request.Id);
-        }
+        var client = _context.Clients.FirstOrDefault(r => r.Id == request.Id);
 
-        var client = new ClientUpdateDTO
-        {
-            Id = request.Id,
-            Firstname = request.Firstname,
-            Lastname = request.Lastname,
-            Patronymic = request.Patronymic,
-            PhoneNumber = request.PhoneNumber,
-            PassportSerie = request.PassportSerie,
-            PassportNumber = request.PassportNumber,
-            TotalIncomePerMounth = request.TotalIncomePerMounth
-        };
+        client.ChangeFirstname(request.Firstname);
+        client.ChangeLastname(request.Lastname);
+        client.ChangePatronymic(request.Patronymic);
+        client.ChangePhoneNumber(request.PhoneNumber);
+        client.ChangePassportSerie(request.PassportSerie);
+        client.ChangePassportNumber(request.PassportNumber);
+        client.ChangeTotalIncomePerMounth(request.TotalIncomePerMounth.ToString());
 
-        await _clientsDbContext.UpdateClient(client, cancellationToken);
+        _context.SaveChangesAsync(cancellationToken);
+
         return;
     }
 }

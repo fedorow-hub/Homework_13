@@ -1,27 +1,25 @@
 ﻿using Bank.Application.Clients.Commands.CreateClient;
 using Bank.Application.Clients.Commands.UpdateClient;
-using Bank.Application.Interfaces;
-using Bank.Domain.Client;
 using Bank.Domain.Client.ValueObjects;
 using Homework_13.Infrastructure;
 using Homework_13.Infrastructure.Commands;
-using Homework_13.Models.Bank;
 using Homework_13.ViewModels.Base;
 using MediatR;
 using System;
 using System.Windows;
 using System.Windows.Input;
+using Bank.Application.Clients.Queries.GetClientList;
 
 namespace Homework_13.ViewModels;
 
 public class ClientInfoViewModel : ViewModel
 {
     private IMediator _mediator;
-    public Client currentClient;
-    
+    public ClientLookUpDTO currentClient;
+
     public ClientInfoViewModel() { }
 
-    public ClientInfoViewModel(Client client, IMediator mediator)
+    public ClientInfoViewModel(ClientLookUpDTO client, IMediator mediator)
     {
         _mediator = mediator;
         this.currentClient = client;
@@ -37,25 +35,26 @@ public class ClientInfoViewModel : ViewModel
     /// Заполнение данных
     /// </summary>
     /// <param name="clientInfo"></param>
-    private void FillFields(Client clientInfo)
+    private void FillFields(ClientLookUpDTO clientInfo)
     {
         if (clientInfo is null)
             return;
-        _firstname = clientInfo.Firstname?.Name ?? String.Empty;
-        _lastname = clientInfo.Lastname?.Name ?? String.Empty;
-        _patronymic = clientInfo.Patronymic?.Name ?? String.Empty;
-        _phoneNumber = clientInfo.PhoneNumber?.ToString() ?? String.Empty;
-        _passportSerie = clientInfo.PassportSerie?.ToString();
-        _passportNumber = clientInfo.PassportNumber?.ToString() ?? String.Empty;
+        _firstname = clientInfo.Firstname ?? String.Empty;
+        _lastname = clientInfo.Lastname ?? String.Empty;
+        _patronymic = clientInfo.Patronymic ?? String.Empty;
+        _phoneNumber = clientInfo.PhoneNumber ?? String.Empty;
+        _passportSerie = clientInfo.PassportSerie;
+        _passportNumber = clientInfo.PassportNumber ?? String.Empty;
+        _totalIncomePerMonth = clientInfo.TotalIncomePerMounth ?? String.Empty;
     }
-      
+
 
     /// <summary>
     /// метод для блокирования кнопки сохранения, если введенные данные не валидны
     /// </summary>
     /// <param name="dataAccess"></param>
     private void CheckSaveClient()
-    {        
+    {
         EnableSaveClient = _borderFirstName != InputValueValidationEnum.Error
                         && _firstname != ""
                         && _borderLastName != InputValueValidationEnum.Error
@@ -253,8 +252,8 @@ public class ClientInfoViewModel : ViewModel
         get => _borderPassportSerie;
         set
         {
-            Set(ref _borderPassportSerie, value);            
-            CheckSaveClient();            
+            Set(ref _borderPassportSerie, value);
+            CheckSaveClient();
         }
     }
 
@@ -264,8 +263,8 @@ public class ClientInfoViewModel : ViewModel
         get => _borderPassportNumber;
         set
         {
-            Set(ref _borderPassportNumber, value);            
-            CheckSaveClient();            
+            Set(ref _borderPassportNumber, value);
+            CheckSaveClient();
         }
     }
 

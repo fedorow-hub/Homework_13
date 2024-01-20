@@ -9,7 +9,7 @@ namespace Bank.Application.Bank.Queries
     {        
         public string Name { get; set; }
 
-        public List<ClientDetailsVM> Clients { get; set; }
+        public List<Client> Clients { get; set; }
 
         public decimal Capinal { get; set; }
 
