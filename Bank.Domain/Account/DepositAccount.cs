@@ -5,19 +5,22 @@ public sealed class DepositAccount : Account
     /// <summary>
     /// процентная ставка
     /// </summary>
-    public InterestRate InterestRate { get; protected set; }
+    public InterestRate InterestRate { get; set; }
+
+    public DepositAccount()
+    {
+        
+    }
 
     public DepositAccount(Guid id, Guid clientId, byte termOfMonth, decimal amount, DateTime timeOfCreated) 
-        : base(id, clientId, amount, timeOfCreated)        
+        : base(id, clientId, termOfMonth, amount, timeOfCreated)        
     {
-        AccountTerm = TimeOfCreated.AddMonths(termOfMonth);
         InterestRate = SetInterestRate();
     }
 
-    private DepositAccount(Guid clientId, byte termOfMonth, decimal amount)
-        : base(clientId, amount)
+    private DepositAccount(Guid clientId, byte termOfMonth, decimal amount, DateTime timeOfCreated)
+        : base(clientId, termOfMonth, amount, timeOfCreated)
     {
-        AccountTerm = TimeOfCreated.AddMonths(termOfMonth);
         InterestRate = SetInterestRate();
     }
 
@@ -29,9 +32,9 @@ public sealed class DepositAccount : Account
     /// <param name="termOfMonth"></param>
     /// <param name="amount"></param>
     /// <returns></returns>
-    public static DepositAccount CreateDepositAccount(Guid clientId, byte termOfMonth, decimal amount)
+    public static DepositAccount CreateDepositAccount(Guid clientId, byte termOfMonth, decimal amount, DateTime timeOfCreated)
     {
-        var newAccount = new DepositAccount(clientId, termOfMonth, amount);
+        var newAccount = new DepositAccount(clientId, termOfMonth, amount, timeOfCreated);
         return newAccount;
     }
 

@@ -8,5 +8,7 @@ public record CreatePlainAccountCommand : IRequest
 
     public string Currency { get; init; }
 
+    public byte TermOfMonth { get; init; }
+
     public decimal Amount { get; init; }
 }

@@ -1,7 +1,7 @@
 ﻿using Bank.Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
+using Microsoft.Extensions.Logging;
 
 namespace Bank.DAL
 {
@@ -10,12 +10,13 @@ namespace Bank.DAL
 
         public static IServiceCollection AddBankDAL(this IServiceCollection services, string connectionString)
         {
-            services.AddDbContext<ClientDbContext>(options =>
+            services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlite(connectionString);
+                options.LogTo(Console.WriteLine, LogLevel.Error);
             });
-            services.AddScoped<IClientDbContext>(provider => provider.GetService<ClientDbContext>());
-            
+            services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
+
             return services;
         }
     }

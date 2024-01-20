@@ -1,12 +1,16 @@
-﻿using Bank.Application.Clients.Queries.GetClientList;
+﻿using Bank.Application.Bank.Commands;
+using Bank.Application.Clients.Queries.GetClientList;
 using Bank.Application.Interfaces;
+using Bank.DAL;
+using Bank.Domain.Bank;
+using Bank.Domain.Client;
 using Homework_13.Infrastructure.Commands;
-using Homework_13.Models.Bank;
 using Homework_13.ViewModels.Base;
 using Homework_13.Views;
-using Bank.Domain.Client;
 using MediatR;
+using System;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -16,7 +20,6 @@ namespace Homework_13.ViewModels;
 public class MainWindowViewModel : ViewModel
 {
     private IMediator _mediator;
-    //public BankRepository Bank { get; private set; }
     public string Date { get; private set; }
 
     #region Currency
@@ -38,22 +41,18 @@ public class MainWindowViewModel : ViewModel
     }
 
     private readonly IExchangeRateService _exchangeRateService;
-    private readonly BankRepository _bankRepository;
+    //private readonly BankRepository _bankRepository;
 
     public string Title { get; set; }
 
-    public MainWindowViewModel(IExchangeRateService exchangeRateService,
-        BankRepository bankRepository, IMediator mediator)
+    public MainWindowViewModel(IExchangeRateService exchangeRateService, IMediator mediator)
     {
         _exchangeRateService = exchangeRateService;
-        _bankRepository = bankRepository;
-        _mediator = mediator;
-        Title = "Альфа Банк";
+        _mediator = mediator;   
 
-        //Bank = _bankRepository;
-        
-        GetAllClients();
+        Title = GetExistBankOrCreateAsync().Result.Name;
 
+        Clients = new ObservableCollection<ClientLookUpDTO>(GetAllClients().Result.Clients);
         #region Currency
 
         Date = _exchangeRateService.GetDate();
@@ -74,6 +73,20 @@ public class MainWindowViewModel : ViewModel
 
         OpenOperationWindowCommand = new LambdaCommand(OnOpenOperationWindowCommandExecute, CanOpenOperationWindowCommandExecute);
         #endregion
+    }
+
+    private async Task<SomeBank> GetExistBankOrCreateAsync()
+    {
+        var createBankCommand = new CreateBankCommand
+        {
+            Name = "Рога и копыта",
+            Capital = 100000000,
+            DateOfCreation = DateTime.Now
+        };
+
+        SomeBank result = await _mediator.Send(createBankCommand);
+
+        return result;
     }
 
     private async Task<ClientListVM> GetAllClients()
@@ -134,7 +147,7 @@ public class MainWindowViewModel : ViewModel
     private void OnAddClientCommandExecute(object p)
     {
         ClientInfoWindow infoWindow = new ClientInfoWindow();
-        ClientInfoViewModel viewModel = new ClientInfoViewModel(new Client(), _bankRepository, _mediator);
+        ClientInfoViewModel viewModel = new ClientInfoViewModel(new Client(), _mediator);
         infoWindow.DataContext = viewModel;
         infoWindow.Show();
     }
@@ -177,7 +190,7 @@ public class MainWindowViewModel : ViewModel
         if (SelectedClient is null) return;
 
         ClientInfoWindow infoWindow = new ClientInfoWindow();
-        ClientInfoViewModel viewModel = new ClientInfoViewModel(SelectedClient, _bankRepository, _mediator);
+        ClientInfoViewModel viewModel = new ClientInfoViewModel(SelectedClient, _mediator);
         infoWindow.DataContext = viewModel;
         infoWindow.Show();
     }
@@ -199,7 +212,7 @@ public class MainWindowViewModel : ViewModel
         if (SelectedClient is null) return;
 
         OperationsWindow operationWindow = new OperationsWindow();
-        OperationsWindowViewModel viewModel = new OperationsWindowViewModel(SelectedClient, _bankRepository, this);
+        OperationsWindowViewModel viewModel = new OperationsWindowViewModel(SelectedClient, this);
         operationWindow.DataContext = viewModel;
         operationWindow.Show();
 

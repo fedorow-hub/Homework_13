@@ -7,6 +7,7 @@ namespace Bank.Application.Clients.Commands.CreateClient
     /// </summary>
     public record CreateClientCommand : IRequest
     {
+        public Guid Id { get; init; }
         public string Firstname { get; init; }
 
         public string Lastname { get; init; }
@@ -19,6 +20,6 @@ namespace Bank.Application.Clients.Commands.CreateClient
 
         public string PassportNumber { get; init; }
 
-        public decimal TotalIncomePerMounth { get; init; }
+        public string TotalIncomePerMounth { get; init; }
     }
 }

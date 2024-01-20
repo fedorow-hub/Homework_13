@@ -7,25 +7,28 @@ public sealed class CreditAccount : Account
     /// <summary>
     /// ежемесячный платеж по кредиту
     /// </summary>
-    public decimal MouthlyPayment { get; private set; }
+    public decimal MouthlyPayment { get; set; }
 
     /// <summary>
     /// проценты по кредиту
     /// </summary>
-    public InterestRate LoanInterest { get; protected set; }
+    public InterestRate LoanInterest { get; set; }
+
+    public CreditAccount()
+    {
+        
+    }
 
     public CreditAccount(Guid id, Guid clientId, byte termOfMonth, decimal amount, DateTime timeOfCreated) 
-        : base(id, clientId, amount, timeOfCreated)
+        : base(id, clientId, termOfMonth, amount, timeOfCreated)
     {
-        AccountTerm = TimeOfCreated.AddMonths(termOfMonth);
         LoanInterest = SetLoanInterest();
         MouthlyPayment = SetMonthlyPayment(termOfMonth);
     }
 
-    private CreditAccount(Guid clientId, byte termOfMonth, decimal amount)
-        : base(clientId, amount)
+    private CreditAccount(Guid clientId, byte termOfMonth, decimal amount, DateTime timeOfCreated)
+        : base(clientId, termOfMonth, amount, timeOfCreated)
     {
-        AccountTerm = TimeOfCreated.AddMonths(termOfMonth);
         LoanInterest = SetLoanInterest();
         MouthlyPayment = SetMonthlyPayment(termOfMonth);
     }
@@ -38,13 +41,13 @@ public sealed class CreditAccount : Account
     /// <param name="termOfMonth"></param>
     /// <param name="amount"></param>
     /// <returns></returns>
-    public static CreditAccount CreateCreditAccount(Client.Client client, byte termOfMonth, decimal amount)
+    public static CreditAccount CreateCreditAccount(Client.Client client, byte termOfMonth, decimal amount, DateTime timeOfCreated)
     {
         if(client.TotalIncomePerMounth.Income/2 < amount / termOfMonth)
         {
             throw new DomainExeption("Ежемесячные платежи по кредиту превышают половину месячного дохода");
         }
-        var newAccount = new CreditAccount(client.Id, termOfMonth, amount);
+        var newAccount = new CreditAccount(client.Id, termOfMonth, amount, timeOfCreated);
         return newAccount;
     }
 

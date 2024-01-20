@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Bank.Domain.Client;
+namespace Bank.Domain.Client.ValueObjects;
 
 public sealed class PhoneNumber : ValueObject
 {

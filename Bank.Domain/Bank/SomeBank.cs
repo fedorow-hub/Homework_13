@@ -12,12 +12,12 @@ public sealed class SomeBank : Entity
     /// <summary>
     /// список клиентов банка
     /// </summary>
-    public List<Client.Client> Clients { get; private set; }
+    public List<Client.Client> Clients { get; private set; } = new();
 
     /// <summary>
     /// капиталл банка в рублях
     /// </summary>
-    public decimal Capinal { get; private set; }
+    public decimal Capital { get; private set; }
 
     /// <summary>
     /// дата создания банка
@@ -31,12 +31,12 @@ public sealed class SomeBank : Entity
 
     private static readonly object _syncRoot = new object();
 
-    private SomeBank(string name, decimal capital)
+    private SomeBank(string name, decimal capital, DateTime dateOfCreation)
     {
         Name = name;
         Clients = new List<Client.Client>();
-        Capinal = capital;
-        DateOfCreation = DateTime.Now;
+        Capital = capital;
+        DateOfCreation = dateOfCreation;
     }
 
     /// <summary>
@@ -45,13 +45,13 @@ public sealed class SomeBank : Entity
     /// <param name="name"></param>
     /// <param name="capital"></param>
     /// <returns></returns>
-    public static SomeBank CreateBank(string name, decimal capital)
+    public static SomeBank CreateBank(string name, decimal capital, DateTime dateOfCreation)
     {
         if (uniqueInstanceOfBank == null)
         {
             lock (_syncRoot)
             {
-                uniqueInstanceOfBank = new SomeBank(name, capital);
+                uniqueInstanceOfBank = new SomeBank(name, capital, dateOfCreation);
             }
             
         }
@@ -64,7 +64,7 @@ public sealed class SomeBank : Entity
     /// <param name="money"></param>
     public void AddMoneyToCapital(decimal money)
     {
-        Capinal += money;
+        Capital += money;
     }
 
     /// <summary>
@@ -74,9 +74,9 @@ public sealed class SomeBank : Entity
     /// <exception cref="DomainExeption"></exception>
     public void WithdrawalMoneyFromCapital(decimal money)
     {
-        if (Capinal >= money)
+        if (Capital >= money)
         {
-            Capinal -= money;
+            Capital -= money;
         }
         else throw new DomainExeption("Недостаточно средств банка");
     }

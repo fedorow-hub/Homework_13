@@ -2,6 +2,7 @@
 using Bank.Application.Clients.Commands.UpdateClient;
 using Bank.Application.Interfaces;
 using Bank.Domain.Client;
+using Bank.Domain.Client.ValueObjects;
 using Homework_13.Infrastructure;
 using Homework_13.Infrastructure.Commands;
 using Homework_13.Models.Bank;
@@ -17,15 +18,13 @@ public class ClientInfoViewModel : ViewModel
 {
     private IMediator _mediator;
     public Client currentClient;
-    private readonly BankRepository bank;
     
     public ClientInfoViewModel() { }
 
-    public ClientInfoViewModel(Client client, BankRepository bank, IMediator mediator)
+    public ClientInfoViewModel(Client client, IMediator mediator)
     {
         _mediator = mediator;
         this.currentClient = client;
-        this.bank = bank;
 
         FillFields(client);
         CheckSaveClient();
@@ -38,13 +37,13 @@ public class ClientInfoViewModel : ViewModel
     /// Заполнение данных
     /// </summary>
     /// <param name="clientInfo"></param>
-    private void FillFields(Bank.Domain.Client.Client clientInfo)
+    private void FillFields(Client clientInfo)
     {
         if (clientInfo is null)
             return;
-        _firstname = clientInfo.Firstname ?? String.Empty;
-        _lastname = clientInfo.Lastname ?? String.Empty;
-        _patronymic = clientInfo.Patronymic ?? String.Empty;
+        _firstname = clientInfo.Firstname?.Name ?? String.Empty;
+        _lastname = clientInfo.Lastname?.Name ?? String.Empty;
+        _patronymic = clientInfo.Patronymic?.Name ?? String.Empty;
         _phoneNumber = clientInfo.PhoneNumber?.ToString() ?? String.Empty;
         _passportSerie = clientInfo.PassportSerie?.ToString();
         _passportNumber = clientInfo.PassportNumber?.ToString() ?? String.Empty;
@@ -97,8 +96,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _firstname, value);
-            BorderFirstName =
-            InputHighlighting(_enableFirstName, _firstname.Length > 2);
+            BorderFirstName = InputHighlighting(_enableFirstName, Bank.Domain.Client.ValueObjects.Firstname.IsName(_firstname));
         }
     }
 
@@ -130,8 +128,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _lastname, value);
-            BorderLastName =
-            InputHighlighting(_enableLastName, _lastname.Length > 2);
+            BorderLastName = InputHighlighting(_enableLastName, Bank.Domain.Client.ValueObjects.Lastname.IsName(_lastname));
         }
     }
 
@@ -163,8 +160,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _patronymic, value);
-            BorderPatronymic =
-            InputHighlighting(_enablePatronymic, _patronymic.Length > 2);
+            BorderPatronymic = InputHighlighting(_enablePatronymic, Bank.Domain.Client.ValueObjects.Patronymic.IsName(_patronymic));
         }
     }
 
@@ -197,7 +193,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _phoneNumber, value);
-            BorderPhoneNumber = InputHighlighting(_enablePhoneNumber, Bank.Domain.Client.PhoneNumber.IsPhoneNumber(_phoneNumber));
+            BorderPhoneNumber = InputHighlighting(_enablePhoneNumber, Bank.Domain.Client.ValueObjects.PhoneNumber.IsPhoneNumber(_phoneNumber));
         }
     }
 
@@ -229,7 +225,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _passportSerie, value);
-            BorderPassportSerie = InputHighlighting(_enablePassportData, Bank.Domain.Client.PassportSerie.IsSeries(_passportSerie));
+            BorderPassportSerie = InputHighlighting(_enablePassportData, Bank.Domain.Client.ValueObjects.PassportSerie.IsSeries(_passportSerie));
         }
     }
 
@@ -240,7 +236,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _passportNumber, value);
-            BorderPassportNumber = InputHighlighting(_enablePassportData, Bank.Domain.Client.PassportNumber.IsNumber(_passportNumber));
+            BorderPassportNumber = InputHighlighting(_enablePassportData, Bank.Domain.Client.ValueObjects.PassportNumber.IsNumber(_passportNumber));
         }
     }
 
@@ -337,16 +333,16 @@ public class ClientInfoViewModel : ViewModel
         {
             var command = new CreateClientCommand
             {
+                Id = Guid.NewGuid(),
                 Firstname = _firstname,
                 Lastname = _lastname,
                 Patronymic = _patronymic,
                 PhoneNumber = _phoneNumber,
                 PassportSerie = _passportSerie,
                 PassportNumber = _passportNumber,
-                TotalIncomePerMounth = Convert.ToDecimal(_totalIncomePerMonth)
+                TotalIncomePerMounth = _totalIncomePerMonth
             };
             await _mediator.Send(command);
-            //bank.AddClient(client);
         }
         else
         {
@@ -362,8 +358,6 @@ public class ClientInfoViewModel : ViewModel
                 TotalIncomePerMounth = Convert.ToDecimal(_totalIncomePerMonth)
             };
             await _mediator.Send(command);
-            
-            //bank.EditClient(client);
         }
 
         if (p is Window window)

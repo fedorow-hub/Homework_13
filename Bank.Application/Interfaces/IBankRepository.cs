@@ -4,7 +4,7 @@ namespace Bank.Application.Interfaces;
 
 public interface IBankRepository
 {
-    Task Createbank(SomeBank bank);
+    Task<int> Createbank(SomeBank bank);
     Task<SomeBank> GetBank();
     Task ChangeCapital(SomeBank bank);
 }

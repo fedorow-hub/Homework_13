@@ -1,30 +1,32 @@
 ﻿using Bank.Application.Interfaces;
 using MediatR;
 using Bank.Domain.Bank;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bank.Application.Bank.Commands;
 
-public class CreateBankCommandHandler : IRequestHandler<CreateBankCommand>
+public class CreateBankCommandHandler : IRequestHandler<CreateBankCommand, SomeBank>
 {
-    private readonly IBankRepository _bankRepository;
+    private readonly IApplicationDbContext _dbContext;
 
-    public CreateBankCommandHandler(IBankRepository bankRepository)
+    public CreateBankCommandHandler(IApplicationDbContext dbContext)
     {
-        _bankRepository = bankRepository;
+        _dbContext = dbContext;
     }
-    //public async Task<Unit> Handle(CreateBankCommand request, CancellationToken cancellationToken)
-    //{
-    //    var bank = SomeBank.CreateBank(request.Name, request.Capital);
 
-    //    await _bankRepository.Createbank(bank);
-    //    return Unit.Value;
-    //}
-
-    public async Task Handle(CreateBankCommand request, CancellationToken cancellationToken)
+    public async Task<SomeBank> Handle(CreateBankCommand request, CancellationToken cancellationToken)
     {
-        var bank = SomeBank.CreateBank(request.Name, request.Capital);
 
-        await _bankRepository.Createbank(bank);
-        return;
+        var entity = await _dbContext.Bank.FirstOrDefaultAsync(cancellationToken);
+
+        var bank = SomeBank.CreateBank(request.Name, request.Capital, request.DateOfCreation);
+
+        if(entity == null)
+        {
+            await _dbContext.Bank.AddAsync(bank);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        return bank;
     }
 }

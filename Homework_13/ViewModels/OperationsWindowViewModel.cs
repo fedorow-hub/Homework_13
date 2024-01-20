@@ -14,7 +14,7 @@ namespace Homework_13.ViewModels;
 public class OperationsWindowViewModel : ViewModel
 {
     private readonly Client _currentClient;
-    private readonly BankRepository _bank;
+    //private readonly BankRepository _bank;
     private readonly MainWindowViewModel _mainWindowViewModel;
 
     public Client CurrentClient { get; set; }
@@ -26,11 +26,11 @@ public class OperationsWindowViewModel : ViewModel
 
     }
     public OperationsWindowViewModel(Client currentClient, 
-        BankRepository bank, MainWindowViewModel mainWindowViewModel)
+        MainWindowViewModel mainWindowViewModel)
     {
         //_clients = clients;
         _currentClient = currentClient;
-        _bank = bank;
+        //_bank = bank;
         _mainWindowViewModel = mainWindowViewModel;
 
         #region Pages
@@ -70,7 +70,7 @@ public class OperationsWindowViewModel : ViewModel
     private void OnAddAndWithdrawalsCommandExecuted(object p)
     {
         CurrentPage = _addAndWithdrawals;
-        _addAndWithdrawals.DataContext = new AddAndWithdrawalsViewModel(_currentClient, _bank);        
+        _addAndWithdrawals.DataContext = new AddAndWithdrawalsViewModel(_currentClient);        
     }
     private bool CanAddAndWithdrawalsCommandExecute(object p)
     {
@@ -86,7 +86,7 @@ public class OperationsWindowViewModel : ViewModel
     private void OnBetweenTheirAccountsCommandExecuted(object p)
     {
         CurrentPage = _betweenTheirAccounts;
-        _betweenTheirAccounts.DataContext = new BetweenTheirAccountsViewModel(_currentClient, _bank);
+        _betweenTheirAccounts.DataContext = new BetweenTheirAccountsViewModel(_currentClient);
     }
     private bool CanBetweenTheirAccountsCommandExecute(object p)
     {
@@ -102,7 +102,7 @@ public class OperationsWindowViewModel : ViewModel
     private void OnOpenDepositCommandExecuted(object p)
     {
         CurrentPage = _openDeposit;
-        _addAndWithdrawals.DataContext = new AddAndWithdrawalsViewModel(_currentClient, _bank);
+        _addAndWithdrawals.DataContext = new AddAndWithdrawalsViewModel(_currentClient);
     }
     private bool CanOpenDepositCommandViewExecute(object p)
     {

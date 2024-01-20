@@ -30,8 +30,8 @@ public partial class MainWindow : Window
         var filter_text = ClientFilter.Text;
         if (filter_text.Length == 0) return;
 
-        if (client.Firstname.Contains(filter_text, StringComparison.OrdinalIgnoreCase)) return;
-        if (client.Lastname.Contains(filter_text, StringComparison.OrdinalIgnoreCase)) return;
+        if (client.Firstname.Name.Contains(filter_text, StringComparison.OrdinalIgnoreCase)) return;
+        if (client.Lastname.Name.Contains(filter_text, StringComparison.OrdinalIgnoreCase)) return;
 
         e.Accepted = false;
     }

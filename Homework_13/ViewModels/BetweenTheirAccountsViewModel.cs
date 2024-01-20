@@ -15,15 +15,15 @@ namespace Homework_13.ViewModels
     public class BetweenTheirAccountsViewModel : ViewModel
     {
         private Client _currentClient;
-        private BankRepository _bank;
+        //private BankRepository _bank;
         public BetweenTheirAccountsViewModel()
         {
             
         }
-        public BetweenTheirAccountsViewModel(Client CurrentClient, BankRepository bank)
+        public BetweenTheirAccountsViewModel(Client CurrentClient)
         {
             _currentClient = CurrentClient;
-            _bank = bank;
+            //_bank = bank;
         }
 
         #region Эксперимент со свойством зависимости

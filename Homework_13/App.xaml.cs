@@ -3,11 +3,13 @@ using Bank.Application.Common.Mapping;
 using Bank.Application.Interfaces;
 using Bank.DAL;
 using Bank.DAL.ExchangeRateService;
-using Homework_13.Models.Bank;
+//using Homework_13.Models.Bank;
 using Homework_13.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using System.Reflection;
@@ -31,10 +33,12 @@ public partial class App : Application
     public static void ConfigureServices(HostBuilderContext host, IServiceCollection services)
     {
         //сюда добавляем необходимые сервисы
+
         services.AddApplication();
-        
+
         services.AddSingleton<MainWindowViewModel>();
         services.AddSingleton<LoginWindowViewModel>();
+
 
         ConfigurationBuilder builder = new ConfigurationBuilder();
         builder.SetBasePath(Directory.GetCurrentDirectory());
@@ -42,45 +46,30 @@ public partial class App : Application
         string connectionString = builder.Build().GetConnectionString("DbConnection");
 
         services.AddBankDAL(connectionString);
-
+        
         //services.AddSingleton<IClientRepository, ClientRepository>();
 
         string urlExchangeServise = builder.Build().GetConnectionString("UrlExchangeService");
 
         services.AddSingleton<IExchangeRateService>(new ExchangeRateService(urlExchangeServise));
 
-        services.AddSingleton<BankRepository>();
+        //services.AddSingleton<Bank.DAL.BankRepository>();
 
         services.AddAutoMapper(config =>
         {
             config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
-            config.AddProfile(new AssemblyMappingProfile(typeof(IClientDbContext).Assembly));
+            config.AddProfile(new AssemblyMappingProfile(typeof(IApplicationDbContext).Assembly));
         });
-
-        //services.AddSingleton<ClientDAL>();
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
     }
 
     protected override async void OnStartup(StartupEventArgs e)
     {
         IsDesignMode = false;
         var host = Host;
-
-        using (var scope = host.Services.CreateScope())
-        {
-            var serviceProvider = scope.ServiceProvider;
-            try
-            {
-                var context = serviceProvider.GetRequiredService<ClientDbContext>();
-                DbInitializer.Initialize(context);
-            }
-            catch (Exception exeption)
-            {
-                
-            }
-        }
-
         base.OnStartup(e);
         await host.StartAsync().ConfigureAwait(false);
+        DbInitializer.Initialize(host.Services.GetRequiredService<ApplicationDbContext>());
     }
 
     protected override async void OnExit(ExitEventArgs e)

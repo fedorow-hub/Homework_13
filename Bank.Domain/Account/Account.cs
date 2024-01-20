@@ -7,12 +7,12 @@ public abstract class Account : Entity
     /// <summary>
     /// идентификационный номер клиента, которому принадлежит счет
     /// </summary>
-    public Guid ClientId { get; }
+    public Guid ClientId { get; private set; }
 
     /// <summary>
     /// дата и время создания счета
     /// </summary>
-    public DateTime TimeOfCreated { get; }
+    public DateTime TimeOfCreated { get; private set; }
 
     /// <summary>
     /// сумма, лежащая на счете
@@ -22,24 +22,31 @@ public abstract class Account : Entity
     /// <summary>
     /// дата, до которой действует счет
     /// </summary>
-    public DateTime AccountTerm { get; protected set; } = DateTime.MaxValue;
+    public DateTime AccountTerm { get; private set; } = DateTime.MaxValue;
 
     /// <summary>
     /// действующий или закрытый счет
     /// </summary>
     public bool IsExistance { get; private set; }
 
-    public Account(Guid clientId, decimal amount)        
+    public Account()
     {
+        
+    }
+
+    public Account(Guid clientId, byte termOfMonth, decimal amount, DateTime timeOfCreated)        
+    {
+        AccountTerm = TimeOfCreated.AddMonths(termOfMonth);
         ClientId = clientId;
-        TimeOfCreated = DateTime.Today;
+        TimeOfCreated = timeOfCreated;
         Amount = amount;
         IsExistance = true;
     }
 
-    public Account(Guid id, Guid clientId, decimal amount, DateTime timeOfCreated)
+    public Account(Guid id, Guid clientId, byte termOfMonth, decimal amount, DateTime timeOfCreated)
         :base(id)        
     {
+        AccountTerm = TimeOfCreated.AddMonths(termOfMonth);
         ClientId = clientId;
         TimeOfCreated = timeOfCreated;
         Amount = amount;

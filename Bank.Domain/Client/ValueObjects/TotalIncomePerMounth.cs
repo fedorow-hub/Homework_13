@@ -1,4 +1,4 @@
-﻿namespace Bank.Domain.Client;
+﻿namespace Bank.Domain.Client.ValueObjects;
 
 public sealed class TotalIncomePerMounth : ValueObject
 {

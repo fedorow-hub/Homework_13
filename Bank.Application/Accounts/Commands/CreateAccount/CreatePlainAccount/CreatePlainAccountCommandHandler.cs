@@ -27,7 +27,7 @@ public class CreatePlainAccountCommandHandler : IRequestHandler<CreatePlainAccou
 
     public async Task Handle(CreatePlainAccountCommand request, CancellationToken cancellationToken)
     {
-        var plainAccount = PlainAccount.CreatePlaneAccount(request.ClientId, request.Amount);
+        var plainAccount = PlainAccount.CreatePlaneAccount(request.ClientId, DateTime.Now, request.TermOfMonth, request.Amount);
         var accountDTO = new PlainAccountCreateDTO
         {
             ClientId = plainAccount.ClientId,

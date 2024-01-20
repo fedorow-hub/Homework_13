@@ -1,6 +1,8 @@
-﻿namespace Bank.Application.Clients.Queries.GetClientList;
+﻿using System.Collections.ObjectModel;
+
+namespace Bank.Application.Clients.Queries.GetClientList;
 
 public class ClientListVM
 {
-    public IList<ClientLookUpDTO> Clients { get; set; }
+    public List<ClientLookUpDTO> Clients { get; set; }
 }

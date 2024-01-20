@@ -1,10 +1,10 @@
-﻿namespace Bank.DAL
+﻿
+namespace Bank.DAL;
+
+public class DbInitializer
 {
-    public static class DbInitializer
+    public static void Initialize(ApplicationDbContext context)
     {
-        public static void Initialize(ClientDbContext context)
-        {
-            context.Database.EnsureCreated();
-        }
+        context.Database.EnsureCreated();
     }
 }

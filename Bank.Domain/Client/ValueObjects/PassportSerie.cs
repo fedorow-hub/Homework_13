@@ -1,4 +1,4 @@
-﻿namespace Bank.Domain.Client;
+﻿namespace Bank.Domain.Client.ValueObjects;
 
 public sealed class PassportSerie : ValueObject
 {
@@ -13,12 +13,12 @@ public sealed class PassportSerie : ValueObject
         if (!IsSeries(serie))
         {
             throw new ArgumentException($"Номер \"{nameof(serie)}\" не является серией паспорта");
-        } 
+        }
         return new PassportSerie(serie);
     }
-        
+
     public static bool IsSeries(string value)
-    {        
+    {
         if (value.Length < 2 || value.Length > 4)
         {
             return false;
@@ -34,5 +34,5 @@ public sealed class PassportSerie : ValueObject
     public override string ToString()
     {
         return $"{Serie}";
-    }    
+    }
 }

@@ -1,6 +1,4 @@
-﻿using MediatR;
-using Microsoft.Extensions.DependencyInjection;
-using System.Net.NetworkInformation;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace Bank.Application
@@ -9,9 +7,7 @@ namespace Bank.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            //регистрация сервиса MediatR с помощью метода AddMediatR из Nuget пакета
-            //MediatR.Extensions.Microsoft.DependencyInjection
-            //services.AddMediatR(Assembly.GetExecutingAssembly());//в метод передается выполняемая сборка 
+            //регистрация сервиса MediatR с помощью метода AddMediatR
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
             return services;

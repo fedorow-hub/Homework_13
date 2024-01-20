@@ -10,7 +10,7 @@ namespace Homework_13.ViewModels;
 public class AddAndWithdrawalsViewModel : ViewModel
 {
     private Client _currentClient;
-    private BankRepository _bank;
+    //private BankRepository _bank;
 
     public Client CurrentClient
     {
@@ -22,10 +22,10 @@ public class AddAndWithdrawalsViewModel : ViewModel
     {
 
     }
-    public AddAndWithdrawalsViewModel(Client CurrentClient, BankRepository bank)
+    public AddAndWithdrawalsViewModel(Client CurrentClient)
     {
         _currentClient = CurrentClient;
-        _bank = bank;
+        //_bank = bank;
 
         OpenAccountCommand = new LambdaCommand(OnOpenAccountCommandExecute, CanOpenAccountCommandExecute);
     }

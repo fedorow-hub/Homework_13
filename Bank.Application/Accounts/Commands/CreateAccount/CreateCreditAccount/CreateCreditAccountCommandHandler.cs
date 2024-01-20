@@ -37,7 +37,7 @@ public class CreateCreditAccountCommandHandler : IRequestHandler<CreateCreditAcc
 
     public async Task Handle(CreateCreditAccountCommand request, CancellationToken cancellationToken)
     {
-        var depositAccount = CreditAccount.CreateCreditAccount(request.Client, request.TermOfMonth, request.Amount);
+        var depositAccount = CreditAccount.CreateCreditAccount(request.Client, request.TermOfMonth, request.Amount, DateTime.Now);
         var accountDTO = new CreditAccountCreateDTO
         {
             ClientId = depositAccount.ClientId,

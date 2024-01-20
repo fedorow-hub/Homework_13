@@ -1,14 +1,20 @@
-﻿namespace Bank.Domain.Account;
+﻿using System;
+
+namespace Bank.Domain.Account;
 
 public sealed class PlainAccount : Account
 {
-    public PlainAccount(Guid id, Guid clientId, DateTime timeOfCreated, decimal amount = 0)
-        : base(id, clientId, amount, timeOfCreated)
+    public PlainAccount()
+    {
+        
+    }
+    public PlainAccount(Guid id, Guid clientId, byte termOfMonth, DateTime timeOfCreated, decimal amount = 0)
+        : base(id, clientId, termOfMonth, amount, timeOfCreated)
     {
     }
 
-    private PlainAccount(Guid clientId, decimal amount = 0)
-        : base(clientId, amount)
+    private PlainAccount(Guid clientId, byte termOfMonth, DateTime timeOfCreated, decimal amount = 0)
+        : base(clientId, termOfMonth, amount, timeOfCreated)
     {
     }
 
@@ -19,9 +25,9 @@ public sealed class PlainAccount : Account
     /// <param name="currency"></param>
     /// <param name="amount"></param>
     /// <returns></returns>
-    public static PlainAccount CreatePlaneAccount(Guid clientId, decimal amount = 0)
+    public static PlainAccount CreatePlaneAccount(Guid clientId, DateTime timeOfCreated, byte termOfMonth = byte.MaxValue, decimal amount = 0 )
     {
-        var newAccount = new PlainAccount(clientId, amount);
+        var newAccount = new PlainAccount(clientId, termOfMonth, timeOfCreated, amount );
         return newAccount;
     }
 }

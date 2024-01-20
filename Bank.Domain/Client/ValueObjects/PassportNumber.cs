@@ -1,7 +1,7 @@
-﻿namespace Bank.Domain.Client;
+﻿namespace Bank.Domain.Client.ValueObjects;
 
 public sealed class PassportNumber : ValueObject
-{    
+{
     public const int MinNumberValue = 100;
     public const int MaxNumberValue = 999999;
 
@@ -14,7 +14,7 @@ public sealed class PassportNumber : ValueObject
 
     public static PassportNumber SetNumber(string number)
     {
-        if(!IsNumber(number))
+        if (!IsNumber(number))
         {
             throw new ArgumentException($"Номер \"{nameof(number)}\" не является номером паспорта");
         };
@@ -38,7 +38,7 @@ public sealed class PassportNumber : ValueObject
             return false;
         }
         return true;
-    }    
+    }
 
     public override string ToString()
     {

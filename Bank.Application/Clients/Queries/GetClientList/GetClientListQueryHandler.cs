@@ -1,21 +1,28 @@
-﻿using Bank.Application.Interfaces;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Bank.Application.Interfaces;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bank.Application.Clients.Queries.GetClientList;
 
 public class GetClientListQueryHandler : IRequestHandler<GetClientListQuery, ClientListVM>
 {
-    private readonly IClientRepository _clientsDbContext;
+    private readonly IApplicationDbContext _dbContext;
+    private readonly IMapper _mapper;
 
-    public GetClientListQueryHandler(IClientRepository clientsDbContext)
+    public GetClientListQueryHandler(IApplicationDbContext dbContext, IMapper mapper)
     {
-        _clientsDbContext = clientsDbContext;
+        _dbContext = dbContext;
+        _mapper = mapper;
     }
 
-    public Task<ClientListVM> Handle(GetClientListQuery request, CancellationToken cancellationToken)
+    public async Task<ClientListVM> Handle(GetClientListQuery request, CancellationToken cancellationToken)
     {
-        var clientsQuery = _clientsDbContext.GetListClient(cancellationToken);        
+        var clientsQuery = await _dbContext.Clients
+            .ProjectTo<ClientLookUpDTO>(_mapper.ConfigurationProvider)
+            .ToListAsync(cancellationToken);
 
-        return clientsQuery;
+        return new ClientListVM { Clients = clientsQuery };
     }
 }
