@@ -1,5 +1,6 @@
 ﻿using Bank.Domain.Bank;
 using Bank.Domain.Client.ValueObjects;
+using Bank.Domain.Root;
 
 namespace Bank.Domain.Client;
 
@@ -13,7 +14,7 @@ public sealed class Client : Entity
 
     public PhoneNumber PhoneNumber { get; private set; }
 
-    public PassportSerie PassportSerie { get; private set; }
+    public PassportSeries PassportSeries { get; private set; }
 
     public PassportNumber PassportNumber { get; private set; }
 
@@ -27,14 +28,14 @@ public sealed class Client : Entity
     public Client() { }
 
     public Client(Guid id, string firstname, string lastname, string patronymic, string phoneNumber, 
-        string seriePassport, string numberPassport, string totalIncome, SomeBank bank)
+        string seriesPassport, string numberPassport, string totalIncome, SomeBank bank)
         :base(id)
     {        
         Firstname = Firstname.SetName(firstname);
         Lastname = Lastname.SetName(lastname);
         Patronymic = Patronymic.SetName(patronymic);
         PhoneNumber = PhoneNumber.SetNumber(phoneNumber);
-        PassportSerie = PassportSerie.SetSerie(seriePassport);
+        PassportSeries = PassportSeries.SetSeries(seriesPassport);
         PassportNumber = PassportNumber.SetNumber(numberPassport);
         TotalIncomePerMounth = TotalIncomePerMounth.SetIncome(totalIncome);
         Accounts = new List<Account.Account>();
@@ -58,9 +59,9 @@ public sealed class Client : Entity
     {
         PhoneNumber = PhoneNumber.SetNumber(number);
     }
-    public void ChangePassportSerie(string number)
+    public void ChangePassportSeries(string number)
     {
-        PassportSerie = PassportSerie.SetSerie(number);
+        PassportSeries = PassportSeries.SetSeries(number);
     }
     public void ChangePassportNumber(string number)
     {

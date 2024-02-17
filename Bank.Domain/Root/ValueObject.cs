@@ -1,4 +1,4 @@
-﻿namespace Bank.Domain;
+﻿namespace Bank.Domain.Root;
 
 public abstract class ValueObject
 {
@@ -16,8 +16,8 @@ public abstract class ValueObject
         return !EqualOperator(left, right);
     }
 
-    protected abstract IEnumerable<Object> GetEqalityComponents();
-    public sealed override bool Equals(object obj)
+    protected abstract IEnumerable<object> GetEqalityComponents();
+    public sealed override bool Equals(object? obj)
     {
         if(obj == null || obj.GetType() != GetType())
         {
@@ -30,11 +30,11 @@ public abstract class ValueObject
 
     public sealed override int GetHashCode()
         => GetEqalityComponents()
-        .Select(x => x != null ? x.GetHashCode() : 0)
+        .Select(x => x.GetHashCode())
         .Aggregate((x, y) => x ^ y);
 
     public override string ToString()
     {
-        return base.ToString();
+        return base.ToString() ?? throw new InvalidOperationException();
     }
 }

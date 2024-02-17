@@ -14,7 +14,7 @@ public class CreateBankCommandHandler : IRequestHandler<CreateBankCommand, SomeB
         _dbContext = dbContext;
     }
 
-    public async Task<SomeBank> Handle(CreateBankCommand request, CancellationToken cancellationToken)
+    public async Task<SomeBank?> Handle(CreateBankCommand request, CancellationToken cancellationToken)
     {
 
         var entity = await _dbContext.Bank.FirstOrDefaultAsync(cancellationToken);

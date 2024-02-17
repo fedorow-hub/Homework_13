@@ -6,7 +6,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Homework_13.Views"
         xmlns:cmd="clr-namespace:Homework_13.Infrastructure.Commands"
+        Icon ="../../Resources/Images/icons8-bank-100.png"
         xmlns:vm="clr-namespace:Homework_13.ViewModels"
+        Style="{StaticResource WindowStyle}"
         DataContext="{Binding LoginWindowModel, Source={StaticResource Locator}}"
         mc:Ignorable="d"
         Title="Авторизация" Height="350" Width="520" WindowStartupLocation="CenterScreen" >

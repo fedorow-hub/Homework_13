@@ -1,4 +1,5 @@
-﻿using Bank.Application.Interfaces;
+﻿using System.Globalization;
+using Bank.Application.Interfaces;
 using MediatR;
 
 namespace Bank.Application.Clients.Commands.UpdateClient;
@@ -16,16 +17,14 @@ public class UpdateClientCommandHandler : IRequestHandler<UpdateClientCommand>
     {
         var client = _context.Clients.FirstOrDefault(r => r.Id == request.Id);
 
-        client.ChangeFirstname(request.Firstname);
-        client.ChangeLastname(request.Lastname);
-        client.ChangePatronymic(request.Patronymic);
-        client.ChangePhoneNumber(request.PhoneNumber);
-        client.ChangePassportSerie(request.PassportSerie);
-        client.ChangePassportNumber(request.PassportNumber);
-        client.ChangeTotalIncomePerMounth(request.TotalIncomePerMounth.ToString());
+        client?.ChangeFirstname(request.Firstname);
+        client?.ChangeLastname(request.Lastname);
+        client?.ChangePatronymic(request.Patronymic);
+        client?.ChangePhoneNumber(request.PhoneNumber);
+        client?.ChangePassportSeries(request.PassportSeries);
+        client?.ChangePassportNumber(request.PassportNumber);
+        client?.ChangeTotalIncomePerMounth(request.TotalIncomePerMounth.ToString(CultureInfo.CurrentCulture));
 
-        _context.SaveChangesAsync(cancellationToken);
-
-        return;
+        await _context.SaveChangesAsync(cancellationToken);
     }
 }

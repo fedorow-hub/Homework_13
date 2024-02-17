@@ -18,6 +18,5 @@ public class DeleteClientCommandHandler : IRequestHandler<DeleteClientCommand>
 
         _context.SaveChangesAsync(cancellationToken);
 
-        return;
     }
 }

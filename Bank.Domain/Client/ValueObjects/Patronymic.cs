@@ -1,4 +1,6 @@
-﻿namespace Bank.Domain.Client.ValueObjects;
+﻿using Bank.Domain.Root;
+
+namespace Bank.Domain.Client.ValueObjects;
 
 public class Patronymic : ValueObject
 {
@@ -20,14 +22,8 @@ public class Patronymic : ValueObject
 
     public static bool IsName(string name)
     {
-        if(name.Length > 0)
-        {
-            if (char.IsUpper(name[0]) && name.Length > 2)
-            {
-                return true;
-            }
-        }            
-        return false;
+        if (name.Length <= 0) return false;
+        return char.IsUpper(name[0]) && name.Length > 2;
     }
 
     protected override IEnumerable<object> GetEqalityComponents()

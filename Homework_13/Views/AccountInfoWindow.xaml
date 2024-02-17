@@ -1,0 +1,41 @@
+﻿<Window x:Class="Homework_13.Views.AccountInfoWindow"
+        x:Name="AccountWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        d:DataContext="{Binding AccountViewModel, Source={StaticResource Locator}}"
+        xmlns:local="clr-namespace:Homework_13.Views"
+        mc:Ignorable="d"
+        Title="AccountInfoWindow" Height="266" Width="429" WindowStartupLocation="CenterScreen">
+    <StackPanel Margin="10,0,10,0" Height="241" VerticalAlignment="Center" >
+        <Grid>
+            <Grid.RowDefinitions >
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Margin="10,10" FontSize="20" Foreground="Gray" Text="Тип счета:"/>
+            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding AccountTypes}" FontSize="20" Margin="3,0,3,10" 
+                      Text="{Binding Type}" />
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Сумма в рублях:" Margin="10,10" FontSize="20" Foreground="Gray"/>
+            <TextBox Grid.Row="1" Grid.Column="1" PreviewTextInput="NumberValidationTextBox" FontSize="20" Margin="3,0,3,10" 
+                     Text="{Binding Amount}"/>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Срок действия:" Margin="10,10" FontSize="20" Foreground="Gray"/>
+            <DatePicker Grid.Row="2" Grid.Column="1" PreviewTextInput="NumberValidationTextBox" FontSize="20" Margin="3,0,3,10" 
+                      SelectedDate="{Binding AccountTerm, UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
+        <StackPanel Orientation="Horizontal" Width="320" Margin="5,20">
+            <Button Content="Сохранить" Margin="0,0,20,0" Width="150"
+                Command="{Binding Path=SaveCommand}"
+                CommandParameter="{Binding ElementName=AccountWindow}" Cursor="Hand"/>
+            <Button Content="Отмена" Width="150" Cursor="Hand"
+                Command="{Binding OutCommand}" 
+                CommandParameter="{Binding ElementName=AccountWindow}" />
+        </StackPanel>
+    </StackPanel>
+</Window>

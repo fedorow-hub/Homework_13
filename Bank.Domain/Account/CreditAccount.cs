@@ -20,14 +20,14 @@ public sealed class CreditAccount : Account
     }
 
     public CreditAccount(Guid id, Guid clientId, byte termOfMonth, decimal amount, DateTime timeOfCreated) 
-        : base(id, clientId, termOfMonth, amount, timeOfCreated)
+        : base(id, clientId, termOfMonth, amount, timeOfCreated, TypeOfAccount.Credit)
     {
         LoanInterest = SetLoanInterest();
         MouthlyPayment = SetMonthlyPayment(termOfMonth);
     }
 
     private CreditAccount(Guid clientId, byte termOfMonth, decimal amount, DateTime timeOfCreated)
-        : base(clientId, termOfMonth, amount, timeOfCreated)
+        : base(clientId, termOfMonth, amount, timeOfCreated, TypeOfAccount.Deposit)
     {
         LoanInterest = SetLoanInterest();
         MouthlyPayment = SetMonthlyPayment(termOfMonth);
@@ -36,11 +36,12 @@ public sealed class CreditAccount : Account
     /// <summary>
     /// метод создания счета
     /// </summary>
-    /// <param name="clientId"></param>
-    /// <param name="currency"></param>
+    /// <param name="client"></param>
     /// <param name="termOfMonth"></param>
     /// <param name="amount"></param>
+    /// <param name="timeOfCreated"></param>
     /// <returns></returns>
+    /// <exception cref="DomainExeption"></exception>
     public static CreditAccount CreateCreditAccount(Client.Client client, byte termOfMonth, decimal amount, DateTime timeOfCreated)
     {
         if(client.TotalIncomePerMounth.Income/2 < amount / termOfMonth)
@@ -62,7 +63,7 @@ public sealed class CreditAccount : Account
         return Amount / termOfMonth + mouthlyPercent;       
     }
 
-    private InterestRate SetLoanInterest()
+    private static InterestRate SetLoanInterest()
     {
         return InterestRate.MaxRate;
     }

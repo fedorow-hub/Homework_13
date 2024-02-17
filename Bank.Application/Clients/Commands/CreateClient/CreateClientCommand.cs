@@ -2,24 +2,21 @@
 
 namespace Bank.Application.Clients.Commands.CreateClient
 {
-    /// <summary>
-    /// данный класс содержит только информацию о том, что необходимо для создания клиента
-    /// </summary>
     public record CreateClientCommand : IRequest
     {
         public Guid Id { get; init; }
-        public string Firstname { get; init; }
+        public string Firstname { get; init; } = null!;
 
-        public string Lastname { get; init; }
+        public string Lastname { get; init; } = null!;
 
-        public string Patronymic { get; init; }
+        public string Patronymic { get; init; } = null!;
 
-        public string PhoneNumber { get; init; }
+        public string PhoneNumber { get; init; } = null!;
 
-        public string PassportSerie { get; init; }
+        public string PassportSeries { get; init; } = null!;
 
-        public string PassportNumber { get; init; }
+        public string PassportNumber { get; init; } = null!;
 
-        public string TotalIncomePerMounth { get; init; }
+        public string TotalIncomePerMounth { get; init; } = null!;
     }
 }

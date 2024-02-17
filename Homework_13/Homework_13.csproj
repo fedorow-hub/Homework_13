@@ -10,6 +10,8 @@
 
   <ItemGroup>
     <None Remove="Resources\Images\bank.jpg" />
+    <None Remove="Resources\Images\icons8-adobe-photoshop-48.png" />
+    <None Remove="Resources\Images\icons8-bank-100.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,7 +24,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,6 +36,7 @@
     <Resource Include="Resources\Images\bank.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\Images\icons8-bank-100.png" />
   </ItemGroup>
 
   <ItemGroup>

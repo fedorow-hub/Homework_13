@@ -5,16 +5,16 @@ using MediatR;
 
 namespace Bank.Application.Clients.Queries.GetClientDetails;
 
-public class GetClientDetailsQueryHandler : IRequestHandler<GetClientDetaialsQuery, ClientDetailsVM>
+public class GetClientDetailsQueryHandler : IRequestHandler<GetClientDetaialsQuery, ClientDetailsVm>
 {
     public GetClientDetailsQueryHandler()
     {
     }
 
-    public async Task<ClientDetailsVM> Handle(GetClientDetaialsQuery request, CancellationToken cancellationToken)
+    public async Task<ClientDetailsVm> Handle(GetClientDetaialsQuery request, CancellationToken cancellationToken)
     {
         
-        ClientDetailsVM client = new ClientDetailsVM();
+        var client = new ClientDetailsVm();
         if (client == null)
         {
             throw new NotFoundException(nameof(Client), request.ClientId);

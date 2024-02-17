@@ -9,7 +9,7 @@ namespace Bank.DAL;
 
 public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
 {
-    public DbSet<SomeBank> Bank { get; set; } = null!;
+    public DbSet<SomeBank?> Bank { get; set; } = null!;
     public DbSet<Client> Clients { get; set; } = null!;
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

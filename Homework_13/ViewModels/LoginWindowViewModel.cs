@@ -2,6 +2,7 @@
 using Homework_13.ViewModels.Base;
 using System.Windows;
 using System.Windows.Input;
+using Homework_13.Views;
 
 namespace Homework_13.ViewModels;
 
@@ -22,8 +23,10 @@ public class LoginWindowViewModel : ViewModel
     public ICommand ComeInCommand { get; }
     private void OnComeInCommandExecuted(object p)
     {
-        MainWindow mainWindow = new MainWindow();
-        mainWindow.DataContext = _mainWindowViewModel;
+        var mainWindow = new MainWindow
+        {
+            DataContext = _mainWindowViewModel
+        };
         mainWindow.Show();
 
         if (p is Window window)
@@ -31,16 +34,16 @@ public class LoginWindowViewModel : ViewModel
             window.Close();
         }
     }
-    private bool CanSetComeInCommandExecute(object p) => true;
+    private static bool CanSetComeInCommandExecute(object p) => true;
     #endregion
 
     #region OutCommand
     public ICommand OutCommand { get; }
-    private void OnOutCommandExecuted(object p)
+    private static void OnOutCommandExecuted(object p)
     {
         Application.Current.Shutdown();
     }
-    private bool CanOutCommandExecute(object p) => true;
+    private static bool CanOutCommandExecute(object p) => true;
     #endregion
     #endregion    
 }

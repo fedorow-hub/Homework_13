@@ -1,4 +1,6 @@
-﻿namespace Bank.Domain.Client.ValueObjects;
+﻿using Bank.Domain.Root;
+
+namespace Bank.Domain.Client.ValueObjects;
 
 public sealed class PassportNumber : ValueObject
 {
@@ -17,27 +19,21 @@ public sealed class PassportNumber : ValueObject
         if (!IsNumber(number))
         {
             throw new ArgumentException($"Номер \"{nameof(number)}\" не является номером паспорта");
-        };
+        }
         return new PassportNumber(number);
     }
 
     /// <summary>
     /// Проверка, являются ли вводимые данные номером паспорта
     /// </summary>
-    /// <param name="number">Номер</param>
+    /// <param name="value"></param>
     /// <returns></returns>
     public static bool IsNumber(string value)
     {
-        int number;
-
-        if (!int.TryParse(value, out number))
+        if (!int.TryParse(value, out var number))
             return false;
 
-        if (number < MinNumberValue || number > MaxNumberValue)
-        {
-            return false;
-        }
-        return true;
+        return number is >= MinNumberValue and <= MaxNumberValue;
     }
 
     public override string ToString()

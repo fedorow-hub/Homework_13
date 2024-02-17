@@ -3,98 +3,119 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Configuration;
+
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Net;
 
 
 namespace ForExperiments
 {
     internal class Program
     {
-        //private const string data_url = "https://www.cbr-xml-daily.ru/daily_json.js";
-
-        //private static async Task<Stream> GetDataStream()
-        //{
-        //    var client = new HttpClient();
-        //    var response = client.GetAsync(data_url, HttpCompletionOption.ResponseHeadersRead).Result;
-        //    return await response.Content.ReadAsStreamAsync();
-        //}
-
-        //private static IEnumerable<string> GetDataLines()
-        //{
-        //    using (var data_stream = GetDataStream().Result)
-        //    {
-        //        using (var data_reader = new StreamReader(data_stream))
-        //        {
-        //            while (!data_reader.EndOfStream)
-        //            {
-        //                var line = data_reader.ReadLine();
-        //                if (string.IsNullOrWhiteSpace(line)) continue;
-        //                yield return line;
-        //            };
-        //        }
-        //    }
-        //}
-
-        //public static string[] GetAllData()
-        //{
-        //    string[] data = new string[5];
-
-        //    string[] allLines = GetDataLines().ToArray();
-        //    string lineWithDate = allLines.Skip(1).First();
-        //    data[0] = lineWithDate.Substring(13, 10);
-
-        //    string lineWithUSDRate = allLines.Skip(129).First();
-        //    data[1] = lineWithUSDRate.Substring(21, 7).Replace(".", ",");
-
-        //    string lineWithUSDPreviousRate = allLines.Skip(130).First();
-        //    data[2] = lineWithUSDPreviousRate.Substring(24, 7).Replace(".", ",");
-
-        //    string lineWithEuroRate = allLines.Skip(138).First();
-        //    data[3] = lineWithEuroRate.Substring(21, 7).Replace(".", ",");
-
-        //    string lineWithEuroPreviousRate = allLines.Skip(139).First();
-        //    data[4] = lineWithEuroPreviousRate.Substring(24, 7).Replace(".", ",");
-
-        //    return data;
-        //}
-
-
+        private static bool _ThreadUpdate = true;
 
         static void Main(string[] args)
         {
-            var setting = new ConnectionStringSettings
+
+            //Thread.CurrentThread.Name = "Main thread";
+
+            //var clock_thread = new Thread(ThreadMethod);
+            //clock_thread.Name = "Other thread";
+            //clock_thread.IsBackground = true;
+            //clock_thread.Priority = ThreadPriority.AboveNormal;
+
+            //clock_thread.Start(45);
+
+            //var msg = "Hello";
+            //var count = 5;
+            //var timeOut = 150;
+            //new Thread(() => PrintMethod(msg, count, timeOut))
+            //{ IsBackground = true }.Start();
+
+            //CheckThread();
+
+            //for (var i = 0; i < 100; i++)
+            //{
+            //    Thread.Sleep(100);
+            //    Console.WriteLine(i);
+            //}
+            //var values = new List<int>();
+            //var threads = new Thread[10];
+            //object lock_object = new object();
+
+            //for (var i = 0; i < threads.Length; i++)
+            //{
+            //    threads[i] = new Thread(() =>
+            //    {
+            //        for(var j = 0; j < 10; j++)
+            //            lock(lock_object)
+            //                values.Add(Thread.CurrentThread.ManagedThreadId);
+            //    });
+            //}
+
+            ManualResetEvent manaManualResetEvent = new ManualResetEvent(false);
+            AutoResetEvent autoResetEvent = new AutoResetEvent(false);
+
+            //объект синхронизации потоков
+            EventWaitHandle threadGuidance = autoResetEvent;
+
+            var testThreads = new Thread[10];
+
+            for (var i = 0; i < testThreads.Length; i++)
             {
-                Name = "MyConnectionString",
-                ConnectionString = @"Data Source;"
-            };
-
-            Configuration config;
-            config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            config.ConnectionStrings.ConnectionStrings.Add(setting);
-            config.Save();
-
-            ConnectionStringsSection section = config.GetSection("connectionString") as ConnectionStringsSection;
-
-            if (section.SectionInformation.IsProtected)
-            {
-                section.SectionInformation.UnprotectSection();
+                var local_i = i;
+                testThreads[i] = new Thread(() =>
+                {
+                    Console.WriteLine("Поток id:{0} - стартовал", Thread.CurrentThread.ManagedThreadId);
+                    threadGuidance.WaitOne();
+                    Console.WriteLine("Value: {0}", local_i);
+                    Console.WriteLine("Поток id:{0} - завершился", Thread.CurrentThread.ManagedThreadId);
+                });
+                testThreads[i].Start();
             }
-            else
+            Console.WriteLine("Готов к запуску");
+            Console.ReadLine();
+
+            threadGuidance.Set();
+
+
+            //foreach (var thred in threads)
+            //{
+            //    thred.Start();
+            //}
+
+            Console.ReadLine();
+           //Console.WriteLine(string.Join(",", values));
+            Console.ReadLine();
+        }
+        [MethodImpl()]
+        private static void PrintMethod(string Message, int Count, int Timeout)
+        {
+            for (var i = 0; i < Count; i++)
             {
-                section.SectionInformation.ProtectSection(
-                    "DataProtectionConfigurationProvider");
+                Console.WriteLine(Message);
+                Thread.Sleep(Timeout);
             }
+        }
 
-            config.Save();
+        private static void ThreadMethod(object parameter)
+        {
+            var value = (int)parameter;
+            Console.WriteLine(value);
+            CheckThread();
 
-            Console.WriteLine($"Protected={section.SectionInformation.IsProtected}");
-
-            Console.WriteLine(ConfigurationManager.ConnectionStrings["MyConnectionString"].ConnectionString);
-
-
+            while (_ThreadUpdate)
+            {
+                Thread.Sleep(100);
+                Console.Title = DateTime.Now.ToString();
+            }
+        }
+        
+        private static void CheckThread()
+        {
+            var thread = Thread.CurrentThread;
+            Console.WriteLine("{0}:{1}", thread.ManagedThreadId, thread.Name);
         }
     }
 }

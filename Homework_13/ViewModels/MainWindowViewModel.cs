@@ -1,11 +1,8 @@
 ﻿using Bank.Application.Bank.Commands;
-using Bank.Application.Clients.Commands.CreateClient;
 using Bank.Application.Clients.Commands.DeleteClient;
 using Bank.Application.Clients.Queries.GetClientList;
 using Bank.Application.Interfaces;
 using Bank.Domain.Bank;
-using Bank.Domain.Client;
-using Bank.Domain.Client.ValueObjects;
 using Homework_13.Infrastructure.Commands;
 using Homework_13.ViewModels.Base;
 using Homework_13.Views;
@@ -15,41 +12,90 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.ComponentModel;
+using System.Windows.Data;
+using Homework_13.Views.AccountOperationWindow;
 
 namespace Homework_13.ViewModels;
 
 public class MainWindowViewModel : ViewModel
 {
-    private IMediator _mediator;
+    private readonly IMediator _mediator;
+
+    public Action UpdateClientList;
     public string Date { get; private set; }
 
     #region Currency
     public decimal DollarCurrentRate { get; private set; }
     public decimal EuroCurrentRate { get; private set; }
-
-    public string IconDollar { get; private set; }
-    public string ColorDollar { get; private set; }
-    public string IconEuro { get; private set; }
-    public string ColorEuro { get; private set; }
     #endregion
 
-    private ObservableCollection<ClientLookUpDTO> clients;
+    private ObservableCollection<ClientLookUpDto> _clients;
 
-    public ObservableCollection<ClientLookUpDTO> Clients
+    public ObservableCollection<ClientLookUpDto> Clients
     {
-        get => clients;
-        set => Set(ref clients, value);
+        get => _clients;
+        set
+        {
+            Set(ref _clients, value);
+            _selectedClients.Source = Clients;
+            OnPropertyChanged(nameof(SelectedClients));
+        }
     }
+
+    private string _clientFilterText;
+
+    public string ClientFilterText
+    {
+        get => _clientFilterText;
+        set
+        {
+            if(!Set(ref _clientFilterText, value)) return;
+            _selectedClients.View.Refresh();
+        }
+    }
+
+    #region FilteredClient
+
+    private readonly CollectionViewSource _selectedClients = new();
+
+    private void OnClientFiltred(object sender, FilterEventArgs e)
+    {
+        if (!(e.Item is ClientLookUpDto client))
+        {
+            e.Accepted = false;
+            return;
+        }
+        var filterText = _clientFilterText;
+
+        if (string.IsNullOrWhiteSpace(filterText)) return;
+
+        if (client.Firstname is null || client.Lastname is null || client.Patronymic is null)
+        {
+            e.Accepted = false;
+            return;
+        }
+
+        if (client.Firstname.Contains(filterText, StringComparison.OrdinalIgnoreCase)) return;
+        if (client.Lastname.Contains(filterText, StringComparison.OrdinalIgnoreCase)) return;
+        if (client.Patronymic.Contains(filterText, StringComparison.OrdinalIgnoreCase)) return;
+
+        e.Accepted = false;
+    }
+
+    public ICollectionView SelectedClients => _selectedClients?.View;
+
+    #endregion
 
     private readonly IExchangeRateService _exchangeRateService;
 
     #region Title
 
     private string _title;
-    
+
     public string Title
     {
-        get { return _title; }
+        get => _title;
         set => Set(ref _title, value);
     }
     #endregion
@@ -57,31 +103,34 @@ public class MainWindowViewModel : ViewModel
     public MainWindowViewModel(IExchangeRateService exchangeRateService, IMediator mediator)
     {
         _exchangeRateService = exchangeRateService;
-        _mediator = mediator;   
+        _mediator = mediator;
 
         Title = $"Банк {GetExistBankOrCreateAsync().Result.Name}, капитал банка: {GetExistBankOrCreateAsync().Result.Capital} руб.";
 
-        Clients = new ObservableCollection<ClientLookUpDTO>(GetAllClients().Result.Clients);
         #region Currency
 
         Date = _exchangeRateService.GetDate();
-        DollarCurrentRate = _exchangeRateService.GetDollarExchangeRate();
-        EuroCurrentRate = _exchangeRateService.GetEuroExchangeRate();
-
-        IconDollar = GetStileIcon(_exchangeRateService.IsUSDRateGrow()).Item1;
-        ColorDollar = GetStileIcon(_exchangeRateService.IsUSDRateGrow()).Item2;
-        IconEuro = GetStileIcon(_exchangeRateService.IsEuroRateGrow()).Item1;
-        ColorEuro = GetStileIcon(_exchangeRateService.IsEuroRateGrow()).Item2;
+        DollarCurrentRate = _exchangeRateService.GetDollarExchangeRate().cur;
+        EuroCurrentRate = _exchangeRateService.GetEuroExchangeRate().cur;
         #endregion
 
         #region commands
         DeleteClientCommand = new LambdaCommand(OnDeleteClientCommandExecute, CanDeleteClientCommandExecute);
         OutLoggingCommand = new LambdaCommand(OnOutLoggingCommandExecute, CanOutLoggingCommandExecute);
-        AddClientCommand = new LambdaCommand(OnAddClientCommandExecute, CanAddClientCommandExecute);
         EditClientCommand = new LambdaCommand(OnEditClientCommandExecute, CanEditClientCommandExecute);
 
         OpenOperationWindowCommand = new LambdaCommand(OnOpenOperationWindowCommandExecute, CanOpenOperationWindowCommandExecute);
+
+        UpdateClientList += UpdateClients;
+        UpdateClientList.Invoke();
         #endregion
+
+        _selectedClients.Filter += OnClientFiltred;
+    }
+
+    private void UpdateClients()
+    {
+        Clients = new ObservableCollection<ClientLookUpDto>(GetAllClients().Result.Clients);
     }
 
     private async Task<SomeBank> GetExistBankOrCreateAsync()
@@ -93,12 +142,12 @@ public class MainWindowViewModel : ViewModel
             DateOfCreation = DateTime.Now
         };
 
-        SomeBank result = await _mediator.Send(createBankCommand);
+        var result = await _mediator.Send(createBankCommand);
 
         return result;
     }
-
-    private async Task<ClientListVM> GetAllClients()
+    
+    private async Task<ClientListVm> GetAllClients()
     {
         var query = new GetClientListQuery();
         var result = await _mediator.Send(query);
@@ -106,38 +155,15 @@ public class MainWindowViewModel : ViewModel
         return result;
     }
 
-    /// <summary>
-    /// Метод возвращает нужный вид и цвет иконки динамики курса валют
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="obj"></param>
-    /// <returns></returns>
-    private (string icon, string color) GetStileIcon(bool isGrow)
-    {
-        string icon = "";
-        string color = "";
-        if (isGrow)
-        {
-            icon = "Solid_SortUp";
-            color = "Green";
-        }
-        else
-        {
-            icon = "Solid_SortDown";
-            color = "Red";
-        }
-        return (icon, color);
-    }
-
     #region Команды
     #region OutLoggingCommand
     public ICommand OutLoggingCommand { get; }
 
-    private bool CanOutLoggingCommandExecute(object p) => true;
+    private static bool CanOutLoggingCommandExecute(object p) => true;
 
-    private void OnOutLoggingCommandExecute(object p)
+    private static void OnOutLoggingCommandExecute(object p)
     {
-        LoginWindow loginWindow = new LoginWindow();
+        var loginWindow = new LoginWindow();
         loginWindow.Show();
 
         if (p is Window window)
@@ -147,22 +173,6 @@ public class MainWindowViewModel : ViewModel
     }
     #endregion
 
-    #region AddClientCommand
-
-    public ICommand AddClientCommand { get; }
-
-    private bool CanAddClientCommandExecute(object p) => true;
-
-    private void OnAddClientCommandExecute(object p)
-    {
-        ClientInfoWindow infoWindow = new ClientInfoWindow();
-        ClientInfoViewModel viewModel = new ClientInfoViewModel(new ClientLookUpDTO(), _mediator);
-        infoWindow.DataContext = viewModel;
-        infoWindow.Show();
-    }
-
-    #endregion
-
 
     #region DeleteClient
 
@@ -170,19 +180,19 @@ public class MainWindowViewModel : ViewModel
 
     private bool CanDeleteClientCommandExecute(object p)
     {
-        if (SelectedClient != null)
-            return true;
-        else return false;
+        return SelectedClient != null;
     }
-
     private void OnDeleteClientCommandExecute(object p)
     {
         if (SelectedClient is null) return;
-
+        
         var command = new DeleteClientCommand
         {
-            Id = SelectedClient.Id,            
+            Id = SelectedClient.Id,
         };
+
+        Clients.Remove(SelectedClient);
+
         _mediator.Send(command);
     }
     #endregion
@@ -193,19 +203,27 @@ public class MainWindowViewModel : ViewModel
 
     private bool CanEditClientCommandExecute(object p)
     {
-        if (SelectedClient is null)
-            return false;
-        return true;
+        return SelectedClient is not null;
     }
-
+    private ClientInfoWindow _clientInfoWindow;
     private void OnEditClientCommandExecute(object p)
     {
         if (SelectedClient is null) return;
 
-        ClientInfoWindow infoWindow = new ClientInfoWindow();
-        ClientInfoViewModel viewModel = new ClientInfoViewModel(SelectedClient, _mediator);
-        infoWindow.DataContext = viewModel;
-        infoWindow.Show();
+        var window = new ClientInfoWindow
+        {
+            Owner = Application.Current.MainWindow
+        };
+        _clientInfoWindow = window;
+        window.DataContext = new ClientInfoViewModel(this, _mediator, SelectedClient);
+        window.Closed += OnWindowClosed;
+        window.ShowDialog();
+    }
+
+    private void OnWindowClosed(object? sender, EventArgs e)
+    {
+        ((Window)sender!).Closed -= OnWindowClosed;
+        _clientInfoWindow = null;
     }
     #endregion
 
@@ -215,17 +233,15 @@ public class MainWindowViewModel : ViewModel
 
     private bool CanOpenOperationWindowCommandExecute(object p)
     {
-        if (SelectedClient is null)
-            return false;
-        return true;
+        return SelectedClient is not null;
     }
 
     private void OnOpenOperationWindowCommandExecute(object p)
     {
         if (SelectedClient is null) return;
 
-        OperationsWindow operationWindow = new OperationsWindow();
-        OperationsWindowViewModel viewModel = new OperationsWindowViewModel(SelectedClient, this);
+        var operationWindow = new OperationsWindow();
+        var viewModel = new OperationsWindowViewModel(SelectedClient, this, _mediator);
         operationWindow.DataContext = viewModel;
         operationWindow.Show();
 
@@ -241,14 +257,14 @@ public class MainWindowViewModel : ViewModel
 
     #region SelectedClient
 
-    private ClientLookUpDTO _SelectedClient;
+    private ClientLookUpDto _selectedClient;
     /// <summary>
     /// Выбранный клиент
     /// </summary>
-    public ClientLookUpDTO SelectedClient
+    public ClientLookUpDto SelectedClient
     {
-        get { return _SelectedClient; }
-        set => Set(ref _SelectedClient, value);
+        get => _selectedClient;
+        set => Set(ref _selectedClient, value);
     }
     #endregion
 

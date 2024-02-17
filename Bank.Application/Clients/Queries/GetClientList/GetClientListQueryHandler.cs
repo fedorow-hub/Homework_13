@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bank.Application.Clients.Queries.GetClientList;
 
-public class GetClientListQueryHandler : IRequestHandler<GetClientListQuery, ClientListVM>
+public class GetClientListQueryHandler : IRequestHandler<GetClientListQuery, ClientListVm>
 {
     private readonly IApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
@@ -17,12 +17,12 @@ public class GetClientListQueryHandler : IRequestHandler<GetClientListQuery, Cli
         _mapper = mapper;
     }
 
-    public async Task<ClientListVM> Handle(GetClientListQuery request, CancellationToken cancellationToken)
+    public async Task<ClientListVm> Handle(GetClientListQuery request, CancellationToken cancellationToken)
     {
         var clientsQuery = await _dbContext.Clients.AsNoTracking()
-            .ProjectTo<ClientLookUpDTO>(_mapper.ConfigurationProvider)
+            .ProjectTo<ClientLookUpDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
 
-        return new ClientListVM { Clients = clientsQuery };
+        return new ClientListVm { Clients = clientsQuery };
     }
 }

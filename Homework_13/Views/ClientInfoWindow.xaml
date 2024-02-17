@@ -6,17 +6,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Homework_13.Views"
         xmlns:vm="clr-namespace:Homework_13.ViewModels" 
+        Icon ="../../Resources/Images/icons8-bank-100.png"
         xmlns:c="clr-namespace:Homework_13.Infrastructure.Convertors"
         mc:Ignorable="d"
-        Title="Карта клиента" Height="390" Width="605" WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize">
-    <Window.DataContext>
-        <vm:ClientInfoViewModel />
-    </Window.DataContext>
+        DataContext="{Binding ClientInfoModel, Source={StaticResource Locator}}"
+        Title="{Binding Title}" Height="390" Width="605" WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">    
     <Window.Resources>
         <c:InputValueValidationConvertor x:Key="InputValueValidationConvertor" />
     </Window.Resources>
-    <StackPanel Margin="10">
+    <StackPanel Margin="10" >
         <StackPanel.Resources>
             <Style x:Key="BorderToTextBox" TargetType="{x:Type Border}">
                 <Setter Property="CornerRadius" Value="5"/>
@@ -61,9 +60,9 @@
             <TextBlock Grid.Row="4" Grid.Column="0" Text="Паспорт:" Margin="10,0" FontSize="20" Foreground="Gray"/>
             <StackPanel Grid.Row="4" Grid.Column="1" Margin="0,5" Orientation="Horizontal" >
                 <TextBlock Text="серия:" FontSize="20" Foreground="Gray"/>
-                <Border Style="{StaticResource BorderToTextBox}" BorderBrush="{Binding BorderPassportSerie, Converter={StaticResource InputValueValidationConvertor}}">
+                <Border Style="{StaticResource BorderToTextBox}" BorderBrush="{Binding BorderPassportSeries, Converter={StaticResource InputValueValidationConvertor}}">
                     <TextBox Width="50" Cursor="Arrow" FontSize="18" 
-                     Text="{Binding PassportSerie, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                     Text="{Binding PassportSeries, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </Border>
                 <TextBlock Text="номер:" Margin="10,0" FontSize="20" Foreground="Gray"/>
                 <Border Style="{StaticResource BorderToTextBox}" BorderBrush="{Binding BorderPassportNumber, Converter={StaticResource InputValueValidationConvertor}}">

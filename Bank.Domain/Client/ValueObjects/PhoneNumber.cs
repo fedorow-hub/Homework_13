@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using Bank.Domain.Root;
 
 namespace Bank.Domain.Client.ValueObjects;
 
@@ -40,9 +41,7 @@ public sealed class PhoneNumber : ValueObject
     /// <returns></returns>
     public static bool IsPhoneNumber(string number)
     {
-        if (Regex.Match(number, @"^(\+[0-9]{11})$").Success || Regex.Match(number, @"^([0-9]{11})$").Success)
-            return true;
-        return false;
+        return Regex.Match(number, @"^(\+[0-9]{11})$").Success || Regex.Match(number, @"^([0-9]{11})$").Success;
     }
 
     protected override IEnumerable<object> GetEqalityComponents()

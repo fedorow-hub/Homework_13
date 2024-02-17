@@ -5,27 +5,27 @@ using Bank.Domain.Client;
 
 namespace Bank.Application.Clients.Queries.GetClientDetails;
 
-public class ClientDetailsVM : IMapWith<Client>
+public class ClientDetailsVm : IMapWith<Client>
 {
-    public string Firstname { get; set; }
+    public string Firstname { get; set; } = null!;
 
-    public string Lastname { get; set; }
+    public string Lastname { get; set; } = null!;
 
-    public string Patronymic { get; set; }
+    public string Patronymic { get; set; } = null!;
 
-    public string PhoneNumber { get; set; }
+    public string PhoneNumber { get; set; } = null!;
 
-    public string PassportSerie { get; set; }
+    public string PassportSeries { get; set; } = null!;
 
-    public string PassportNumber { get; set; }
+    public string PassportNumber { get; set; } = null!;
 
-    public string TotalIncomePerMounth { get; set; }
+    public string TotalIncomePerMounth { get; set; } = null!;
 
-    public List<Account> Accounts { get; set; }
+    public List<Account> Accounts { get; set; } = null!;
 
     public void Mapping(Profile profile)
     {
-        profile.CreateMap<Client, ClientDetailsVM>()
+        profile.CreateMap<Client, ClientDetailsVm>()
             .ForMember(clientVm => clientVm.Firstname,
                 opt => opt.MapFrom(client => client.Firstname))
             .ForMember(clientVm => clientVm.Lastname,
@@ -34,8 +34,8 @@ public class ClientDetailsVM : IMapWith<Client>
                 opt => opt.MapFrom(client => client.Patronymic))
             .ForMember(clientVm => clientVm.PhoneNumber,
                 opt => opt.MapFrom(client => client.PhoneNumber.Number))
-            .ForMember(clientVm => clientVm.PassportSerie,
-                opt => opt.MapFrom(client => client.PassportSerie.Serie))
+            .ForMember(clientVm => clientVm.PassportSeries,
+                opt => opt.MapFrom(client => client.PassportSeries.Series))
             .ForMember(clientVm => clientVm.PassportNumber,
                 opt => opt.MapFrom(client => client.PassportNumber.Number))
             .ForMember(clientVm => clientVm.TotalIncomePerMounth,

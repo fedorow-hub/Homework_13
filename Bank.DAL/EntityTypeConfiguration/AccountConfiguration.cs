@@ -11,6 +11,9 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
     {
         builder.HasKey(x => x.Id);
         builder.HasIndex(x => x.Id).IsUnique();
+        builder.Property(x => x.Type)
+            .HasConversion(type => type.Name,
+                value => TypeOfAccount.Parse(value));
         builder.HasOne<Client>()
             .WithMany()
             .HasForeignKey(x => x.ClientId)

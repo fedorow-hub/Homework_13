@@ -15,12 +15,16 @@ namespace Homework_13.ViewModels;
 public class ClientInfoViewModel : ViewModel
 {
     private IMediator _mediator;
-    public ClientLookUpDTO currentClient;
+    public ClientLookUpDto currentClient;
+    private MainWindowViewModel _mainWindowViewModel;
 
-    public ClientInfoViewModel() { }
-
-    public ClientInfoViewModel(ClientLookUpDTO client, IMediator mediator)
+    public ClientInfoViewModel()
     {
+    }
+
+    public ClientInfoViewModel(MainWindowViewModel mainWindowView, IMediator? mediator, ClientLookUpDto client = null)
+    {
+        _mainWindowViewModel = mainWindowView;
         _mediator = mediator;
         this.currentClient = client;
 
@@ -31,11 +35,12 @@ public class ClientInfoViewModel : ViewModel
         SaveCommand = new LambdaCommand(OnSaveCommandExecute, CanSaveCommandExecute);
     }
 
+
     /// <summary>
     /// Заполнение данных
     /// </summary>
     /// <param name="clientInfo"></param>
-    private void FillFields(ClientLookUpDTO clientInfo)
+    private void FillFields(ClientLookUpDto clientInfo)
     {
         if (clientInfo is null)
             return;
@@ -43,7 +48,7 @@ public class ClientInfoViewModel : ViewModel
         _lastname = clientInfo.Lastname ?? String.Empty;
         _patronymic = clientInfo.Patronymic ?? String.Empty;
         _phoneNumber = clientInfo.PhoneNumber ?? String.Empty;
-        _passportSerie = clientInfo.PassportSerie;
+        _passportSeries = clientInfo.PassportSeries;
         _passportNumber = clientInfo.PassportNumber ?? String.Empty;
         _totalIncomePerMonth = clientInfo.TotalIncomePerMounth ?? String.Empty;
     }
@@ -56,19 +61,19 @@ public class ClientInfoViewModel : ViewModel
     private void CheckSaveClient()
     {
         EnableSaveClient = _borderFirstName != InputValueValidationEnum.Error
-                        && _firstname != ""
+                        && !string.IsNullOrEmpty(_firstname)
                         && _borderLastName != InputValueValidationEnum.Error
-                        && _lastname != ""
+                        && !string.IsNullOrEmpty(_lastname)
                         && _borderPatronymic != InputValueValidationEnum.Error
-                        && _patronymic != ""
-                        && _borderPassportSerie != InputValueValidationEnum.Error
-                        && _passportSerie != ""
+                        && !string.IsNullOrEmpty(_patronymic)
+                        && _borderPassportSeries != InputValueValidationEnum.Error
+                        && !string.IsNullOrEmpty(_passportSeries)
                         && _borderPassportNumber != InputValueValidationEnum.Error
-                        && _passportNumber != ""
+                        && !string.IsNullOrEmpty(_passportNumber)
                         && _borderPhoneNumber != InputValueValidationEnum.Error
-                        && _phoneNumber != ""
+                        && !string.IsNullOrEmpty(_phoneNumber)
                         && _borderTotalIncomePerMonth != InputValueValidationEnum.Error
-                        && _totalIncomePerMonth != "";
+                        && !string.IsNullOrEmpty(_totalIncomePerMonth);
     }
 
     /// <summary>
@@ -217,14 +222,14 @@ public class ClientInfoViewModel : ViewModel
     #endregion
 
     #region PassportData
-    private string _passportSerie;
-    public string PassportSerie
+    private string _passportSeries;
+    public string PassportSeries
     {
-        get => _passportSerie;
+        get => _passportSeries;
         set
         {
-            Set(ref _passportSerie, value);
-            BorderPassportSerie = InputHighlighting(_enablePassportData, Bank.Domain.Client.ValueObjects.PassportSerie.IsSeries(_passportSerie));
+            Set(ref _passportSeries, value);
+            BorderPassportSeries = InputHighlighting(_enablePassportData, Bank.Domain.Client.ValueObjects.PassportSeries.IsSeries(_passportSeries));
         }
     }
 
@@ -246,13 +251,13 @@ public class ClientInfoViewModel : ViewModel
         set => Set(ref _enablePassportData, value);
     }
 
-    private InputValueValidationEnum _borderPassportSerie;
-    public InputValueValidationEnum BorderPassportSerie
+    private InputValueValidationEnum _borderPassportSeries;
+    public InputValueValidationEnum BorderPassportSeries
     {
-        get => _borderPassportSerie;
+        get => _borderPassportSeries;
         set
         {
-            Set(ref _borderPassportSerie, value);
+            Set(ref _borderPassportSeries, value);
             CheckSaveClient();
         }
     }
@@ -328,7 +333,7 @@ public class ClientInfoViewModel : ViewModel
 
     private async void OnSaveCommandExecute(object p)
     {
-        if (currentClient.Id == Guid.Empty) // новый клиент
+        if (currentClient is null) // новый клиент
         {
             var command = new CreateClientCommand
             {
@@ -337,7 +342,7 @@ public class ClientInfoViewModel : ViewModel
                 Lastname = _lastname,
                 Patronymic = _patronymic,
                 PhoneNumber = _phoneNumber,
-                PassportSerie = _passportSerie,
+                PassportSeries = _passportSeries,
                 PassportNumber = _passportNumber,
                 TotalIncomePerMounth = _totalIncomePerMonth
             };
@@ -352,7 +357,7 @@ public class ClientInfoViewModel : ViewModel
                 Lastname = _lastname,
                 Patronymic = _patronymic,
                 PhoneNumber = _phoneNumber,
-                PassportSerie = _passportSerie,
+                PassportSeries = _passportSeries,
                 PassportNumber = _passportNumber,
                 TotalIncomePerMounth = Convert.ToDecimal(_totalIncomePerMonth)
             };
@@ -363,6 +368,7 @@ public class ClientInfoViewModel : ViewModel
         {
             window.Close();
         }
+        _mainWindowViewModel.UpdateClientList.Invoke();
     }
     #endregion
     #endregion
@@ -373,6 +379,13 @@ public class ClientInfoViewModel : ViewModel
     {
         get => _enableSaveClient;
         set => Set(ref _enableSaveClient, value);
+    }
+
+    private string _Title = "Окно редактирования клиента";
+    public string Title
+    {
+        get => _Title;
+        set => Set(ref _Title, value);
     }
     #endregion  
 }

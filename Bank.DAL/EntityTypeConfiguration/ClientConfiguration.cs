@@ -1,4 +1,5 @@
-﻿using Bank.Domain.Account;
+﻿using System.Globalization;
+using Bank.Domain.Account;
 using Bank.Domain.Client;
 using Bank.Domain.Client.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -13,26 +14,26 @@ public class ClientConfiguration : IEntityTypeConfiguration<Client>
         builder.HasKey(x => x.Id);
         builder.HasIndex(x => x.Id).IsUnique();
         builder.Property(x => x.Firstname)
-            .HasConversion(Firstname => Firstname.Name,
+            .HasConversion(firstname => firstname.Name,
             value => Firstname.SetName(value));
         builder.Property(x => x.Lastname)
-            .HasConversion(Lastname => Lastname.Name,
+            .HasConversion(lastname => lastname.Name,
             value => Lastname.SetName(value));
         builder.Property(x => x.Patronymic)
-            .HasConversion(Patronymic => Patronymic.Name,
+            .HasConversion(patronymic => patronymic.Name,
             value => Patronymic.SetName(value));
         builder.Property(x => x.PhoneNumber)
-            .HasConversion(PhoneNumber => PhoneNumber.Number,
+            .HasConversion(phoneNumber => phoneNumber.Number,
             value => PhoneNumber.SetNumber(value));
-        builder.Property(x => x.PassportSerie)
-            .HasConversion(PassportSerie => PassportSerie.Serie,
-            value => PassportSerie.SetSerie(value));
+        builder.Property(x => x.PassportSeries)
+            .HasConversion(passportSeries => passportSeries.Series,
+            value => PassportSeries.SetSeries(value));
         builder.Property(x => x.PassportNumber)
-            .HasConversion(PassportNumber => PassportNumber.Number,
+            .HasConversion(passportNumber => passportNumber.Number,
             value => PassportNumber.SetNumber(value));
         builder.Property(x => x.TotalIncomePerMounth)
-            .HasConversion(TotalIncomePerMounth => TotalIncomePerMounth.Income,
-            value => TotalIncomePerMounth.SetIncome(value.ToString()));
+            .HasConversion(totalIncomePerMounth => totalIncomePerMounth.Income,
+            value => TotalIncomePerMounth.SetIncome(value.ToString(CultureInfo.CurrentCulture)));
         builder.HasMany<Account>()
             .WithOne()
             .HasForeignKey(x => x.ClientId);

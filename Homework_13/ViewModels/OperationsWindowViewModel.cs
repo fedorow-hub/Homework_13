@@ -1,5 +1,4 @@
-﻿
-using Homework_13.Infrastructure.Commands;
+﻿using Homework_13.Infrastructure.Commands;
 using Homework_13.ViewModels.Base;
 using Homework_13.Views.AccountOperationWindow.Pages;
 using System.Windows;
@@ -7,34 +6,41 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Bank.Domain.Client;
 using Bank.Application.Clients.Queries.GetClientList;
+using Homework_13.Views;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Homework_13.ViewModels;
 
 public class OperationsWindowViewModel : ViewModel
 {
-    private readonly ClientLookUpDTO _currentClient;
+    private IMediator _mediator;
+
+    private ClientLookUpDto _currentClient;
+
+    public ClientLookUpDto CurrentClient
+    {
+        get => _currentClient;
+        set => Set(ref _currentClient, value);
+    }
+
     private readonly MainWindowViewModel _mainWindowViewModel;
-
-    public Client CurrentClient { get; set; }
-
-    //private readonly IClientDAL _clients;
-
+    
     public OperationsWindowViewModel()
     {
 
     }
-    public OperationsWindowViewModel(ClientLookUpDTO currentClient, 
-        MainWindowViewModel mainWindowViewModel)
+    public OperationsWindowViewModel(ClientLookUpDto currentClient, 
+        MainWindowViewModel mainWindowViewModel, IMediator mediator)
     {
-        //_clients = clients;
         _currentClient = currentClient;
-        //_bank = bank;
         _mainWindowViewModel = mainWindowViewModel;
+        _mediator = mediator;
 
         #region Pages
         _addAndWithdrawals = new AddAndWithdrawalsPage();
         _betweenTheirAccounts = new BetweenTheirAccountPage();
-        _openDeposit = new OpenAccountPage();
+        _openAccount = new OpenAccountPage();
 
         CurrentPage = new EmptyPage();
         #endregion
@@ -48,7 +54,7 @@ public class OperationsWindowViewModel : ViewModel
     #region Pages
     private readonly Page _addAndWithdrawals;
     private readonly Page _betweenTheirAccounts;
-    private readonly Page _openDeposit;
+    private readonly Page _openAccount;
 
     private Page _currentPage;
     /// <summary>
@@ -99,26 +105,28 @@ public class OperationsWindowViewModel : ViewModel
     public ICommand OpenAccountCommand { get; }
     private void OnOpenAccountCommandExecuted(object p)
     {
-        CurrentPage = _openDeposit;
-        _addAndWithdrawals.DataContext = new AddAndWithdrawalsViewModel(_currentClient);
+        CurrentPage = _openAccount;
+
+        _openAccount.DataContext = new OpenAccountViewModel(p as ClientLookUpDto, _mediator);
+
     }
     private bool CanOpenAccountCommandExecute(object p)
     {
-        if (CurrentPage == _openDeposit)
-            return false;
-        return true;
+        return CurrentPage != _openAccount;
     }
     #endregion
 
     #region ExitCommand
     public ICommand ExitCommand { get; }
 
-    private bool CanExitCommandExecute(object p) => true;
+    private static bool CanExitCommandExecute(object p) => true;
 
     private void OnExitCommandExecute(object p)
     {
-        MainWindow mainWindow = new MainWindow();
-        mainWindow.DataContext = _mainWindowViewModel;
+        var mainWindow = new MainWindow
+        {
+            DataContext = _mainWindowViewModel
+        };
         mainWindow.Show();
 
         if (p is Window window)

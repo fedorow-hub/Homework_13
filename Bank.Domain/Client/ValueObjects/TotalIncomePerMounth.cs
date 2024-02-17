@@ -1,4 +1,5 @@
-﻿namespace Bank.Domain.Client.ValueObjects;
+﻿using Bank.Domain.Root;
+namespace Bank.Domain.Client.ValueObjects;
 
 public sealed class TotalIncomePerMounth : ValueObject
 {
@@ -10,7 +11,7 @@ public sealed class TotalIncomePerMounth : ValueObject
 
     public static TotalIncomePerMounth SetIncome(string number)
     {
-        bool success = decimal.TryParse(number, out decimal result);
+        var success = decimal.TryParse(number, out var result);
         if (success && result > 0)
         {
             return new TotalIncomePerMounth(result);
@@ -21,17 +22,10 @@ public sealed class TotalIncomePerMounth : ValueObject
 
     public static bool IsIncome(string value)
     {
-        int number;
-
-        if (!int.TryParse(value, out number))
+        if (!int.TryParse(value, out var number))
             return false;
 
-        if (number < 0)
-        {
-            return false;
-        }
-
-        return true;
+        return number >= 0;
     }
 
 

@@ -4,20 +4,20 @@ namespace Bank.Domain.Account;
 
 public sealed class InterestRate : Enumeration
 {
-    public static InterestRate MinRate = new(0, "0%");
+    public static readonly InterestRate MinRate = new(0, "0%");
 
-    public static InterestRate MiddleRate = new(5, "5%");
+    public static readonly InterestRate MiddleRate = new(5, "5%");
 
-    public static InterestRate MaxRate = new(10, "10%");
+    public static readonly InterestRate MaxRate = new(10, "10%");
 
-    public static InterestRate CreditRate = new(15, "15%");
+    public static readonly InterestRate CreditRate = new(15, "15%");
     private InterestRate(int id, string name) 
         : base(id, name)
     {
     }
 
     public static InterestRate Parse(string value)
-        => value?.ToUpper() switch
+        => value.ToUpper() switch
         {
             "0%" => MinRate,
             "5%" => MiddleRate,

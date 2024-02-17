@@ -29,21 +29,24 @@ public abstract class Account : Entity
     /// </summary>
     public bool IsExistance { get; private set; }
 
+    public TypeOfAccount Type { get; private set; }
+
     public Account()
     {
         
     }
 
-    public Account(Guid clientId, byte termOfMonth, decimal amount, DateTime timeOfCreated)        
+    public Account(Guid clientId, byte termOfMonth, decimal amount, DateTime timeOfCreated, TypeOfAccount type)        
     {
         AccountTerm = TimeOfCreated.AddMonths(termOfMonth);
         ClientId = clientId;
         TimeOfCreated = timeOfCreated;
         Amount = amount;
         IsExistance = true;
+        Type = type;
     }
 
-    public Account(Guid id, Guid clientId, byte termOfMonth, decimal amount, DateTime timeOfCreated)
+    public Account(Guid id, Guid clientId, byte termOfMonth, decimal amount, DateTime timeOfCreated, TypeOfAccount type)
         :base(id)        
     {
         AccountTerm = TimeOfCreated.AddMonths(termOfMonth);
@@ -51,6 +54,7 @@ public abstract class Account : Entity
         TimeOfCreated = timeOfCreated;
         Amount = amount;
         IsExistance = true;
+        Type = type;
     }     
        
     /// <summary>

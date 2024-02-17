@@ -13,13 +13,13 @@ public sealed class DepositAccount : Account
     }
 
     public DepositAccount(Guid id, Guid clientId, byte termOfMonth, decimal amount, DateTime timeOfCreated) 
-        : base(id, clientId, termOfMonth, amount, timeOfCreated)        
+        : base(id, clientId, termOfMonth, amount, timeOfCreated, TypeOfAccount.Deposit)        
     {
         InterestRate = SetInterestRate();
     }
 
     private DepositAccount(Guid clientId, byte termOfMonth, decimal amount, DateTime timeOfCreated)
-        : base(clientId, termOfMonth, amount, timeOfCreated)
+        : base(clientId, termOfMonth, amount, timeOfCreated, TypeOfAccount.Deposit)
     {
         InterestRate = SetInterestRate();
     }
@@ -28,9 +28,9 @@ public sealed class DepositAccount : Account
     /// метод создания счета
     /// </summary>
     /// <param name="clientId"></param>
-    /// <param name="currency"></param>
     /// <param name="termOfMonth"></param>
     /// <param name="amount"></param>
+    /// <param name="timeOfCreated"></param>
     /// <returns></returns>
     public static DepositAccount CreateDepositAccount(Guid clientId, byte termOfMonth, decimal amount, DateTime timeOfCreated)
     {
@@ -41,20 +41,16 @@ public sealed class DepositAccount : Account
     /// <summary>
     /// установка значения процентной ставки
     /// </summary>
-    /// <param name="termOfMonth">срок действия счета в месяцах</param>
     /// <returns></returns>
-    private InterestRate SetInterestRate()
+    private static InterestRate SetInterestRate()
     {
         return InterestRate.MaxRate;
     }
     
-    /// <summary>
-    /// ежемесячная капиталлизация
-    /// (пока не знаю как ее подключить из сущности счета)
-    /// </summary>
-    private void MounthlyCapitalization()
-    {
-        decimal mouthlyPercent = Amount * InterestRate.Id / 100 / 12;
-        Amount += mouthlyPercent;
-    }  
+    
+    //private void MounthlyCapitalization()
+    //{
+    //    var mouthlyPercent = Amount * InterestRate.Id / 100 / 12;
+    //    Amount += mouthlyPercent;
+    //}  
 }

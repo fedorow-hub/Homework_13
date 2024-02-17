@@ -33,15 +33,16 @@ public class ExchangeRateServiceProxy : IExchangeRateService
         return _exchangeRateService.GetDate();
     }
 
-    public decimal GetDollarExchangeRate()
+    public (decimal prev, decimal cur) GetDollarExchangeRate()
     {
-        return _exchangeRateService.GetDollarExchangeRate();
+        throw new NotImplementedException();
     }
 
-    public decimal GetEuroExchangeRate()
+    public (decimal prev, decimal cur) GetEuroExchangeRate()
     {
-        return _exchangeRateService.GetEuroExchangeRate();
+        throw new NotImplementedException();
     }
+
 
     //public string[] GetExchangeRate()
     //{
@@ -67,15 +68,6 @@ public class ExchangeRateServiceProxy : IExchangeRateService
 
     //}
 
-    public bool IsEuroRateGrow()
-    {
-        return _exchangeRateService.IsEuroRateGrow();
-    }
-
-    public bool IsUSDRateGrow()
-    {
-        return _exchangeRateService.IsUSDRateGrow();
-    }
 
     /// <summary>
     /// Загрузка кэша

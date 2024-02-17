@@ -4,11 +4,11 @@ namespace Bank.Domain.Account;
 
 public sealed class TypeOfAccount : Enumeration
 {
-    public static TypeOfAccount Deposit = new(1, "Deposit");
+    public static readonly TypeOfAccount Deposit = new(1, "Депозитный");
 
-    public static TypeOfAccount Credit = new(2, "Credit");
+    public static readonly TypeOfAccount Credit = new(2, "Кредитный");
 
-    public static TypeOfAccount Plain = new(3, "Plain");
+    public static readonly TypeOfAccount Plain = new(3, "Рассчетный");
 
     private TypeOfAccount(int id, string name) 
         : base(id, name)
@@ -16,11 +16,11 @@ public sealed class TypeOfAccount : Enumeration
     }
 
     public static TypeOfAccount Parse(string value)
-        => value?.ToUpper() switch
+        => value switch
         {
-            "Deposit" => Deposit,
-            "Credit" => Credit,
-            "Plain" => Plain,
+            "Депозитный" => Deposit,
+            "Кредитный" => Credit,
+            "Рассчетный" => Plain,
             _ => throw new DomainExeption("Unknown account type")
         };
 }

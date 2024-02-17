@@ -12,7 +12,7 @@ public sealed class SomeBank : Entity
     /// <summary>
     /// список клиентов банка
     /// </summary>
-    public List<Client.Client> Clients { get; private set; } = new();
+    public List<Client.Client> Clients { get; private set; }
 
     /// <summary>
     /// капиталл банка в рублях
@@ -27,9 +27,9 @@ public sealed class SomeBank : Entity
     /// <summary>
     /// одиночный объект банка
     /// </summary>
-    private static volatile SomeBank uniqueInstanceOfBank;
+    private static volatile SomeBank? _uniqueInstanceOfBank;
 
-    private static readonly object _syncRoot = new object();
+    private static readonly object SyncRoot = new();
 
     private SomeBank(string name, decimal capital, DateTime dateOfCreation)
     {
@@ -44,18 +44,16 @@ public sealed class SomeBank : Entity
     /// </summary>
     /// <param name="name"></param>
     /// <param name="capital"></param>
+    /// <param name="dateOfCreation"></param>
     /// <returns></returns>
     public static SomeBank CreateBank(string name, decimal capital, DateTime dateOfCreation)
     {
-        if (uniqueInstanceOfBank == null)
+        if (_uniqueInstanceOfBank != null) return _uniqueInstanceOfBank;
+        lock (SyncRoot)
         {
-            lock (_syncRoot)
-            {
-                uniqueInstanceOfBank = new SomeBank(name, capital, dateOfCreation);
-            }
-            
+            _uniqueInstanceOfBank = new SomeBank(name, capital, dateOfCreation);
         }
-        return uniqueInstanceOfBank;
+        return _uniqueInstanceOfBank;
     }
 
     /// <summary>

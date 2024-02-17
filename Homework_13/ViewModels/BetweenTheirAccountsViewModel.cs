@@ -1,21 +1,18 @@
 ﻿using Bank.Application.Clients.Queries.GetClientList;
-using Bank.Domain.Client;
 using Homework_13.ViewModels.Base;
 
 namespace Homework_13.ViewModels;
 
 public class BetweenTheirAccountsViewModel : ViewModel
 {
-    private ClientLookUpDTO _currentClient;
-    //private BankRepository _bank;
+    private ClientLookUpDto _currentClient;
     public BetweenTheirAccountsViewModel()
     {
 
     }
-    public BetweenTheirAccountsViewModel(ClientLookUpDTO CurrentClient)
+    public BetweenTheirAccountsViewModel(ClientLookUpDto CurrentClient)
     {
         _currentClient = CurrentClient;
-        //_bank = bank;
     }
 
     #region Эксперимент со свойством зависимости

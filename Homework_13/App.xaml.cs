@@ -4,7 +4,6 @@ using Bank.Application.Interfaces;
 using Bank.DAL;
 using Bank.DAL.ExchangeRateService;
 using Homework_13.ViewModels;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -36,20 +35,22 @@ public partial class App : Application
 
         services.AddSingleton<MainWindowViewModel>();
         services.AddSingleton<LoginWindowViewModel>();
+        services.AddTransient<ClientInfoViewModel>();
+        services.AddTransient<OperationsWindowViewModel>();
+        services.AddTransient<OpenAccountViewModel>();
+        services.AddTransient<AccountInfoViewModel>();
 
-
-        ConfigurationBuilder builder = new ConfigurationBuilder();
+        var builder = new ConfigurationBuilder();
         builder.SetBasePath(Directory.GetCurrentDirectory());
         builder.AddJsonFile("appsettings.json");
-        string connectionString = builder.Build().GetConnectionString("DbConnection");
+        var connectionString = builder.Build().GetConnectionString("DbConnection");
 
-        services.AddBankDAL(connectionString);
+        services.AddBankDAL(connectionString!);
         
-        //services.AddSingleton<IClientRepository, ClientRepository>();
 
-        string urlExchangeServise = builder.Build().GetConnectionString("UrlExchangeService");
+        var urlExchangeServise = builder.Build().GetConnectionString("UrlExchangeService");
 
-        services.AddSingleton<IExchangeRateService>(new ExchangeRateService(urlExchangeServise));
+        services.AddSingleton<IExchangeRateService>(new ExchangeRateService(urlExchangeServise!));
 
         services.AddAutoMapper(config =>
         {
@@ -80,5 +81,5 @@ public partial class App : Application
         ? Path.GetDirectoryName(GetSourceCodePath())
         : Environment.CurrentDirectory;
 
-    private static string GetSourceCodePath([CallerFilePath] string Path = null) => Path;
+    private static string? GetSourceCodePath([CallerFilePath] string? path = null) => path;
 }

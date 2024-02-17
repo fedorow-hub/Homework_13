@@ -1,5 +1,4 @@
 ﻿using Bank.Application.Clients.Queries.GetClientList;
-using Bank.Domain.Client;
 using Homework_13.Infrastructure.Commands;
 using Homework_13.ViewModels.Base;
 using System.Windows.Input;
@@ -8,9 +7,9 @@ namespace Homework_13.ViewModels;
 
 public class AddAndWithdrawalsViewModel : ViewModel
 {
-    private ClientLookUpDTO _currentClient;
+    private ClientLookUpDto _currentClient;
 
-    public ClientLookUpDTO CurrentClient
+    public ClientLookUpDto CurrentClient
     {
         get => _currentClient;
         set => Set(ref _currentClient, value);
@@ -20,7 +19,7 @@ public class AddAndWithdrawalsViewModel : ViewModel
     {
 
     }
-    public AddAndWithdrawalsViewModel(ClientLookUpDTO CurrentClient)
+    public AddAndWithdrawalsViewModel(ClientLookUpDto CurrentClient)
     {
         _currentClient = CurrentClient;
 
