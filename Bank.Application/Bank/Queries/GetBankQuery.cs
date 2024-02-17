@@ -1,8 +1,8 @@
 ﻿using MediatR;
 
-namespace Bank.Application.Bank.Queries
+namespace Bank.Application.Bank.Queries;
+
+public class GetBankQuery : IRequest<BankDetailVM>
 {
-    public class GetBankQuery : IRequest<BankDetailVM>
-    {
-    }
 }
+

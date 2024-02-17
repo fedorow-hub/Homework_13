@@ -7,19 +7,19 @@
         xmlns:fa="http://schemas.fontawesome.com/icons/"
         d:DataContext="{Binding OperationWindowModel, Source={StaticResource Locator}}"
         mc:Ignorable="d"
-        Title="Операции" Height="389" Width="721" WindowStartupLocation="CenterScreen"
+        Title="Операции" Height="389" Width="792" WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="278*"/>
-            <ColumnDefinition Width="443*"/>
+            <ColumnDefinition Width="95*"/>
+            <ColumnDefinition Width="169*"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Margin="0,3,0,3" Grid.Column="0">
+        <StackPanel Margin="0,3,8,3" Grid.Column="0">
             <Button Margin="5" Height="40"  
                         Command="{Binding AddAndWithdrawalsCommand}"
-                        Cursor="Hand" Width="253">                                   
-                <TextBlock Text="Внесение/снятие средств" FontSize="14"/>                
-            </Button>            
+                        Cursor="Hand" Width="253">
+                <TextBlock Text="Внесение/снятие средств" FontSize="14"/>
+            </Button>
             <Button Margin="5" Height="40"  
                         Command="{Binding BetweenTheirAccountsCommand}"
                         Cursor="Hand" Width="253">
@@ -71,9 +71,9 @@
                 </StackPanel>
             </Button>
         </StackPanel>
-        <Frame Grid.Column="1"
+        <Frame
                    Content="{Binding CurrentPage}"
-                   NavigationUIVisibility="Hidden"
+                   NavigationUIVisibility="Hidden" Grid.ColumnSpan="2" Margin="276,0,0,0"
                    >
             <Frame.RenderTransform>
                 <TransformGroup>

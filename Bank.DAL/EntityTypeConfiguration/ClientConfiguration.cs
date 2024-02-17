@@ -34,8 +34,8 @@ public class ClientConfiguration : IEntityTypeConfiguration<Client>
         builder.Property(x => x.TotalIncomePerMounth)
             .HasConversion(totalIncomePerMounth => totalIncomePerMounth.Income,
             value => TotalIncomePerMounth.SetIncome(value.ToString(CultureInfo.CurrentCulture)));
-        builder.HasMany<Account>()
-            .WithOne()
-            .HasForeignKey(x => x.ClientId);
+        //builder.HasMany<Account>()
+        //    .WithOne()
+        //    .HasForeignKey(x => x.ClientId);
     }
 }

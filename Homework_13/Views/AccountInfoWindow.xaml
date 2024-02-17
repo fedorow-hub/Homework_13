@@ -25,9 +25,9 @@
             <TextBlock Grid.Row="1" Grid.Column="0" Text="Сумма в рублях:" Margin="10,10" FontSize="20" Foreground="Gray"/>
             <TextBox Grid.Row="1" Grid.Column="1" PreviewTextInput="NumberValidationTextBox" FontSize="20" Margin="3,0,3,10" 
                      Text="{Binding Amount}"/>
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="Срок действия:" Margin="10,10" FontSize="20" Foreground="Gray"/>
-            <DatePicker Grid.Row="2" Grid.Column="1" PreviewTextInput="NumberValidationTextBox" FontSize="20" Margin="3,0,3,10" 
-                      SelectedDate="{Binding AccountTerm, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Срок действия (мес):" Margin="10,10" FontSize="20" Foreground="Gray"/>
+            <TextBox Grid.Row="2" Grid.Column="1" PreviewTextInput="NumberValidationTextBox" FontSize="20" Margin="3,0,3,10" 
+                     Text="{Binding AccountTerm, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
         <StackPanel Orientation="Horizontal" Width="320" Margin="5,20">
             <Button Content="Сохранить" Margin="0,0,20,0" Width="150"

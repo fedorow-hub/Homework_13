@@ -1,5 +1,6 @@
 ﻿using Bank.Application.Interfaces;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bank.Application.Clients.Commands.DeleteClient;
 
@@ -14,9 +15,10 @@ public class DeleteClientCommandHandler : IRequestHandler<DeleteClientCommand>
 
     public async Task Handle(DeleteClientCommand request, CancellationToken cancellationToken)
     {
-        _context.Clients.Remove(_context.Clients.FirstOrDefault(r => r.Id == request.Id));
-
-        _context.SaveChangesAsync(cancellationToken);
-
+        
+        var client = await _context.Clients.FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
+        _context.Clients.Remove(client);
+        
+        await _context.SaveChangesAsync(cancellationToken);
     }
 }

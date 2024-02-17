@@ -39,9 +39,9 @@ public class ClientDetailsVm : IMapWith<Client>
             .ForMember(clientVm => clientVm.PassportNumber,
                 opt => opt.MapFrom(client => client.PassportNumber.Number))
             .ForMember(clientVm => clientVm.TotalIncomePerMounth,
-                opt => opt.MapFrom(client => client.TotalIncomePerMounth))
-            .ForMember(clientVm => clientVm.Accounts,
-                opt => opt.MapFrom(client => client.Accounts));
+                opt => opt.MapFrom(client => client.TotalIncomePerMounth));
+        //.ForMember(clientVm => clientVm.Accounts,
+        //    opt => opt.MapFrom(client => client.Accounts));
 
     }
 }

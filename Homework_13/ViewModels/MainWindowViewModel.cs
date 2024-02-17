@@ -14,7 +14,10 @@ using System.Windows;
 using System.Windows.Input;
 using System.ComponentModel;
 using System.Windows.Data;
+using Bank.Domain.Account;
 using Homework_13.Views.AccountOperationWindow;
+using Bank.Application.Accounts;
+using Bank.Application.Accounts.Queries;
 
 namespace Homework_13.ViewModels;
 
@@ -23,6 +26,7 @@ public class MainWindowViewModel : ViewModel
     private readonly IMediator _mediator;
 
     public Action UpdateClientList;
+    public Action UpdateAccountListForCurrentClient;
     public string Date { get; private set; }
 
     #region Currency
@@ -42,6 +46,14 @@ public class MainWindowViewModel : ViewModel
             OnPropertyChanged(nameof(SelectedClients));
         }
     }
+
+    private ObservableCollection<Account> _accountsCurrentClient;
+    public ObservableCollection<Account> AccountsCurrentClient
+    {
+        get => _accountsCurrentClient;
+        set => Set(ref _accountsCurrentClient, value);
+    }
+    
 
     private string _clientFilterText;
 
@@ -108,7 +120,6 @@ public class MainWindowViewModel : ViewModel
         Title = $"Банк {GetExistBankOrCreateAsync().Result.Name}, капитал банка: {GetExistBankOrCreateAsync().Result.Capital} руб.";
 
         #region Currency
-
         Date = _exchangeRateService.GetDate();
         DollarCurrentRate = _exchangeRateService.GetDollarExchangeRate().cur;
         EuroCurrentRate = _exchangeRateService.GetEuroExchangeRate().cur;
@@ -118,12 +129,13 @@ public class MainWindowViewModel : ViewModel
         DeleteClientCommand = new LambdaCommand(OnDeleteClientCommandExecute, CanDeleteClientCommandExecute);
         OutLoggingCommand = new LambdaCommand(OnOutLoggingCommandExecute, CanOutLoggingCommandExecute);
         EditClientCommand = new LambdaCommand(OnEditClientCommandExecute, CanEditClientCommandExecute);
-
         OpenOperationWindowCommand = new LambdaCommand(OnOpenOperationWindowCommandExecute, CanOpenOperationWindowCommandExecute);
+        #endregion
 
         UpdateClientList += UpdateClients;
         UpdateClientList.Invoke();
-        #endregion
+
+        UpdateAccountListForCurrentClient += UpdateAccount;
 
         _selectedClients.Filter += OnClientFiltred;
     }
@@ -131,6 +143,11 @@ public class MainWindowViewModel : ViewModel
     private void UpdateClients()
     {
         Clients = new ObservableCollection<ClientLookUpDto>(GetAllClients().Result.Clients);
+    }
+
+    private void UpdateAccount()
+    {
+        AccountsCurrentClient = new ObservableCollection<Account>(GetAccounts(_selectedClient.Id).Result.Accounts);
     }
 
     private async Task<SomeBank> GetExistBankOrCreateAsync()
@@ -150,6 +167,17 @@ public class MainWindowViewModel : ViewModel
     private async Task<ClientListVm> GetAllClients()
     {
         var query = new GetClientListQuery();
+        var result = await _mediator.Send(query);
+
+        return result;
+    }
+
+    private async Task<AccountListVm> GetAccounts(Guid id)
+    {
+        var query = new GetAccountsQuery
+        {
+            Id = id
+        };
         var result = await _mediator.Send(query);
 
         return result;
@@ -264,7 +292,11 @@ public class MainWindowViewModel : ViewModel
     public ClientLookUpDto SelectedClient
     {
         get => _selectedClient;
-        set => Set(ref _selectedClient, value);
+        set
+        {
+            Set(ref _selectedClient, value);
+            UpdateAccountListForCurrentClient.Invoke();
+        }
     }
     #endregion
 

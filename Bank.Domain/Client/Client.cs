@@ -20,7 +20,7 @@ public sealed class Client : Entity
 
     public TotalIncomePerMounth TotalIncomePerMounth { get; private set; }
 
-    public List<Account.Account> Accounts { get; private set; }
+    //public List<Account.Account> Accounts { get; private set; }
 
     public Guid BankId { get; private set; }
     public SomeBank? Bank { get; private set; }
@@ -38,7 +38,7 @@ public sealed class Client : Entity
         PassportSeries = PassportSeries.SetSeries(seriesPassport);
         PassportNumber = PassportNumber.SetNumber(numberPassport);
         TotalIncomePerMounth = TotalIncomePerMounth.SetIncome(totalIncome);
-        Accounts = new List<Account.Account>();
+        //Accounts = new List<Account.Account>();
         Bank = bank;
     }
 
@@ -79,10 +79,10 @@ public sealed class Client : Entity
     /// метод добавления нового счета клиенту
     /// </summary>
     /// <param name="account"></param>
-    public bool AddAccountToClient(Account.Account account)
-    {
-        //здесь можно реализовать логику ограничения на создание нового счета
-        Accounts.Add(account);
-        return true;
-    }
+    //public bool AddAccountToClient(Account.Account account)
+    //{
+    //    //здесь можно реализовать логику ограничения на создание нового счета
+    //    Accounts.Add(account);
+    //    return true;
+    //}
 }

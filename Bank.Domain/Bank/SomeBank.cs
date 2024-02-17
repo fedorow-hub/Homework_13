@@ -12,7 +12,7 @@ public sealed class SomeBank : Entity
     /// <summary>
     /// список клиентов банка
     /// </summary>
-    public List<Client.Client> Clients { get; private set; }
+    //public List<Client.Client> Clients { get; }
 
     /// <summary>
     /// капиталл банка в рублях
@@ -34,7 +34,7 @@ public sealed class SomeBank : Entity
     private SomeBank(string name, decimal capital, DateTime dateOfCreation)
     {
         Name = name;
-        Clients = new List<Client.Client>();
+        //Clients = new List<Client.Client>();
         Capital = capital;
         DateOfCreation = dateOfCreation;
     }
@@ -79,13 +79,13 @@ public sealed class SomeBank : Entity
         else throw new DomainExeption("Недостаточно средств банка");
     }
 
-    public void AddClient(Client.Client client)
-    {
-        Clients.Add(client);
-    }
+    //public void AddClient(Client.Client client)
+    //{
+    //    Clients.Add(client);
+    //}
 
-    public void RemoveClient(Client.Client client)
-    {
-        Clients.Remove(client);
-    }
+    //public void RemoveClient(Client.Client client)
+    //{
+    //    Clients.Remove(client);
+    //}
 }

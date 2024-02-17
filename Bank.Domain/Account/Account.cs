@@ -22,7 +22,7 @@ public abstract class Account : Entity
     /// <summary>
     /// дата, до которой действует счет
     /// </summary>
-    public DateTime AccountTerm { get; private set; } = DateTime.MaxValue;
+    public DateTime AccountTerm { get; private set; }
 
     /// <summary>
     /// действующий или закрытый счет
@@ -38,7 +38,7 @@ public abstract class Account : Entity
 
     public Account(Guid clientId, byte termOfMonth, decimal amount, DateTime timeOfCreated, TypeOfAccount type)        
     {
-        AccountTerm = TimeOfCreated.AddMonths(termOfMonth);
+        AccountTerm = timeOfCreated.AddMonths(termOfMonth);
         ClientId = clientId;
         TimeOfCreated = timeOfCreated;
         Amount = amount;
@@ -49,7 +49,7 @@ public abstract class Account : Entity
     public Account(Guid id, Guid clientId, byte termOfMonth, decimal amount, DateTime timeOfCreated, TypeOfAccount type)
         :base(id)        
     {
-        AccountTerm = TimeOfCreated.AddMonths(termOfMonth);
+        AccountTerm = timeOfCreated.AddMonths(termOfMonth);
         ClientId = clientId;
         TimeOfCreated = timeOfCreated;
         Amount = amount;

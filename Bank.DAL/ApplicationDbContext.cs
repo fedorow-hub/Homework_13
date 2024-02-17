@@ -9,15 +9,16 @@ namespace Bank.DAL;
 
 public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
 {
-    public DbSet<SomeBank?> Bank { get; set; } = null!;
+    public DbSet<SomeBank> Bank { get; set; } = null!;
     public DbSet<Client> Clients { get; set; } = null!;
+    public DbSet<Account> Accounts { get; set; } = null!;
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options){}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Account>().UseTphMappingStrategy();
+        //modelBuilder.Entity<Account>().UseTphMappingStrategy();
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         modelBuilder.ApplyConfiguration(new ClientConfiguration());
         modelBuilder.ApplyConfiguration(new BankConfiguration());

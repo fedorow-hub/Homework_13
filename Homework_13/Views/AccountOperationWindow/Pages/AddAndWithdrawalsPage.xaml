@@ -12,10 +12,11 @@
         <vm:AddAndWithdrawalsViewModel />
     </Page.DataContext>
     <StackPanel>
+        <TextBlock FontWeight="Bold" FontSize="14" Margin="5">Страница снятия и внесения средств на счета клиента</TextBlock>
         <DockPanel>
-            <TextBlock Text="{Binding Path=CurrentClient.Lastname}" FontWeight="Bold" FontSize="14" Margin="5"/>
-            <TextBlock Text="{Binding Path=CurrentClient.Firstname}" FontWeight="Bold" FontSize="14" Margin="5"/>
-            <TextBlock Text="{Binding Path=CurrentClient.Patronymic}" FontWeight="Bold" FontSize="14" Margin="5"/>            
+            <TextBlock Text="{Binding Path=CurrentClient.Lastname}" FontWeight="Bold" FontSize="12" Margin="5"/>
+            <TextBlock Text="{Binding Path=CurrentClient.Firstname}" FontWeight="Bold" FontSize="12" Margin="5"/>
+            <TextBlock Text="{Binding Path=CurrentClient.Patronymic}" FontWeight="Bold" FontSize="12" Margin="5"/>            
         </DockPanel>
         <StackPanel>
             <TextBox Text="Счет зачисления/снятия"/>

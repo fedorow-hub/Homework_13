@@ -42,13 +42,13 @@ public sealed class CreditAccount : Account
     /// <param name="timeOfCreated"></param>
     /// <returns></returns>
     /// <exception cref="DomainExeption"></exception>
-    public static CreditAccount CreateCreditAccount(Client.Client client, byte termOfMonth, decimal amount, DateTime timeOfCreated)
+    public static CreditAccount CreateCreditAccount(Guid id, Client.Client client, byte termOfMonth, decimal amount, DateTime timeOfCreated)
     {
         if(client.TotalIncomePerMounth.Income/2 < amount / termOfMonth)
         {
             throw new DomainExeption("Ежемесячные платежи по кредиту превышают половину месячного дохода");
         }
-        var newAccount = new CreditAccount(client.Id, termOfMonth, amount, timeOfCreated);
+        var newAccount = new CreditAccount(id, client.Id, termOfMonth, amount, timeOfCreated);
         return newAccount;
     }
 

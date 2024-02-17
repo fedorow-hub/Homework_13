@@ -5,7 +5,7 @@ using Homework_13.Infrastructure.Commands;
 using Homework_13.ViewModels.Base;
 using MediatR;
 using System.Windows.Input;
-using Bank.Application.Accounts.Commands.CreateAccount.CreatePlainAccount;
+using Bank.Application.Accounts.Commands.CreateAccount;
 using System.Windows;
 
 namespace Homework_13.ViewModels;
@@ -14,6 +14,7 @@ public class AccountInfoViewModel : ViewModel
 {
     private ClientLookUpDto _currentClient;
     private IMediator _mediator;
+    private OpenAccountViewModel _openAccountViewModel;
 
     private TypeOfAccount[] _accountTypes = { TypeOfAccount.Plain, TypeOfAccount.Credit, TypeOfAccount.Deposit };
 
@@ -39,18 +40,19 @@ public class AccountInfoViewModel : ViewModel
         set => Set(ref _amount, value);
     }
 
-    private DateTime _accountTerm = DateTime.Now + TimeSpan.FromDays(365);
+    private byte _accountTerm = byte.MaxValue;
 
-    public DateTime AccountTerm
+    public byte AccountTerm
     {
         get => _accountTerm;
         set => Set(ref _accountTerm, value);
     }
 
-    public AccountInfoViewModel(ClientLookUpDto client, IMediator mediator)
+    public AccountInfoViewModel(ClientLookUpDto client, IMediator mediator, OpenAccountViewModel openAccountViewModel)
     {
         _currentClient = client;
         _mediator = mediator;
+        _openAccountViewModel = openAccountViewModel;
         SaveCommand = new LambdaCommand(OnSaveCommandExecute, CanSaveCommandExecute);
         OutCommand = new LambdaCommand(OnOutCommandExecute, CanOutCommandExecute);
     }
@@ -92,7 +94,7 @@ public class AccountInfoViewModel : ViewModel
         {
             window.Close();
         }
-        //_mainWindowViewModel.UpdateClientList.Invoke();
+        _openAccountViewModel.UpdateAccountList.Invoke();
     }
     #endregion
 }

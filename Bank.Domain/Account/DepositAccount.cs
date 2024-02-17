@@ -32,9 +32,9 @@ public sealed class DepositAccount : Account
     /// <param name="amount"></param>
     /// <param name="timeOfCreated"></param>
     /// <returns></returns>
-    public static DepositAccount CreateDepositAccount(Guid clientId, byte termOfMonth, decimal amount, DateTime timeOfCreated)
+    public static DepositAccount CreateDepositAccount(Guid id, Guid clientId, byte termOfMonth, decimal amount, DateTime timeOfCreated)
     {
-        var newAccount = new DepositAccount(clientId, termOfMonth, amount, timeOfCreated);
+        var newAccount = new DepositAccount(id, clientId, termOfMonth, amount, timeOfCreated);
         return newAccount;
     }
 

@@ -14,18 +14,12 @@ public class GetBankQueryHandler : IRequestHandler<GetBankQuery, BankDetailVM>
     public async Task<BankDetailVM> Handle(GetBankQuery request, CancellationToken cancellationToken)
     {
         var sourseBank = await _dbContext.Bank.AsNoTracking().FirstOrDefaultAsync(cancellationToken);
-
-        var clients = await _dbContext.Clients.AsNoTracking()
-            .ToListAsync(cancellationToken);
-
-        sourseBank.Clients.AddRange(clients);
-
+        
         var destBank = new BankDetailVM
         {
             Name = sourseBank.Name,
-            Capinal = sourseBank.Capital,
+            Capital = sourseBank.Capital,
             DateOfCreation = sourseBank.DateOfCreation,
-            Clients = sourseBank.Clients
         };
 
         return destBank;

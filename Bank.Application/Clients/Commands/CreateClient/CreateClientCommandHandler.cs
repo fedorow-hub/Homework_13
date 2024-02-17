@@ -23,7 +23,7 @@ public class CreateClientCommandHandler : IRequestHandler<CreateClientCommand>
             var client = new Client(request.Id, 
                 request.Firstname, request.Lastname, request.Patronymic, request.PhoneNumber, 
                 request.PassportSeries, request.PassportNumber, request.TotalIncomePerMounth, bank);
-    
+            
             await _dbContext.Clients.AddAsync(client, cancellationToken);
         }
 

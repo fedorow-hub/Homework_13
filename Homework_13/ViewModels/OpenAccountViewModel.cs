@@ -6,16 +6,19 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows;
 using System;
+using System.Collections.Generic;
 using MediatR;
 using Homework_13.Views;
+using System.Threading.Tasks;
+using Bank.Application.Accounts;
+using Bank.Application.Accounts.Queries;
 
 namespace Homework_13.ViewModels;
 
 public class OpenAccountViewModel : ViewModel
 {
-    
+    public Action UpdateAccountList;
     private IMediator _mediator;
-    //private AccountInfoViewModel _accountInfoViewModel;
 
     #region CurrentClient
     private ClientLookUpDto _currentClient;
@@ -55,8 +58,29 @@ public class OpenAccountViewModel : ViewModel
         _currentClient = CurrentClient;
         _mediator = mediator;
 
+        
+
         OutCommand = new LambdaCommand(OnOutCommandExecute, CanOutCommandExecute);
         CreateAccoundCommand = new LambdaCommand(OnCreateAccoundCommandExecute, CanCreateAccoundCommandExecute);
+
+        UpdateAccountList += UpdateAccount;
+        UpdateAccountList.Invoke();
+    }
+
+    private void UpdateAccount()
+    {
+        Accounts = new ObservableCollection<Account>(GetAccounts(_currentClient.Id).Result.Accounts);
+    }
+
+    private async Task<AccountListVm> GetAccounts(Guid id)
+    {
+        var query = new GetAccountsQuery
+        {
+            Id = id
+        };
+        var result = await _mediator.Send(query);
+
+        return result;
     }
 
 
@@ -76,7 +100,7 @@ public class OpenAccountViewModel : ViewModel
             Owner = Application.Current.MainWindow
         };
         _accountInfoWindow = window;
-        window.DataContext = new AccountInfoViewModel(p as ClientLookUpDto, _mediator);
+        window.DataContext = new AccountInfoViewModel(p as ClientLookUpDto, _mediator, this);
         window.Closed += OnWindowClosed;
         window.ShowDialog();
     }

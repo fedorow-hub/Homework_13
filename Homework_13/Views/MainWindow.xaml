@@ -28,9 +28,20 @@
                         <TextBlock Text="Операции со счетами"/>
                     </Button>
                     <StackPanel Margin="5,0,0,0" DockPanel.Dock="Top" Height="213">
-                        <TextBlock Text="{Binding SelectedClient.Lastname}" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding SelectedClient.Firstname}" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding SelectedClient.Patronymic}" FontWeight="Bold"/>
+                        <TextBlock Text="Список счетов клиента" FontWeight="Bold" TextAlignment="Center" Margin="5"/>
+                        
+                        <DataGrid ItemsSource="{Binding AccountsCurrentClient}"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True" 
+                                  Margin="5"
+                                  Height="130"
+                        >
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Вид счета" Binding="{Binding Type}"/>
+                                <DataGridTextColumn Header="Сумма" Binding="{Binding Amount}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
 
                     </StackPanel>
                     <StackPanel DockPanel.Dock="Bottom">

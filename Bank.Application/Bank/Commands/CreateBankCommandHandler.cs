@@ -14,19 +14,17 @@ public class CreateBankCommandHandler : IRequestHandler<CreateBankCommand, SomeB
         _dbContext = dbContext;
     }
 
-    public async Task<SomeBank?> Handle(CreateBankCommand request, CancellationToken cancellationToken)
+    public async Task<SomeBank> Handle(CreateBankCommand request, CancellationToken cancellationToken)
     {
 
         var entity = await _dbContext.Bank.FirstOrDefaultAsync(cancellationToken);
 
         var bank = SomeBank.CreateBank(request.Name, request.Capital, request.DateOfCreation);
 
-        if(entity == null)
-        {
-            await _dbContext.Bank.AddAsync(bank);
-            await _dbContext.SaveChangesAsync(cancellationToken);
-        }
-
+        if (entity != null) return entity;
+        await _dbContext.Bank.AddAsync(bank, cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
         return bank;
+
     }
 }

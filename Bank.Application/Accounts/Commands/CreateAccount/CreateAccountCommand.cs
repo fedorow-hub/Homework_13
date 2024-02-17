@@ -1,7 +1,7 @@
 ﻿using Bank.Domain.Account;
 using MediatR;
 
-namespace Bank.Application.Accounts.Commands.CreateAccount.CreatePlainAccount;
+namespace Bank.Application.Accounts.Commands.CreateAccount;
 
 public record CreateAccountCommand : IRequest
 {
@@ -9,7 +9,7 @@ public record CreateAccountCommand : IRequest
 
     public DateTime CreatedAt { get; init; }
     
-    public DateTime AccountTerm { get; init; }
+    public byte AccountTerm { get; init; }
 
     public decimal Amount { get; init; }
 

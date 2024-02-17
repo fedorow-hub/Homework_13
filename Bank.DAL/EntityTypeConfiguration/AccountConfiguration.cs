@@ -14,10 +14,10 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
         builder.Property(x => x.Type)
             .HasConversion(type => type.Name,
                 value => TypeOfAccount.Parse(value));
-        builder.HasOne<Client>()
-            .WithMany()
-            .HasForeignKey(x => x.ClientId)
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Cascade);
+        //builder.HasOne<Client>()
+        //    .WithMany()
+        //    .HasForeignKey(x => x.ClientId)
+        //    .IsRequired()
+        //    .OnDelete(DeleteBehavior.Cascade);
     }
 }

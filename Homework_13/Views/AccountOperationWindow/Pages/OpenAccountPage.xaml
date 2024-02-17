@@ -22,15 +22,16 @@
                       IsReadOnly="True" 
                       Margin="5"
                       DockPanel.Dock="Top"
+                      Height="150"
             >
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Дата открытия" Binding="{Binding TimeOfCreated}"/>
+                    <DataGridTextColumn Header="Дата открытия" Binding="{Binding TimeOfCreated, StringFormat=dd.MM.yyyy}" />
                     <DataGridTextColumn Header="Сумма" Binding="{Binding Amount}"/>
                     <DataGridTextColumn Header="Вид счета" Binding="{Binding Type}"/>
-                    <DataGridTextColumn Header="Срок окончания" Binding="{Binding AccountTerm}"/>
+                    <DataGridTextColumn Header="Срок окончания" Binding="{Binding AccountTerm, StringFormat=dd.MM.yyyy}"/>
                 </DataGrid.Columns>
             </DataGrid>
-            <StackPanel Height="101" Width="333" DockPanel.Dock="Bottom">
+            <StackPanel DockPanel.Dock="Right" Width="278" Height="149">
                 <Button Margin="5" Height="40" Cursor="Hand" Width="213" 
                         Command="{Binding CreateAccoundCommand}" 
                         CommandParameter="{Binding CurrentClient}">
