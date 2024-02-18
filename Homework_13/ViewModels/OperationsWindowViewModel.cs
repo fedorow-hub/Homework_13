@@ -74,7 +74,7 @@ public class OperationsWindowViewModel : ViewModel
     private void OnAddAndWithdrawalsCommandExecuted(object p)
     {
         CurrentPage = _addAndWithdrawals;
-        _addAndWithdrawals.DataContext = new AddAndWithdrawalsViewModel(_currentClient);        
+        _addAndWithdrawals.DataContext = new AddAndWithdrawalsViewModel(_currentClient, _mediator);        
     }
     private bool CanAddAndWithdrawalsCommandExecute(object p)
     {

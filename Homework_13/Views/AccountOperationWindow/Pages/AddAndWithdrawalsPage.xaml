@@ -6,11 +6,9 @@
       xmlns:local="clr-namespace:Homework_13.Views.AccountOperationWindow.Pages"
       xmlns:vm="clr-namespace:Homework_13.ViewModels"
       mc:Ignorable="d" 
+      d:DataContext="{Binding AddAndWithdrawalsViewModel, Source={StaticResource Locator}}"
       d:DesignHeight="389" d:DesignWidth="443"
       Title="AddAndWithdrawalsPage">
-    <Page.DataContext>
-        <vm:AddAndWithdrawalsViewModel />
-    </Page.DataContext>
     <StackPanel>
         <TextBlock FontWeight="Bold" FontSize="14" Margin="5">Страница снятия и внесения средств на счета клиента</TextBlock>
         <DockPanel>
@@ -18,13 +16,39 @@
             <TextBlock Text="{Binding Path=CurrentClient.Firstname}" FontWeight="Bold" FontSize="12" Margin="5"/>
             <TextBlock Text="{Binding Path=CurrentClient.Patronymic}" FontWeight="Bold" FontSize="12" Margin="5"/>            
         </DockPanel>
+        <TextBlock FontWeight="SemiBold" FontSize="14" Margin="5">Выберите счет для выполнения операции</TextBlock>
         <StackPanel>
-            <TextBox Text="Счет зачисления/снятия"/>
-            <Button Margin="5" Height="40"  
-                        Command="{Binding OpenAccountCommand}"
+            <DataGrid ItemsSource="{Binding Accounts}"
+                      SelectedItem="{Binding SelectedAccount}"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True" 
+                      Margin="5"
+                      DockPanel.Dock="Top"
+                      Height="150"
+            >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Дата открытия" Binding="{Binding TimeOfCreated, StringFormat=dd.MM.yyyy}" />
+                    <DataGridTextColumn Header="Сумма" Binding="{Binding Amount}"/>
+                    <DataGridTextColumn Header="Вид счета" Binding="{Binding Type}"/>
+                    <DataGridTextColumn Header="Срок окончания" Binding="{Binding AccountTerm, StringFormat=dd.MM.yyyy}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+                <Button Margin="5" Height="40"  
+                        Command="{Binding AddCommand}"
+                        CommandParameter="{Binding SelectedAccount}"
                         Cursor="Hand" Width="160">
-                <TextBlock Text="Добавить" FontSize="18"/>                
-            </Button>
+                    <TextBlock Text="Внести" FontSize="18"/>
+                </Button>
+                <Button Margin="5" Height="40"  
+                        Command="{Binding WithdrawalCommand}"
+                        CommandParameter="{Binding SelectedAccount}"
+                        Cursor="Hand" Width="160">
+                    <TextBlock Text="Снять" FontSize="18"/>
+                </Button>
+
+            </StackPanel>
+            
         </StackPanel>
     </StackPanel>
 </Page>

@@ -38,7 +38,7 @@
                         >
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Вид счета" Binding="{Binding Type}"/>
-                                <DataGridTextColumn Header="Сумма" Binding="{Binding Amount}"/>
+                                <DataGridTextColumn Header="Сумма руб." Binding="{Binding Amount}"/>
                             </DataGrid.Columns>
                         </DataGrid>
 

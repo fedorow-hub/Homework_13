@@ -44,7 +44,9 @@
                         <TextBlock Text="Открытие счета" FontSize="18"/>
                     </StackPanel>
                 </Button>
-                <Button Height="40" Margin="5" Cursor="Hand" Width="216">
+                <Button Height="40" Margin="5" Cursor="Hand" Width="216"
+                        Command="{Binding CloseAccoundCommand}" 
+                        CommandParameter="{Binding SelectedAccount}">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Solid_Trash" Height="20" Margin="0,0,10,0" Foreground="red">
                             <fa:ImageAwesome.Effect>

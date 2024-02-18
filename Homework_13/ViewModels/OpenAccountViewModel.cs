@@ -11,6 +11,7 @@ using MediatR;
 using Homework_13.Views;
 using System.Threading.Tasks;
 using Bank.Application.Accounts;
+using Bank.Application.Accounts.Commands.CloseAccount;
 using Bank.Application.Accounts.Queries;
 
 namespace Homework_13.ViewModels;
@@ -49,8 +50,6 @@ public class OpenAccountViewModel : ViewModel
         set => Set(ref _selectedAccount, value);
     }
     #endregion
-
-    
     
 
 	public OpenAccountViewModel(ClientLookUpDto CurrentClient, IMediator mediator)
@@ -58,10 +57,15 @@ public class OpenAccountViewModel : ViewModel
         _currentClient = CurrentClient;
         _mediator = mediator;
 
-        
+
+        #region Commands
 
         OutCommand = new LambdaCommand(OnOutCommandExecute, CanOutCommandExecute);
         CreateAccoundCommand = new LambdaCommand(OnCreateAccoundCommandExecute, CanCreateAccoundCommandExecute);
+        CloseAccoundCommand = new LambdaCommand(OnCloseAccoundCommandExecute, CanCloseAccoundCommandExecute);
+
+        #endregion
+
 
         UpdateAccountList += UpdateAccount;
         UpdateAccountList.Invoke();
@@ -110,7 +114,35 @@ public class OpenAccountViewModel : ViewModel
         _accountInfoWindow = null;
     }
     #endregion
+
+    #region CloseAccount
+
+    public ICommand CloseAccoundCommand { get; }
+
+    private bool CanCloseAccoundCommandExecute(object p) => p != null;
     
+    private async void OnCloseAccoundCommandExecute(object p)
+    {
+        if (_selectedAccount.Amount > 0)
+        {
+            MessageBox.Show("На счету имеются денежные средства, перед закрытием счета их необходимо снять или перевести на другой счет");
+        }
+        else
+        {
+            var command = new CloseAccountCommand
+            {
+                Id = _selectedAccount.Id
+            };
+
+            await _mediator.Send(command);
+
+        }
+
+        UpdateAccountList.Invoke();
+    }
+
+    #endregion
+
 
     #region OutCommand
     public ICommand OutCommand { get; }

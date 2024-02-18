@@ -25,17 +25,19 @@ public class MainWindowViewModel : ViewModel
 {
     private readonly IMediator _mediator;
 
+    private readonly IExchangeRateService _exchangeRateService;
+    public string Date { get; private set; }
+
     public Action UpdateClientList;
     public Action UpdateAccountListForCurrentClient;
-    public string Date { get; private set; }
 
     #region Currency
     public decimal DollarCurrentRate { get; private set; }
     public decimal EuroCurrentRate { get; private set; }
     #endregion
 
+    #region Clients
     private ObservableCollection<ClientLookUpDto> _clients;
-
     public ObservableCollection<ClientLookUpDto> Clients
     {
         get => _clients;
@@ -46,15 +48,18 @@ public class MainWindowViewModel : ViewModel
             OnPropertyChanged(nameof(SelectedClients));
         }
     }
+    #endregion
 
+    #region AccountsCurrentClient
     private ObservableCollection<Account> _accountsCurrentClient;
     public ObservableCollection<Account> AccountsCurrentClient
     {
         get => _accountsCurrentClient;
         set => Set(ref _accountsCurrentClient, value);
     }
-    
+    #endregion
 
+    #region ClientFilterText
     private string _clientFilterText;
 
     public string ClientFilterText
@@ -62,10 +67,11 @@ public class MainWindowViewModel : ViewModel
         get => _clientFilterText;
         set
         {
-            if(!Set(ref _clientFilterText, value)) return;
+            if (!Set(ref _clientFilterText, value)) return;
             _selectedClients.View.Refresh();
         }
     }
+    #endregion
 
     #region FilteredClient
 
@@ -98,8 +104,7 @@ public class MainWindowViewModel : ViewModel
     public ICollectionView SelectedClients => _selectedClients?.View;
 
     #endregion
-
-    private readonly IExchangeRateService _exchangeRateService;
+    
 
     #region Title
 
@@ -213,6 +218,15 @@ public class MainWindowViewModel : ViewModel
     private void OnDeleteClientCommandExecute(object p)
     {
         if (SelectedClient is null) return;
+
+        foreach (var account in _accountsCurrentClient)
+        {
+            if (account.IsExistance)
+            {
+                MessageBox.Show("У клиента есть незакрытые счета, удаление не возможно до их закрытия");
+                return;
+            }
+        }
         
         var command = new DeleteClientCommand
         {

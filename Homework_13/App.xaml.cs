@@ -39,6 +39,8 @@ public partial class App : Application
         services.AddTransient<OperationsWindowViewModel>();
         services.AddTransient<OpenAccountViewModel>();
         services.AddTransient<AccountInfoViewModel>();
+        services.AddTransient<AddAndWithdrawalsViewModel>();
+        services.AddTransient<DialogViewModel>();
 
         var builder = new ConfigurationBuilder();
         builder.SetBasePath(Directory.GetCurrentDirectory());
