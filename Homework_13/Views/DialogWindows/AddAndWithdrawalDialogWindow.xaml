@@ -7,17 +7,29 @@
         xmlns:local="clr-namespace:Homework_13.Views.DialogWindows"
         d:DataContext="{Binding AddAndWithdrawalsDialogModel, Source={StaticResource Locator}}"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="228" Width="331" WindowStartupLocation="CenterScreen">
-    <StackPanel>
+        Title="{Binding Title}" Height="228" Width="353" WindowStartupLocation="CenterScreen">
+    <StackPanel Margin="0,0,4,3">
         <TextBlock Text="Введите сумму" TextAlignment="Center" Margin="10" FontSize="14" FontWeight="SemiBold"/>
         <TextBox PreviewTextInput="NumberValidationTextBox" FontSize="20" Margin="3,0,3,10" TextAlignment="Center" FontWeight="Bold"
                  Text="{Binding Amount}" Width="188"/>
-        <Button Margin="30" Height="40"  
-                Command="{Binding SaveCommand}"
-                CommandParameter="{Binding ElementName=DialogWind}"
-                Cursor="Hand" Width="160">
-            <TextBlock Text="Выполнить" FontSize="18"/>
-        </Button>
+        <StackPanel Orientation="Horizontal">
+            <Button  
+                    Height="40"
+                    Margin="5"
+                    Command="{Binding SaveCommand}"
+                    CommandParameter="{Binding ElementName=DialogWind}"
+                    Cursor="Hand" Width="160">
+                <TextBlock Text="Выполнить" FontSize="18"/>
+            </Button>
+            <Button Height="40"  
+                    Command="{Binding EscCommand}"
+                    CommandParameter="{Binding ElementName=DialogWind}"
+                    Cursor="Hand" Width="160"
+                    Margin="5">
+                <TextBlock Text="Отмена" FontSize="18"/>
+            </Button>
+
+        </StackPanel>
 
     </StackPanel>
 </Window>

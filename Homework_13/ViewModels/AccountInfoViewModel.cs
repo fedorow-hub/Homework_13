@@ -87,8 +87,10 @@ public class AccountInfoViewModel : ViewModel
             Amount = Convert.ToDecimal(_amount),
             TypeOfAccount = TypeOfAccount.Parse(_type)
         };
-        await _mediator.Send(command);
 
+        var message = await _mediator.Send(command);
+
+        MessageBox.Show(message);
 
         if (p is Window window)
         {

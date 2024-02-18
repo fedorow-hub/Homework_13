@@ -37,22 +37,25 @@ public class OperationsWindowViewModel : ViewModel
 
         #region Pages
         _addAndWithdrawals = new AddAndWithdrawalsPage();
-        _betweenTheirAccounts = new TransferBetweenOwnAccountPage();
+        _betweenOwnAccounts = new TransferBetweenOwnAccountPage();
         _openAccount = new OpenAccountPage();
+        _transferToOtherClientsAccounts = new TransferToOtherClientsAccountPage();
 
         CurrentPage = new EmptyPage();
         #endregion
 
         ExitCommand = new LambdaCommand(OnExitCommandExecute, CanExitCommandExecute);
         AddAndWithdrawalsCommand = new LambdaCommand(OnAddAndWithdrawalsCommandExecuted, CanAddAndWithdrawalsCommandExecute);
-        BetweenTheirAccountsCommand = new LambdaCommand(OnBetweenTheirAccountsCommandExecuted, CanBetweenTheirAccountsCommandExecute);
+        BetweenOwnAccountsCommand = new LambdaCommand(OnBetweenOwnAccountsCommandExecuted, CanBetweenOwnAccountsCommandExecute);
+        TransferToOtherClientsAccountsCommand = new LambdaCommand(OnTransferToOtherClientsAccountsCommandExecuted, CanTransferToOtherClientsAccountsCommandExecute);
         OpenAccountCommand = new LambdaCommand(OnOpenAccountCommandExecuted, CanOpenAccountCommandExecute);
     }
 
     #region Pages
     private readonly Page _addAndWithdrawals;
-    private readonly Page _betweenTheirAccounts;
+    private readonly Page _betweenOwnAccounts;
     private readonly Page _openAccount;
+    private readonly Page _transferToOtherClientsAccounts;
 
     private Page _currentPage;
     /// <summary>
@@ -82,17 +85,33 @@ public class OperationsWindowViewModel : ViewModel
     }
     #endregion
 
-    #region BetweenTheirAccounts
+    #region BetweenOwnAccountsCommand
 
-    public ICommand BetweenTheirAccountsCommand { get; }
-    private void OnBetweenTheirAccountsCommandExecuted(object p)
+    public ICommand BetweenOwnAccountsCommand { get; }
+    private void OnBetweenOwnAccountsCommandExecuted(object p)
     {
-        CurrentPage = _betweenTheirAccounts;
-        _betweenTheirAccounts.DataContext = new BetweenOwnAccountsViewModel(_currentClient, _mediator);
+        CurrentPage = _betweenOwnAccounts;
+        _betweenOwnAccounts.DataContext = new TransferBetweenOwnAccountsViewModel(_currentClient, _mediator);
     }
-    private bool CanBetweenTheirAccountsCommandExecute(object p)
+    private bool CanBetweenOwnAccountsCommandExecute(object p)
     {
-        if (CurrentPage == _betweenTheirAccounts)
+        if (CurrentPage == _betweenOwnAccounts)
+            return false;
+        return true;
+    }
+    #endregion
+
+    #region TransferToOtherClientsAccountsCommand
+
+    public ICommand TransferToOtherClientsAccountsCommand { get; }
+    private void OnTransferToOtherClientsAccountsCommandExecuted(object p)
+    {
+        CurrentPage = _transferToOtherClientsAccounts;
+        _transferToOtherClientsAccounts.DataContext = new TransferToOtherClientsAccountsViewModel(_currentClient, _mediator);
+    }
+    private bool CanTransferToOtherClientsAccountsCommandExecute(object p)
+    {
+        if (CurrentPage == _transferToOtherClientsAccounts)
             return false;
         return true;
     }

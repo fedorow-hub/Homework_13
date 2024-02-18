@@ -42,8 +42,10 @@ public partial class App : Application
         services.AddTransient<AccountInfoViewModel>();
         services.AddTransient<AddAndWithdrawalsViewModel>();
         services.AddTransient<AddAndWithdrawalsDialogViewModel>();
-        services.AddTransient<BetweenOwnAccountsViewModel>();
         services.AddTransient<TransferBetweenOwnAccountsViewModel>();
+        services.AddTransient<TransferBetweenOwnAccountsDialogViewModel>();
+        services.AddTransient<TransferToOtherClientsAccountsViewModel>();
+        services.AddTransient<TransferToOtherClientsDialogViewModel>();
 
         var builder = new ConfigurationBuilder();
         builder.SetBasePath(Directory.GetCurrentDirectory());

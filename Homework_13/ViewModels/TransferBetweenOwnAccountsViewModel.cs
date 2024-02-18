@@ -3,11 +3,9 @@ using Homework_13.ViewModels.Base;
 using System.Collections.ObjectModel;
 using Bank.Domain.Account;
 using Homework_13.Infrastructure.Commands;
-using Homework_13.Views;
 using System.Windows.Input;
 using System.Windows;
 using System;
-using System.Collections.Generic;
 using MediatR;
 using Bank.Application.Accounts.Queries;
 using Bank.Application.Accounts;
@@ -17,7 +15,7 @@ using Homework_13.ViewModels.DialogViewModels;
 
 namespace Homework_13.ViewModels;
 
-public class BetweenOwnAccountsViewModel : ViewModel
+public class TransferBetweenOwnAccountsViewModel : ViewModel
 {
     public Action UpdateAccountList;
     private IMediator _mediator;
@@ -63,11 +61,11 @@ public class BetweenOwnAccountsViewModel : ViewModel
 
     #endregion
 
-    public BetweenOwnAccountsViewModel()
+    public TransferBetweenOwnAccountsViewModel()
     {
 
     }
-    public BetweenOwnAccountsViewModel(ClientLookUpDto CurrentClient, IMediator mediator)
+    public TransferBetweenOwnAccountsViewModel(ClientLookUpDto CurrentClient, IMediator mediator)
     {
         _currentClient = CurrentClient;
         _mediator = mediator;
@@ -111,7 +109,7 @@ public class BetweenOwnAccountsViewModel : ViewModel
             Owner = Application.Current.MainWindow
         };
         _dialogWindow = window;
-        window.DataContext = new TransferBetweenOwnAccountsViewModel(_selectedAccountFrom, _selectedAccountTo, _mediator, this);
+        window.DataContext = new TransferBetweenOwnAccountsDialogViewModel(_selectedAccountFrom, _selectedAccountTo, _mediator, this);
         window.Closed += OnWindowClosed;
         window.ShowDialog();
     }

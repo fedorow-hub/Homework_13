@@ -1,10 +1,11 @@
 ﻿using Bank.Application.Interfaces;
+using Bank.Domain.Root;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bank.Application.Accounts.Commands.AddAndWithdrawalMoney;
 
-public class AddAndWithdrawalMoneyCommandHandler : IRequestHandler<AddAndWithdrawalMoneyCommand>
+public class AddAndWithdrawalMoneyCommandHandler : IRequestHandler<AddAndWithdrawalMoneyCommand, string>
 {
     private readonly IApplicationDbContext _dbContext;
     public AddAndWithdrawalMoneyCommandHandler(IApplicationDbContext dbContext)
@@ -12,7 +13,7 @@ public class AddAndWithdrawalMoneyCommandHandler : IRequestHandler<AddAndWithdra
         _dbContext = dbContext;
     }
    
-    public async Task Handle(AddAndWithdrawalMoneyCommand request, CancellationToken cancellationToken)
+    public async Task<string> Handle(AddAndWithdrawalMoneyCommand request, CancellationToken cancellationToken)
     {
         var selectedAccount = await _dbContext.Accounts.FirstOrDefaultAsync(ac => ac.Id == request.Id);
         var bank = await _dbContext.Bank.FirstOrDefaultAsync();
@@ -22,14 +23,30 @@ public class AddAndWithdrawalMoneyCommandHandler : IRequestHandler<AddAndWithdra
             {
                 selectedAccount.AddMoneyToAccount(request.Amount);
                 bank.AddMoneyToCapital(request.Amount);
+                await _dbContext.SaveChangesAsync(cancellationToken);
+                return "Средства успешно добавлены на счет";
             }
-            else
+
+            try
             {
                 selectedAccount.WithdrawalMoneyFromAccount(request.Amount);
-                bank.WithdrawalMoneyFromCapital(request.Amount);
+                try
+                {
+                    bank.WithdrawalMoneyFromCapital(request.Amount);
+                }
+                catch (DomainExeption ex)
+                {
+                    Console.WriteLine(ex);
+                }
+                await _dbContext.SaveChangesAsync(cancellationToken);
+                return "Средства успешно сняты со счета";
+            }
+            catch (DomainExeption ex)
+            {
+                return ex.Message;
             }
         }
 
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        return "Клиент не найден";
     }
 }

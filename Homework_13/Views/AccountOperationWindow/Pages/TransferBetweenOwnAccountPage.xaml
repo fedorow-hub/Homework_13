@@ -42,14 +42,12 @@
                     <DataGridTextColumn Header="Вид счета" Binding="{Binding Type}"/>
                 </DataGrid.Columns>
             </DataGrid>
-            <Button Margin="5" Height="40"  
+            <Button Margin="10" Height="40"  
                 Command="{Binding TransferCommand}"
-
+                HorizontalAlignment="Right"
                 Cursor="Hand" Width="160">
                 <TextBlock Text="Перевести" FontSize="18"/>
             </Button>
-
-
         </StackPanel>
     </StackPanel>
 </Page>

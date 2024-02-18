@@ -134,8 +134,9 @@ public class OpenAccountViewModel : ViewModel
                 Id = _selectedAccount.Id
             };
 
-            await _mediator.Send(command);
+            var message = await _mediator.Send(command);
 
+            MessageBox.Show(message);
         }
 
         UpdateAccountList.Invoke();

@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Bank.Application.Accounts.Commands.CreateAccount;
 
-public record CreateAccountCommand : IRequest
+public record CreateAccountCommand : IRequest<string>
 {
     public Guid ClientId { get; init; }
 

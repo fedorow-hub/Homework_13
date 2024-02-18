@@ -79,13 +79,4 @@ public sealed class SomeBank : Entity
         else throw new DomainExeption("Недостаточно средств банка");
     }
 
-    //public void AddClient(Client.Client client)
-    //{
-    //    Clients.Add(client);
-    //}
-
-    //public void RemoveClient(Client.Client client)
-    //{
-    //    Clients.Remove(client);
-    //}
 }

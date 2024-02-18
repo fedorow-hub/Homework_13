@@ -21,7 +21,7 @@
                 <TextBlock Text="Внесение/снятие средств" FontSize="14"/>
             </Button>
             <Button Margin="5" Height="40"  
-                        Command="{Binding BetweenTheirAccountsCommand}"
+                        Command="{Binding BetweenOwnAccountsCommand}"
                         Cursor="Hand" Width="253">
                 <StackPanel Orientation="Horizontal">
                     <fa:ImageAwesome Icon="Solid_ArrowAltCircleLeft" Height="20" Margin="0,0,10,0" Foreground="SkyBlue">
@@ -32,9 +32,8 @@
                     <TextBlock Text="Между своими счетами" FontSize="14"/>
                 </StackPanel>
             </Button>
-            <Button Margin="5" Height="40"  
-                        
-                        Cursor="Hand" Width="253">
+            <Button Margin="5" Height="40" Cursor="Hand" Width="253"
+                    Command="{Binding TransferToOtherClientsAccountsCommand}">
                 <StackPanel Orientation="Horizontal">
                     <fa:ImageAwesome Icon="Solid_PeopleArrows" Height="20" Margin="0,0,10,0" Foreground="LawnGreen">
                         <fa:ImageAwesome.Effect>

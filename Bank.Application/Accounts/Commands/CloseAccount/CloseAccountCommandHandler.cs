@@ -1,10 +1,11 @@
 ﻿using Bank.Application.Interfaces;
+using Bank.Domain.Root;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bank.Application.Accounts.Commands.CloseAccount;
 
-internal class CloseAccountCommandHandler : IRequestHandler<CloseAccountCommand>
+internal class CloseAccountCommandHandler : IRequestHandler<CloseAccountCommand, string>
 {
     private readonly IApplicationDbContext _dbContext;
     public CloseAccountCommandHandler(IApplicationDbContext dbContext)
@@ -12,19 +13,24 @@ internal class CloseAccountCommandHandler : IRequestHandler<CloseAccountCommand>
         _dbContext = dbContext;
     }
 
-    public async Task Handle(CloseAccountCommand request, CancellationToken cancellationToken)
+    public async Task<string> Handle(CloseAccountCommand request, CancellationToken cancellationToken)
     {
         var selectedAccount = await _dbContext.Accounts.FirstOrDefaultAsync(ac => ac.Id == request.Id, cancellationToken);
 
         if (selectedAccount != null)
         {
-            selectedAccount.CloseAccount();
-        }
-        else
-        {
-            throw new ApplicationException("Выбранный счет не найден");
+            try
+            {
+                selectedAccount.CloseAccount();
+                await _dbContext.SaveChangesAsync(cancellationToken);
+                return "Счет успешно закрыт";
+            }
+            catch (DomainExeption ex)
+            {
+                return ex.Message;
+            }
         }
 
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        return "Выбранный счет не найден";
     }
 }

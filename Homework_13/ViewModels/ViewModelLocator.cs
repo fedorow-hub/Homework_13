@@ -21,8 +21,13 @@ public class ViewModelLocator
         App.Host.Services.GetRequiredService<AddAndWithdrawalsViewModel>();
     public AddAndWithdrawalsDialogViewModel AddAndWithdrawalsDialogModel =>
         App.Host.Services.GetRequiredService<AddAndWithdrawalsDialogViewModel>();
-    public BetweenOwnAccountsViewModel BetweenOwnAccounts =>
-        App.Host.Services.GetRequiredService<BetweenOwnAccountsViewModel>();
-    public TransferBetweenOwnAccountsViewModel TransferBetweenOwnAccounts =>
+    public TransferBetweenOwnAccountsViewModel BetweenOwnAccounts =>
         App.Host.Services.GetRequiredService<TransferBetweenOwnAccountsViewModel>();
+    public TransferBetweenOwnAccountsDialogViewModel TransferBetweenOwnAccounts =>
+        App.Host.Services.GetRequiredService<TransferBetweenOwnAccountsDialogViewModel>();
+    public TransferToOtherClientsAccountsViewModel TransferToOtherClientsAccounts =>
+        App.Host.Services.GetRequiredService<TransferToOtherClientsAccountsViewModel>();
+    public TransferToOtherClientsDialogViewModel TransferToOtherClientsDialog =>
+        App.Host.Services.GetRequiredService<TransferToOtherClientsDialogViewModel>();
+
 }

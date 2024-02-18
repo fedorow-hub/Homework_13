@@ -51,6 +51,7 @@ public class AddAndWithdrawalsDialogViewModel : ViewModel
         _viewModel = viewModel;
 
         SaveCommand = new LambdaCommand(OnSaveCommandExecute, CanSaveCommandExecute);
+        EscCommand = new LambdaCommand(OnEscCommandExecute, CanEscCommandExecute);
     }
 
     #region SaveCommand
@@ -68,13 +69,30 @@ public class AddAndWithdrawalsDialogViewModel : ViewModel
             IsAdd = _isAdd
         };
 
-        await _mediator.Send(command);
+        var message = await _mediator.Send(command);
+
+        MessageBox.Show(message);
 
         if (p is Window window)
         {
             window.Close();
         }
         _viewModel.UpdateAccountList.Invoke();
+    }
+    #endregion
+
+    #region EscCommand
+
+    public ICommand EscCommand { get; }
+
+    private bool CanEscCommandExecute(object p) => true;
+
+    private void OnEscCommandExecute(object p)
+    {
+        if (p is Window window)
+        {
+            window.Close();
+        }
     }
     #endregion
 

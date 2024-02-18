@@ -8,11 +8,11 @@ using Bank.Application.Accounts.Commands.TransactionBetweenAccounts;
 
 namespace Homework_13.ViewModels.DialogViewModels
 {
-    public class TransferBetweenOwnAccountsViewModel : ViewModel
+    public class TransferBetweenOwnAccountsDialogViewModel : ViewModel
     {
         private IMediator _mediator;
 
-        private BetweenOwnAccountsViewModel _viewModel;
+        private TransferBetweenOwnAccountsViewModel _viewModel;
 
         private Account _accountFrom;
 
@@ -26,7 +26,7 @@ namespace Homework_13.ViewModels.DialogViewModels
             set => Set(ref _amount, value);
         }
 
-        public TransferBetweenOwnAccountsViewModel(Account accountFrom, Account accountTo, IMediator mediator, BetweenOwnAccountsViewModel viewModel)
+        public TransferBetweenOwnAccountsDialogViewModel(Account accountFrom, Account accountTo, IMediator mediator, TransferBetweenOwnAccountsViewModel viewModel)
         {
             _mediator = mediator;
             _accountFrom = accountFrom;
@@ -34,6 +34,7 @@ namespace Homework_13.ViewModels.DialogViewModels
             _viewModel = viewModel;
 
             SaveCommand = new LambdaCommand(OnSaveCommandExecute, CanSaveCommandExecute);
+            EscCommand = new LambdaCommand(OnEscCommandExecute, CanEscCommandExecute);
         }
 
         #region SaveCommand
@@ -51,13 +52,30 @@ namespace Homework_13.ViewModels.DialogViewModels
                 Amount = _amount,
             };
 
-            await _mediator.Send(command);
+            var message = await _mediator.Send(command);
 
+            MessageBox.Show(message);
+            
             if (p is Window window)
             {
                 window.Close();
             }
             _viewModel.UpdateAccountList.Invoke();
+        }
+        #endregion
+
+        #region EscCommand
+
+        public ICommand EscCommand { get; }
+
+        private bool CanEscCommandExecute(object p) => true;
+
+        private void OnEscCommandExecute(object p)
+        {
+            if (p is Window window)
+            {
+                window.Close();
+            }
         }
         #endregion
 
