@@ -1,5 +1,4 @@
 ﻿using Bank.Application.Interfaces;
-using Bank.Domain.Root;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Homework_13.ViewModels.DialogViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Homework_13.ViewModels;
 
@@ -18,6 +19,10 @@ public class ViewModelLocator
         App.Host.Services.GetRequiredService<AccountInfoViewModel>();
     public AddAndWithdrawalsViewModel AddAndWithdrawalsViewModel =>
         App.Host.Services.GetRequiredService<AddAndWithdrawalsViewModel>();
-    public DialogViewModel DialogModel =>
-        App.Host.Services.GetRequiredService<DialogViewModel>();
+    public AddAndWithdrawalsDialogViewModel AddAndWithdrawalsDialogModel =>
+        App.Host.Services.GetRequiredService<AddAndWithdrawalsDialogViewModel>();
+    public BetweenOwnAccountsViewModel BetweenOwnAccounts =>
+        App.Host.Services.GetRequiredService<BetweenOwnAccountsViewModel>();
+    public TransferBetweenOwnAccountsViewModel TransferBetweenOwnAccounts =>
+        App.Host.Services.GetRequiredService<TransferBetweenOwnAccountsViewModel>();
 }

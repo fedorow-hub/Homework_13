@@ -6,13 +6,13 @@ using System.Windows.Input;
 using Bank.Application.Accounts.Commands.AddAndWithdrawalMoney;
 using System.Windows;
 
-namespace Homework_13.ViewModels;
+namespace Homework_13.ViewModels.DialogViewModels;
 
-public class DialogViewModel : ViewModel
+public class AddAndWithdrawalsDialogViewModel : ViewModel
 {
     private IMediator _mediator;
 
-    private AddAndWithdrawalsViewModel _addAndWithdrawalsViewModel;
+    private AddAndWithdrawalsViewModel _viewModel;
 
     private Account _currentAccount;
 
@@ -34,7 +34,7 @@ public class DialogViewModel : ViewModel
         set => Set(ref _title, value);
     }
 
-    public DialogViewModel(Account account, IMediator mediator, bool isAdd, AddAndWithdrawalsViewModel addAndWithdrawalsViewModel)
+    public AddAndWithdrawalsDialogViewModel(Account account, IMediator mediator, bool isAdd, AddAndWithdrawalsViewModel viewModel)
     {
         _mediator = mediator;
         _currentAccount = account;
@@ -48,7 +48,7 @@ public class DialogViewModel : ViewModel
         {
             _title = "Внесение средств";
         }
-        _addAndWithdrawalsViewModel = addAndWithdrawalsViewModel;
+        _viewModel = viewModel;
 
         SaveCommand = new LambdaCommand(OnSaveCommandExecute, CanSaveCommandExecute);
     }
@@ -74,7 +74,7 @@ public class DialogViewModel : ViewModel
         {
             window.Close();
         }
-        _addAndWithdrawalsViewModel.UpdateAccountList.Invoke();
+        _viewModel.UpdateAccountList.Invoke();
     }
     #endregion
 

@@ -1,25 +1,28 @@
 ﻿using Bank.Application.Clients.Queries.GetClientList;
-using Homework_13.Infrastructure.Commands;
 using Homework_13.ViewModels.Base;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 using Bank.Domain.Account;
-using MediatR;
+using Homework_13.Infrastructure.Commands;
+using Homework_13.Views;
+using System.Windows.Input;
+using System.Windows;
 using System;
+using System.Collections.Generic;
+using MediatR;
 using Bank.Application.Accounts.Queries;
 using Bank.Application.Accounts;
 using System.Threading.Tasks;
-using System.Windows;
-using Homework_13.ViewModels.DialogViewModels;
 using Homework_13.Views.DialogWindows;
+using Homework_13.ViewModels.DialogViewModels;
 
 namespace Homework_13.ViewModels;
 
-public class AddAndWithdrawalsViewModel : ViewModel
+public class BetweenOwnAccountsViewModel : ViewModel
 {
     public Action UpdateAccountList;
     private IMediator _mediator;
 
+    #region Свойства зависимости
     private ClientLookUpDto _currentClient;
     public ClientLookUpDto CurrentClient
     {
@@ -39,26 +42,37 @@ public class AddAndWithdrawalsViewModel : ViewModel
     }
     #endregion
 
-    #region SelectedAccount
-    private Account _selectedAccount;
-    public Account SelectedAccount
+    #region SelectedAccountFrom
+    private Account _selectedAccountFrom;
+    public Account SelectedAccountFrom
     {
-        get => _selectedAccount;
-        set => Set(ref _selectedAccount, value);
+        get => _selectedAccountFrom;
+        set => Set(ref _selectedAccountFrom, value);
     }
     #endregion
 
-    public AddAndWithdrawalsViewModel()
+    #region SelectedAccountTo
+    private Account _selectedAccountTo;
+    public Account SelectedAccountTo
+    {
+        get => _selectedAccountTo;
+        set => Set(ref _selectedAccountTo, value);
+
+    }
+    #endregion
+
+    #endregion
+
+    public BetweenOwnAccountsViewModel()
     {
 
     }
-    public AddAndWithdrawalsViewModel(ClientLookUpDto CurrentClient, IMediator mediator)
+    public BetweenOwnAccountsViewModel(ClientLookUpDto CurrentClient, IMediator mediator)
     {
         _currentClient = CurrentClient;
         _mediator = mediator;
 
-        AddCommand = new LambdaCommand(OnAddCommandExecute, CanAddCommandExecute);
-        WithdrawalCommand = new LambdaCommand(OnWithdrawalCommandExecute, CanWithdrawalCommandExecute);
+        TransferCommand = new LambdaCommand(OnTransferCommandExecute, CanTransferCommandExecute);
 
         UpdateAccountList += UpdateAccount;
         UpdateAccountList.Invoke();
@@ -80,41 +94,24 @@ public class AddAndWithdrawalsViewModel : ViewModel
         return result;
     }
 
-    #region Команды
+    #region TransferCommand
 
-    private AddAndWithdrawalDialogWindow _dialogWindow;
+    private TransferBetweenOwnAccountsDialogWindow _dialogWindow;
+    public ICommand TransferCommand { get; }
 
-    #region AddCommand
-    public ICommand AddCommand { get; }
-
-    private bool CanAddCommandExecute(object p) => p != null;
-
-    private void OnAddCommandExecute(object p)
+    private bool CanTransferCommandExecute(object p)
     {
-        var window = new AddAndWithdrawalDialogWindow
-        {
-            Owner = Application.Current.MainWindow
-        };
-        _dialogWindow = window;
-        window.DataContext = new AddAndWithdrawalsDialogViewModel(p as Account, _mediator, true, this);
-        window.Closed += OnWindowClosed;
-        window.ShowDialog();
+        return (_selectedAccountFrom != null && _selectedAccountTo != null) && (_selectedAccountFrom.Id != _selectedAccountTo.Id);
     }
-    #endregion
 
-    #region WithdrawalCommand
-    public ICommand WithdrawalCommand { get; }
-
-    private bool CanWithdrawalCommandExecute(object p) => p != null;
-
-    private void OnWithdrawalCommandExecute(object p)
+    private void OnTransferCommandExecute(object p)
     {
-        var window = new AddAndWithdrawalDialogWindow
+        var window = new TransferBetweenOwnAccountsDialogWindow
         {
             Owner = Application.Current.MainWindow
         };
         _dialogWindow = window;
-        window.DataContext = new AddAndWithdrawalsDialogViewModel(p as Account, _mediator, false, this);
+        window.DataContext = new TransferBetweenOwnAccountsViewModel(_selectedAccountFrom, _selectedAccountTo, _mediator, this);
         window.Closed += OnWindowClosed;
         window.ShowDialog();
     }
@@ -124,9 +121,6 @@ public class AddAndWithdrawalsViewModel : ViewModel
         ((Window)sender!).Closed -= OnWindowClosed;
         _dialogWindow = null;
     }
-    #endregion
-
-
     #endregion
 
 

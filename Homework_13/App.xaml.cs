@@ -4,6 +4,7 @@ using Bank.Application.Interfaces;
 using Bank.DAL;
 using Bank.DAL.ExchangeRateService;
 using Homework_13.ViewModels;
+using Homework_13.ViewModels.DialogViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -40,7 +41,9 @@ public partial class App : Application
         services.AddTransient<OpenAccountViewModel>();
         services.AddTransient<AccountInfoViewModel>();
         services.AddTransient<AddAndWithdrawalsViewModel>();
-        services.AddTransient<DialogViewModel>();
+        services.AddTransient<AddAndWithdrawalsDialogViewModel>();
+        services.AddTransient<BetweenOwnAccountsViewModel>();
+        services.AddTransient<TransferBetweenOwnAccountsViewModel>();
 
         var builder = new ConfigurationBuilder();
         builder.SetBasePath(Directory.GetCurrentDirectory());

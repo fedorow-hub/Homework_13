@@ -2,14 +2,14 @@
 using System.Windows;
 using System.Windows.Input;
 
-namespace Homework_13.Views
+namespace Homework_13.Views.DialogWindows
 {
     /// <summary>
     /// Логика взаимодействия для DialogWindow.xaml
     /// </summary>
-    public partial class DialogWindow : Window
+    public partial class AddAndWithdrawalDialogWindow : Window
     {
-        public DialogWindow()
+        public AddAndWithdrawalDialogWindow()
         {
             InitializeComponent();
         }

@@ -4,11 +4,9 @@ using Homework_13.Views.AccountOperationWindow.Pages;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Bank.Domain.Client;
 using Bank.Application.Clients.Queries.GetClientList;
 using Homework_13.Views;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Homework_13.ViewModels;
 
@@ -39,7 +37,7 @@ public class OperationsWindowViewModel : ViewModel
 
         #region Pages
         _addAndWithdrawals = new AddAndWithdrawalsPage();
-        _betweenTheirAccounts = new BetweenTheirAccountPage();
+        _betweenTheirAccounts = new TransferBetweenOwnAccountPage();
         _openAccount = new OpenAccountPage();
 
         CurrentPage = new EmptyPage();
@@ -90,7 +88,7 @@ public class OperationsWindowViewModel : ViewModel
     private void OnBetweenTheirAccountsCommandExecuted(object p)
     {
         CurrentPage = _betweenTheirAccounts;
-        _betweenTheirAccounts.DataContext = new BetweenTheirAccountsViewModel(_currentClient);
+        _betweenTheirAccounts.DataContext = new BetweenOwnAccountsViewModel(_currentClient, _mediator);
     }
     private bool CanBetweenTheirAccountsCommandExecute(object p)
     {
