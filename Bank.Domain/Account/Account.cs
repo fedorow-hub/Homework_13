@@ -29,7 +29,7 @@ public abstract class Account : Entity
     /// </summary>
     public bool IsExistance { get; private set; }
 
-    public TypeOfAccount Type { get; private set; }
+    public TypeOfAccount Type { get; private set; } = null!;
 
     public Account()
     {

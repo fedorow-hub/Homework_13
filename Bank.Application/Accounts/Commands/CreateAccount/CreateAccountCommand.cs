@@ -13,5 +13,5 @@ public record CreateAccountCommand : IRequest<string>
 
     public decimal Amount { get; init; }
 
-    public TypeOfAccount TypeOfAccount { get; init; }
+    public TypeOfAccount? TypeOfAccount { get; init; }
 }

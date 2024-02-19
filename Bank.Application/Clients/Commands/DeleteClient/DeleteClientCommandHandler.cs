@@ -17,7 +17,10 @@ public class DeleteClientCommandHandler : IRequestHandler<DeleteClientCommand>
     {
         
         var client = await _context.Clients.FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
-        _context.Clients.Remove(client);
+        if (client != null)
+        {
+            _context.Clients.Remove(client);
+        }
         
         await _context.SaveChangesAsync(cancellationToken);
     }

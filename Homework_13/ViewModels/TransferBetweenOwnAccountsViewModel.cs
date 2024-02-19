@@ -7,18 +7,16 @@ using System.Windows.Input;
 using System.Windows;
 using System;
 using MediatR;
-using Bank.Application.Accounts.Queries;
-using Bank.Application.Accounts;
-using System.Threading.Tasks;
 using Homework_13.Views.DialogWindows;
 using Homework_13.ViewModels.DialogViewModels;
+using Homework_13.ViewModels.Helpers;
 
 namespace Homework_13.ViewModels;
 
 public class TransferBetweenOwnAccountsViewModel : ViewModel
 {
     public Action UpdateAccountList;
-    private IMediator _mediator;
+    private readonly IMediator _mediator;
 
     #region Свойства зависимости
     private ClientLookUpDto _currentClient;
@@ -33,10 +31,7 @@ public class TransferBetweenOwnAccountsViewModel : ViewModel
     public ObservableCollection<Account> Accounts
     {
         get => _accounts;
-        set
-        {
-            Set(ref _accounts, value);
-        }
+        set => Set(ref _accounts, value);
     }
     #endregion
 
@@ -58,16 +53,11 @@ public class TransferBetweenOwnAccountsViewModel : ViewModel
 
     }
     #endregion
-
     #endregion
 
-    public TransferBetweenOwnAccountsViewModel()
+    public TransferBetweenOwnAccountsViewModel(ClientLookUpDto currentClient, IMediator mediator)
     {
-
-    }
-    public TransferBetweenOwnAccountsViewModel(ClientLookUpDto CurrentClient, IMediator mediator)
-    {
-        _currentClient = CurrentClient;
+        _currentClient = currentClient;
         _mediator = mediator;
 
         TransferCommand = new LambdaCommand(OnTransferCommandExecute, CanTransferCommandExecute);
@@ -78,20 +68,9 @@ public class TransferBetweenOwnAccountsViewModel : ViewModel
 
     private void UpdateAccount()
     {
-        Accounts = new ObservableCollection<Account>(GetAccounts(_currentClient.Id).Result.Accounts);
+        Accounts = new ObservableCollection<Account>(ViewModelHelper.GetAccounts(_currentClient.Id).Result.Accounts);
     }
-
-    private async Task<AccountListVm> GetAccounts(Guid id)
-    {
-        var query = new GetAccountsQuery
-        {
-            Id = id
-        };
-        var result = await _mediator.Send(query);
-
-        return result;
-    }
-
+    
     #region TransferCommand
 
     private TransferBetweenOwnAccountsDialogWindow _dialogWindow;
@@ -120,6 +99,4 @@ public class TransferBetweenOwnAccountsViewModel : ViewModel
         _dialogWindow = null;
     }
     #endregion
-
-
 }

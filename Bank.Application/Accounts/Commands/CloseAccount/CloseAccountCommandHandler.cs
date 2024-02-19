@@ -30,7 +30,6 @@ internal class CloseAccountCommandHandler : IRequestHandler<CloseAccountCommand,
                 return ex.Message;
             }
         }
-
         return "Выбранный счет не найден";
     }
 }

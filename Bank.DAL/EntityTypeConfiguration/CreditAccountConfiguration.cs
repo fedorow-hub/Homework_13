@@ -1,5 +1,4 @@
 ﻿using Bank.Domain.Account;
-using Bank.Domain.Client;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -15,10 +14,5 @@ public class CreditAccountConfiguration : IEntityTypeConfiguration<CreditAccount
             loanBuilder.Property(p => p.Id).HasColumnName("InterestRateId");
             loanBuilder.Property(p => p.Name).HasColumnName("InterestRateName");
         });
-        //builder.HasOne<Client>()
-        //    .WithMany()
-        //    .HasForeignKey(x => x.ClientId)
-        //    .IsRequired()
-        //    .OnDelete(DeleteBehavior.Cascade);
     }
 }

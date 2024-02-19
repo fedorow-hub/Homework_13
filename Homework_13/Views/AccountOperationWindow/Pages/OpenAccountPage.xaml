@@ -33,7 +33,7 @@
             </DataGrid>
             <StackPanel DockPanel.Dock="Right" Width="278" Height="149">
                 <Button Margin="5" Height="40" Cursor="Hand" Width="213" 
-                        Command="{Binding CreateAccoundCommand}" 
+                        Command="{Binding CreateAccountCommand}" 
                         CommandParameter="{Binding CurrentClient}">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Solid_Plus" Height="20" Margin="0,0,10,0" Foreground="Yellow">
@@ -45,7 +45,7 @@
                     </StackPanel>
                 </Button>
                 <Button Height="40" Margin="5" Cursor="Hand" Width="216"
-                        Command="{Binding CloseAccoundCommand}" 
+                        Command="{Binding CloseAccountCommand}" 
                         CommandParameter="{Binding SelectedAccount}">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Solid_Trash" Height="20" Margin="0,0,10,0" Foreground="red">

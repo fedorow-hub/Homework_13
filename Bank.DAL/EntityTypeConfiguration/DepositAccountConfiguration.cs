@@ -14,10 +14,5 @@ public class DepositAccountConfiguration : IEntityTypeConfiguration<DepositAccou
             interestBuilder.Property(p => p.Id).HasColumnName("InterestRateId");
             interestBuilder.Property(p => p.Name).HasColumnName("InterestRateName");
         });
-        //builder.HasOne<Client>()
-        //    .WithMany()
-        //    .HasForeignKey(x => x.ClientId)
-        //    .IsRequired()
-        //    .OnDelete(DeleteBehavior.Cascade);
     }
 }

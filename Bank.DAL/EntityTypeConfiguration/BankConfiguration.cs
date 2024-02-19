@@ -1,5 +1,4 @@
 ﻿using Bank.Domain.Bank;
-using Bank.Domain.Client;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,6 +10,5 @@ public class BankConfiguration : IEntityTypeConfiguration<SomeBank>
     {
         builder.HasKey(x => x.Id);
         builder.HasIndex(x => x.Id).IsUnique();
-        
     }
 }

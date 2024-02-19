@@ -10,16 +10,16 @@ namespace Homework_13.ViewModels.DialogViewModels;
 
 public class AddAndWithdrawalsDialogViewModel : ViewModel
 {
-    private IMediator _mediator;
+    private readonly IMediator _mediator;
 
-    private AddAndWithdrawalsViewModel _viewModel;
+    private readonly AddAndWithdrawalsViewModel _viewModel;
 
-    private Account _currentAccount;
+    private readonly Account _currentAccount;
 
-    private bool _isAdd;
+    private readonly bool _isAdd;
 
+    #region Свойства зависимости
     private decimal _amount;
-
     public decimal Amount
     {
         get => _amount;
@@ -27,18 +27,19 @@ public class AddAndWithdrawalsDialogViewModel : ViewModel
     }
 
     private string _title;
-
     public string Title
     {
         get => _title;
         set => Set(ref _title, value);
     }
+    #endregion
 
     public AddAndWithdrawalsDialogViewModel(Account account, IMediator mediator, bool isAdd, AddAndWithdrawalsViewModel viewModel)
     {
         _mediator = mediator;
         _currentAccount = account;
         _isAdd = isAdd;
+        _viewModel = viewModel;
         if (!isAdd)
         {
             _amount = account.Amount;
@@ -48,12 +49,14 @@ public class AddAndWithdrawalsDialogViewModel : ViewModel
         {
             _title = "Внесение средств";
         }
-        _viewModel = viewModel;
 
+        #region Commands
         SaveCommand = new LambdaCommand(OnSaveCommandExecute, CanSaveCommandExecute);
         EscCommand = new LambdaCommand(OnEscCommandExecute, CanEscCommandExecute);
+        #endregion
     }
 
+    #region Commands
     #region SaveCommand
 
     public ICommand SaveCommand { get; }
@@ -95,7 +98,7 @@ public class AddAndWithdrawalsDialogViewModel : ViewModel
         }
     }
     #endregion
-
+    #endregion
 
 }
 

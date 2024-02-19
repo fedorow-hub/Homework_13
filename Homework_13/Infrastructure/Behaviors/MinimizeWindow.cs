@@ -1,7 +1,6 @@
-﻿
-
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
+using Homework_13.Infrastructure.Extensions;
 using Microsoft.Xaml.Behaviors;
 
 namespace Homework_13.Infrastructure.Behaviors

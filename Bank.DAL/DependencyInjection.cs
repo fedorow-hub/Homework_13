@@ -8,14 +8,14 @@ namespace Bank.DAL;
 public static class DependencyInjection
 {
 
-    public static IServiceCollection AddBankDAL(this IServiceCollection services, string connectionString)
+    public static IServiceCollection AddBankDal(this IServiceCollection services, string connectionString)
     {
         services.AddDbContext<ApplicationDbContext>(options =>
         {
             options.UseSqlite(connectionString);
             options.LogTo(Console.WriteLine, LogLevel.Error);
         });
-        services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
+        services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>() ?? throw new InvalidOperationException());
 
         return services;
     }

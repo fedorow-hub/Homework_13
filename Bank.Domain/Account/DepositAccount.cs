@@ -5,7 +5,7 @@ public sealed class DepositAccount : Account
     /// <summary>
     /// процентная ставка
     /// </summary>
-    public InterestRate InterestRate { get; set; }
+    public InterestRate InterestRate { get; set; } = null!;
 
     public DepositAccount()
     {
@@ -18,15 +18,10 @@ public sealed class DepositAccount : Account
         InterestRate = SetInterestRate();
     }
 
-    private DepositAccount(Guid clientId, byte termOfMonth, decimal amount, DateTime timeOfCreated)
-        : base(clientId, termOfMonth, amount, timeOfCreated, TypeOfAccount.Deposit)
-    {
-        InterestRate = SetInterestRate();
-    }
-
     /// <summary>
     /// метод создания счета
     /// </summary>
+    /// <param name="id"></param>
     /// <param name="clientId"></param>
     /// <param name="termOfMonth"></param>
     /// <param name="amount"></param>

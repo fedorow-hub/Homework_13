@@ -12,7 +12,7 @@ public sealed class CreditAccount : Account
     /// <summary>
     /// проценты по кредиту
     /// </summary>
-    public InterestRate LoanInterest { get; set; }
+    public InterestRate LoanInterest { get; set; } = null!;
 
     public CreditAccount()
     {
@@ -26,16 +26,10 @@ public sealed class CreditAccount : Account
         MouthlyPayment = SetMonthlyPayment(termOfMonth);
     }
 
-    private CreditAccount(Guid clientId, byte termOfMonth, decimal amount, DateTime timeOfCreated)
-        : base(clientId, termOfMonth, amount, timeOfCreated, TypeOfAccount.Deposit)
-    {
-        LoanInterest = SetLoanInterest();
-        MouthlyPayment = SetMonthlyPayment(termOfMonth);
-    }
-
     /// <summary>
     /// метод создания счета
     /// </summary>
+    /// <param name="id"></param>
     /// <param name="client"></param>
     /// <param name="termOfMonth"></param>
     /// <param name="amount"></param>

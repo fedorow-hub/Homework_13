@@ -3,8 +3,6 @@ using Bank.Application.Common.Mapping;
 using Bank.Application.Interfaces;
 using Bank.DAL;
 using Bank.DAL.ExchangeRateService;
-using Homework_13.ViewModels;
-using Homework_13.ViewModels.DialogViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -13,6 +11,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using Homework_13.ViewModels.Base;
 
 namespace Homework_13;
 
@@ -31,29 +30,15 @@ public partial class App : Application
     public static void ConfigureServices(HostBuilderContext host, IServiceCollection services)
     {
         //сюда добавляем необходимые сервисы
-
         services.AddApplication();
-
-        services.AddSingleton<MainWindowViewModel>();
-        services.AddSingleton<LoginWindowViewModel>();
-        services.AddTransient<ClientInfoViewModel>();
-        services.AddTransient<OperationsWindowViewModel>();
-        services.AddTransient<OpenAccountViewModel>();
-        services.AddTransient<AccountInfoViewModel>();
-        services.AddTransient<AddAndWithdrawalsViewModel>();
-        services.AddTransient<AddAndWithdrawalsDialogViewModel>();
-        services.AddTransient<TransferBetweenOwnAccountsViewModel>();
-        services.AddTransient<TransferBetweenOwnAccountsDialogViewModel>();
-        services.AddTransient<TransferToOtherClientsAccountsViewModel>();
-        services.AddTransient<TransferToOtherClientsDialogViewModel>();
-
+        services.AddViewModels();
+        
         var builder = new ConfigurationBuilder();
         builder.SetBasePath(Directory.GetCurrentDirectory());
         builder.AddJsonFile("appsettings.json");
         var connectionString = builder.Build().GetConnectionString("DbConnection");
 
-        services.AddBankDAL(connectionString!);
-        
+        services.AddBankDal(connectionString!);
 
         var urlExchangeServise = builder.Build().GetConnectionString("UrlExchangeService");
 

@@ -29,5 +29,4 @@ public class ViewModelLocator
         App.Host.Services.GetRequiredService<TransferToOtherClientsAccountsViewModel>();
     public TransferToOtherClientsDialogViewModel TransferToOtherClientsDialog =>
         App.Host.Services.GetRequiredService<TransferToOtherClientsDialogViewModel>();
-
 }

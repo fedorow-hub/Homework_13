@@ -11,14 +11,10 @@ public sealed class PlainAccount : Account
     {
     }
 
-    private PlainAccount(Guid clientId, byte termOfMonth, DateTime timeOfCreated, decimal amount = 0)
-        : base(clientId, termOfMonth, amount, timeOfCreated, TypeOfAccount.Plain)
-    {
-    }
-    
     /// <summary>
     /// метод создания счета
     /// </summary>
+    /// <param name="id"></param>
     /// <param name="clientId"></param>
     /// <param name="timeOfCreated"></param>
     /// <param name="termOfMonth"></param>

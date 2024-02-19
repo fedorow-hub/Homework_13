@@ -5,7 +5,7 @@ namespace Bank.Application.Bank.Commands;
 
 public record CreateBankCommand : IRequest<SomeBank>
 {
-    public string Name { get; init; }
+    public string? Name { get; init; }
 
     public decimal Capital { get; init; }
 

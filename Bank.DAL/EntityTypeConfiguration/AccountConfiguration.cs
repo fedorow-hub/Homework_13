@@ -1,5 +1,4 @@
 ﻿using Bank.Domain.Account;
-using Bank.Domain.Client;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,10 +13,5 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
         builder.Property(x => x.Type)
             .HasConversion(type => type.Name,
                 value => TypeOfAccount.Parse(value));
-        //builder.HasOne<Client>()
-        //    .WithMany()
-        //    .HasForeignKey(x => x.ClientId)
-        //    .IsRequired()
-        //    .OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -16,8 +16,7 @@ using System.ComponentModel;
 using System.Windows.Data;
 using Bank.Domain.Account;
 using Homework_13.Views.AccountOperationWindow;
-using Bank.Application.Accounts;
-using Bank.Application.Accounts.Queries;
+using Homework_13.ViewModels.Helpers;
 
 namespace Homework_13.ViewModels;
 
@@ -36,6 +35,19 @@ public class MainWindowViewModel : ViewModel
     public decimal EuroCurrentRate { get; private set; }
     #endregion
 
+    #region Свойства зависимости
+    #region SelectedClient
+    private ClientLookUpDto _selectedClient;
+    public ClientLookUpDto SelectedClient
+    {
+        get => _selectedClient;
+        set
+        {
+            Set(ref _selectedClient, value);
+            UpdateAccountListForCurrentClient.Invoke();
+        }
+    }
+    #endregion
     #region Clients
     private ObservableCollection<ClientLookUpDto> _clients;
     public ObservableCollection<ClientLookUpDto> Clients
@@ -100,11 +112,8 @@ public class MainWindowViewModel : ViewModel
 
         e.Accepted = false;
     }
-
     public ICollectionView SelectedClients => _selectedClients?.View;
-
     #endregion
-    
 
     #region Title
 
@@ -115,6 +124,45 @@ public class MainWindowViewModel : ViewModel
         get => _title;
         set => Set(ref _title, value);
     }
+    #endregion
+
+
+    #region EnableAddClient
+    private bool _enableAddClient;
+    public bool EnableAddClient
+    {
+        get => _enableAddClient;
+        set => Set(ref _enableAddClient, value);
+    }
+    #endregion
+
+    #region EnableDelClient
+    private bool _enableDelClient;
+    public bool EnableDelClient
+    {
+        get => _enableDelClient;
+        set => Set(ref _enableDelClient, value);
+    }
+    #endregion
+
+    #region EnableEditClient
+    private bool _enableEditClient;
+    public bool EnableEditClient
+    {
+        get => _enableEditClient;
+        set => Set(ref _enableEditClient, value);
+    }
+    #endregion
+
+    #region EnableOperationAccounts
+    private bool _enableOperationAccounts;
+    public bool EnableOperationAccounts
+    {
+        get => _enableOperationAccounts;
+        set => Set(ref _enableOperationAccounts, value);
+    }
+    #endregion
+
     #endregion
 
     public MainWindowViewModel(IExchangeRateService exchangeRateService, IMediator mediator)
@@ -139,20 +187,18 @@ public class MainWindowViewModel : ViewModel
 
         UpdateClientList += UpdateClients;
         UpdateClientList.Invoke();
-
         UpdateAccountListForCurrentClient += UpdateAccount;
-
         _selectedClients.Filter += OnClientFiltred;
     }
 
     private void UpdateClients()
     {
-        Clients = new ObservableCollection<ClientLookUpDto>(GetAllClients().Result.Clients);
+        Clients = new ObservableCollection<ClientLookUpDto>(ViewModelHelper.GetAllClients().Result.Clients);
     }
 
     private void UpdateAccount()
     {
-        AccountsCurrentClient = new ObservableCollection<Account>(GetAccounts(_selectedClient.Id).Result.Accounts);
+        AccountsCurrentClient = new ObservableCollection<Account>(ViewModelHelper.GetAccounts(_selectedClient.Id).Result.Accounts);
     }
 
     private async Task<SomeBank> GetExistBankOrCreateAsync()
@@ -169,24 +215,6 @@ public class MainWindowViewModel : ViewModel
         return result;
     }
     
-    private async Task<ClientListVm> GetAllClients()
-    {
-        var query = new GetClientListQuery();
-        var result = await _mediator.Send(query);
-
-        return result;
-    }
-
-    private async Task<AccountListVm> GetAccounts(Guid id)
-    {
-        var query = new GetAccountsQuery
-        {
-            Id = id
-        };
-        var result = await _mediator.Send(query);
-
-        return result;
-    }
 
     #region Команды
     #region OutLoggingCommand
@@ -297,57 +325,7 @@ public class MainWindowViewModel : ViewModel
 
     #endregion
 
-    #region SelectedClient
-
-    private ClientLookUpDto _selectedClient;
-    /// <summary>
-    /// Выбранный клиент
-    /// </summary>
-    public ClientLookUpDto SelectedClient
-    {
-        get => _selectedClient;
-        set
-        {
-            Set(ref _selectedClient, value);
-            UpdateAccountListForCurrentClient.Invoke();
-        }
-    }
-    #endregion
+    
 
 
-    #region EnableAddClient
-    private bool _enableAddClient;
-    public bool EnableAddClient
-    {
-        get => _enableAddClient;
-        set => Set(ref _enableAddClient, value);
-    }
-    #endregion
-
-    #region EnableDelClient
-    private bool _enableDelClient;
-    public bool EnableDelClient
-    {
-        get => _enableDelClient;
-        set => Set(ref _enableDelClient, value);
-    }
-    #endregion
-
-    #region EnableEditClient
-    private bool _enableEditClient;
-    public bool EnableEditClient
-    {
-        get => _enableEditClient;
-        set => Set(ref _enableEditClient, value);
-    }
-    #endregion
-
-    #region EnableOperationAccounts
-    private bool _enableOperationAccounts;
-    public bool EnableOperationAccounts
-    {
-        get => _enableOperationAccounts;
-        set => Set(ref _enableOperationAccounts, value);
-    }
-    #endregion
 }

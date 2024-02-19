@@ -12,12 +12,12 @@ namespace Homework_13.ViewModels;
 
 public class AccountInfoViewModel : ViewModel
 {
-    private ClientLookUpDto _currentClient;
-    private IMediator _mediator;
-    private OpenAccountViewModel _openAccountViewModel;
+    private readonly ClientLookUpDto _currentClient;
+    private readonly IMediator _mediator;
+    private readonly OpenAccountViewModel _openAccountViewModel;
 
+    #region Свойства зависимости
     private TypeOfAccount[] _accountTypes = { TypeOfAccount.Plain, TypeOfAccount.Credit, TypeOfAccount.Deposit };
-
     public TypeOfAccount[] AccountTypes
     {
         get => _accountTypes;
@@ -25,7 +25,6 @@ public class AccountInfoViewModel : ViewModel
     }
 
     private string _type = "Рассчетный";
-
     public string Type
     {
         get => _type;
@@ -33,7 +32,6 @@ public class AccountInfoViewModel : ViewModel
     }
 
     private decimal _amount;
-
     public decimal Amount
     {
         get => _amount;
@@ -41,27 +39,29 @@ public class AccountInfoViewModel : ViewModel
     }
 
     private byte _accountTerm = byte.MaxValue;
-
     public byte AccountTerm
     {
         get => _accountTerm;
         set => Set(ref _accountTerm, value);
     }
+    #endregion
 
     public AccountInfoViewModel(ClientLookUpDto client, IMediator mediator, OpenAccountViewModel openAccountViewModel)
     {
         _currentClient = client;
         _mediator = mediator;
         _openAccountViewModel = openAccountViewModel;
+
+        #region Commands
         SaveCommand = new LambdaCommand(OnSaveCommandExecute, CanSaveCommandExecute);
         OutCommand = new LambdaCommand(OnOutCommandExecute, CanOutCommandExecute);
+        #endregion
     }
 
+    #region Commands
     #region OutCommand
     public ICommand OutCommand { get; }
-
     private bool CanOutCommandExecute(object p) => true;
-
     private void OnOutCommandExecute(object p)
     {
         if (p is Window window)
@@ -72,11 +72,8 @@ public class AccountInfoViewModel : ViewModel
     #endregion
 
     #region SaveCommand
-
     public ICommand SaveCommand { get; }
-
     private bool CanSaveCommandExecute(object p) => true;
-
     private async void OnSaveCommandExecute(object p)
     {
         var command = new CreateAccountCommand
@@ -98,6 +95,7 @@ public class AccountInfoViewModel : ViewModel
         }
         _openAccountViewModel.UpdateAccountList.Invoke();
     }
+    #endregion
     #endregion
 }
 

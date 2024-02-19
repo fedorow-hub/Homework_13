@@ -23,7 +23,7 @@ public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand,
         
         if (client != null && bank != null)
         {
-            switch (request.TypeOfAccount.Id)
+            switch (request.TypeOfAccount?.Id)
             {
                 case 1://deposit 
                     bank.AddMoneyToCapital(request.Amount);
@@ -55,7 +55,6 @@ public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand,
             await _dbContext.SaveChangesAsync(cancellationToken);
             return "Счет успешно создан";
         }
-
         return "Счет создать не удалось";
     }
 }

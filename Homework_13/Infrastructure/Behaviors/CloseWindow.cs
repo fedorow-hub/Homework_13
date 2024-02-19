@@ -1,8 +1,7 @@
 ﻿using Microsoft.Xaml.Behaviors;
-using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
+using Homework_13.Infrastructure.Extensions;
 
 namespace Homework_13.Infrastructure.Behaviors
 {

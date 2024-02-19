@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -10,7 +9,7 @@ namespace Homework_13.Infrastructure.Behaviors
     public class DragInCanvas: Behavior<UIElement>
     {
         private Point _startPoint;
-        private Canvas _canvas;
+        private Canvas? _canvas;
         protected override void OnAttached()
         {
             AssociatedObject.MouseLeftButtonDown += OnLeftButtonDown;

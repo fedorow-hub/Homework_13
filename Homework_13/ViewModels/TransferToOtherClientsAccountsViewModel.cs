@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using Bank.Application.Accounts.Queries;
-using Bank.Application.Accounts;
-using System.Threading.Tasks;
 using Bank.Application.Clients.Queries.GetClientList;
 using Bank.Domain.Account;
 using Homework_13.ViewModels.Base;
@@ -14,16 +11,17 @@ using Homework_13.ViewModels.DialogViewModels;
 using Homework_13.Views.DialogWindows;
 using System.Windows.Input;
 using System.Windows;
+using Homework_13.ViewModels.Helpers;
 
 namespace Homework_13.ViewModels;
 
 public class TransferToOtherClientsAccountsViewModel : ViewModel
 {
-    private IMediator _mediator;
+    private readonly IMediator _mediator;
     public Action UpdateAccountList;
     public Action UpdateClientList;
 
-
+    #region Свойства зависимости
     private ClientLookUpDto _currentClient;
     public ClientLookUpDto CurrentClient
     {
@@ -65,7 +63,6 @@ public class TransferToOtherClientsAccountsViewModel : ViewModel
 
     #region ClientFilterText
     private string _clientFilterText;
-
     public string ClientFilterText
     {
         get => _clientFilterText;
@@ -78,11 +75,7 @@ public class TransferToOtherClientsAccountsViewModel : ViewModel
     #endregion
 
     #region SelectedClient
-
     private ClientLookUpDto _selectedClient;
-    /// <summary>
-    /// Выбранный клиент
-    /// </summary>
     public ClientLookUpDto SelectedClient
     {
         get => _selectedClient;
@@ -91,9 +84,7 @@ public class TransferToOtherClientsAccountsViewModel : ViewModel
     #endregion
 
     #region FilteredClient
-
     private readonly CollectionViewSource _selectedClients = new();
-
     private void OnClientFiltred(object sender, FilterEventArgs e)
     {
         if (!(e.Item is ClientLookUpDto client))
@@ -117,15 +108,14 @@ public class TransferToOtherClientsAccountsViewModel : ViewModel
 
         e.Accepted = false;
     }
-
     public ICollectionView SelectedClients => _selectedClients?.View;
+    #endregion
 
     #endregion
 
-
-    public TransferToOtherClientsAccountsViewModel(ClientLookUpDto CurrentClient, IMediator mediator)
+    public TransferToOtherClientsAccountsViewModel(ClientLookUpDto currentClient, IMediator mediator)
     {
-        _currentClient = CurrentClient;
+        _currentClient = currentClient;
         _mediator = mediator;
 
         TransferCommand = new LambdaCommand(OnTransferCommandExecute, CanTransferCommandExecute);
@@ -141,38 +131,19 @@ public class TransferToOtherClientsAccountsViewModel : ViewModel
 
     private void UpdateClients()
     {
-        Clients = new ObservableCollection<ClientLookUpDto>(GetAllClients().Result.Clients);
+        Clients = new ObservableCollection<ClientLookUpDto>(ViewModelHelper.GetAllClients().Result.Clients);
     }
 
     private void UpdateAccount()
     {
-        Accounts = new ObservableCollection<Account>(GetAccounts(_currentClient.Id).Result.Accounts);
+        Accounts = new ObservableCollection<Account>(ViewModelHelper.GetAccounts(_currentClient.Id).Result.Accounts);
     }
 
-    private async Task<AccountListVm> GetAccounts(Guid id)
-    {
-        var query = new GetAccountsQuery
-        {
-            Id = id
-        };
-        var result = await _mediator.Send(query);
-
-        return result;
-    }
-
-    private async Task<ClientListVm> GetAllClients()
-    {
-        var query = new GetClientListQuery();
-        var result = await _mediator.Send(query);
-
-        return result;
-    }
-
+    #region Commands
     #region TransferCommand
 
     private TransferToOtherClientWindow _dialogWindow;
     public ICommand TransferCommand { get; }
-
     private bool CanTransferCommandExecute(object p)
     {
         return (_selectedAccount != null && _selectedClient != null);
@@ -195,6 +166,7 @@ public class TransferToOtherClientsAccountsViewModel : ViewModel
         ((Window)sender!).Closed -= OnWindowClosed;
         _dialogWindow = null;
     }
+    #endregion
     #endregion
 }
 

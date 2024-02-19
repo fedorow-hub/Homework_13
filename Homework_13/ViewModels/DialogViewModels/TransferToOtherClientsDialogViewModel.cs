@@ -1,25 +1,23 @@
-﻿using Bank.Application.Accounts.Queries;
-using Bank.Application.Accounts;
-using Bank.Application.Clients.Queries.GetClientList;
+﻿using Bank.Application.Clients.Queries.GetClientList;
 using Bank.Domain.Account;
 using Homework_13.ViewModels.Base;
 using MediatR;
-using System;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using Homework_13.Infrastructure.Commands;
 using Bank.Application.Accounts.Commands.TransactionBetweenAccounts;
 using System.Windows.Input;
 using System.Windows;
+using Homework_13.ViewModels.Helpers;
 
 namespace Homework_13.ViewModels.DialogViewModels
 {
     public class TransferToOtherClientsDialogViewModel : ViewModel
     {
-        private IMediator _mediator;
+        private readonly IMediator _mediator;
 
-        private TransferToOtherClientsAccountsViewModel _transferToOtherClientsAccountsViewModel;
+        private readonly TransferToOtherClientsAccountsViewModel _transferToOtherClientsAccountsViewModel;
 
+        #region Свойства зависимости
         #region Accounts
         private ObservableCollection<Account> _accountsSelectedClient;
         public ObservableCollection<Account> AccountsSelectedClient
@@ -46,42 +44,28 @@ namespace Homework_13.ViewModels.DialogViewModels
             set => Set(ref _selectedAccount, value);
         }
         #endregion
+        #endregion
 
         public ClientLookUpDto SelectedClient { get; set; }
-
         public Account AccountFrom { get; set; }
 
         public TransferToOtherClientsDialogViewModel(Account accountFrom, ClientLookUpDto client,  IMediator mediator, TransferToOtherClientsAccountsViewModel viewModel)
         {
             _mediator = mediator;
-
-            _accountsSelectedClient = new ObservableCollection<Account>(GetAccounts(client.Id).Result.Accounts);
-
+            _accountsSelectedClient = new ObservableCollection<Account>(ViewModelHelper.GetAccounts(client.Id).Result.Accounts);
             _transferToOtherClientsAccountsViewModel = viewModel;
-
             AccountFrom = accountFrom;
-
             SelectedClient = client;
 
+            #region Commands
             SaveCommand = new LambdaCommand(OnSaveCommandExecute, CanSaveCommandExecute);
             EscCommand = new LambdaCommand(OnEscCommandExecute, CanEscCommandExecute);
+            #endregion
         }
-
-        private async Task<AccountListVm> GetAccounts(Guid id)
-        {
-            var query = new GetAccountsQuery
-            {
-                Id = id
-            };
-            var result = await _mediator.Send(query);
-
-            return result;
-        }
-
+        
+        #region Commands
         #region SaveCommand
-
         public ICommand SaveCommand { get; }
-
         private bool CanSaveCommandExecute(object p)
         {
             return _amount > 0 && _selectedAccount != null;
@@ -109,11 +93,8 @@ namespace Homework_13.ViewModels.DialogViewModels
         #endregion
 
         #region EscCommand
-
         public ICommand EscCommand { get; }
-
         private bool CanEscCommandExecute(object p) => true;
-
         private void OnEscCommandExecute(object p)
         {
             if (p is Window window)
@@ -121,6 +102,7 @@ namespace Homework_13.ViewModels.DialogViewModels
                 window.Close();
             }
         }
+        #endregion
         #endregion
     }
 }

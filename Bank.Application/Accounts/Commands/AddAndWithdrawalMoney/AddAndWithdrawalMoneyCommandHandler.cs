@@ -15,14 +15,14 @@ public class AddAndWithdrawalMoneyCommandHandler : IRequestHandler<AddAndWithdra
    
     public async Task<string> Handle(AddAndWithdrawalMoneyCommand request, CancellationToken cancellationToken)
     {
-        var selectedAccount = await _dbContext.Accounts.FirstOrDefaultAsync(ac => ac.Id == request.Id);
-        var bank = await _dbContext.Bank.FirstOrDefaultAsync();
+        var selectedAccount = await _dbContext.Accounts.FirstOrDefaultAsync(ac => ac.Id == request.Id, cancellationToken);
+        var bank = await _dbContext.Bank.FirstOrDefaultAsync(cancellationToken);
         if (selectedAccount != null)
         {
             if (request.IsAdd)
             {
                 selectedAccount.AddMoneyToAccount(request.Amount);
-                bank.AddMoneyToCapital(request.Amount);
+                bank?.AddMoneyToCapital(request.Amount);
                 await _dbContext.SaveChangesAsync(cancellationToken);
                 return "Средства успешно добавлены на счет";
             }
@@ -32,7 +32,7 @@ public class AddAndWithdrawalMoneyCommandHandler : IRequestHandler<AddAndWithdra
                 selectedAccount.WithdrawalMoneyFromAccount(request.Amount);
                 try
                 {
-                    bank.WithdrawalMoneyFromCapital(request.Amount);
+                    bank?.WithdrawalMoneyFromCapital(request.Amount);
                 }
                 catch (DomainExeption ex)
                 {

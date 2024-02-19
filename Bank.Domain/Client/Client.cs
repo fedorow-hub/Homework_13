@@ -6,23 +6,20 @@ namespace Bank.Domain.Client;
 
 public sealed class Client : Entity
 {  
-    public Firstname Firstname { get; private set; }
+    public Firstname Firstname { get; private set; } = null!;
 
-    public Lastname Lastname { get; private set; }
+    public Lastname Lastname { get; private set; } = null!;
 
-    public Patronymic Patronymic { get; private set; }
+    public Patronymic Patronymic { get; private set; } = null!;
 
-    public PhoneNumber PhoneNumber { get; private set; }
+    public PhoneNumber PhoneNumber { get; private set; } = null!;
 
-    public PassportSeries PassportSeries { get; private set; }
+    public PassportSeries PassportSeries { get; private set; } = null!;
 
-    public PassportNumber PassportNumber { get; private set; }
+    public PassportNumber PassportNumber { get; private set; } = null!;
 
-    public TotalIncomePerMounth TotalIncomePerMounth { get; private set; }
+    public TotalIncomePerMounth TotalIncomePerMounth { get; private set; } = null!;
 
-    //public List<Account.Account> Accounts { get; private set; }
-
-    public Guid BankId { get; private set; }
     public SomeBank? Bank { get; private set; }
 
     public Client() { }
@@ -38,7 +35,6 @@ public sealed class Client : Entity
         PassportSeries = PassportSeries.SetSeries(seriesPassport);
         PassportNumber = PassportNumber.SetNumber(numberPassport);
         TotalIncomePerMounth = TotalIncomePerMounth.SetIncome(totalIncome);
-        //Accounts = new List<Account.Account>();
         Bank = bank;
     }
 
@@ -74,15 +70,4 @@ public sealed class Client : Entity
 
     #endregion
 
-
-    /// <summary>
-    /// метод добавления нового счета клиенту
-    /// </summary>
-    /// <param name="account"></param>
-    //public bool AddAccountToClient(Account.Account account)
-    //{
-    //    //здесь можно реализовать логику ограничения на создание нового счета
-    //    Accounts.Add(account);
-    //    return true;
-    //}
 }

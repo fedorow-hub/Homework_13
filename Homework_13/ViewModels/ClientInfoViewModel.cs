@@ -14,86 +14,29 @@ namespace Homework_13.ViewModels;
 
 public class ClientInfoViewModel : ViewModel
 {
-    private IMediator _mediator;
-    public ClientLookUpDto currentClient;
-    private MainWindowViewModel _mainWindowViewModel;
+    private readonly IMediator _mediator;
+    public ClientLookUpDto CurrentClient;
+    private readonly MainWindowViewModel _mainWindowViewModel;
 
-    public ClientInfoViewModel()
+    #region Свойствса зависимости
+    #region EnableSaveClient
+    private bool _enableSaveClient;
+    public bool EnableSaveClient
     {
+        get => _enableSaveClient;
+        set => Set(ref _enableSaveClient, value);
     }
 
-    public ClientInfoViewModel(MainWindowViewModel mainWindowView, IMediator? mediator, ClientLookUpDto client = null)
+    private string _title = "Окно редактирования клиента";
+    public string Title
     {
-        _mainWindowViewModel = mainWindowView;
-        _mediator = mediator;
-        this.currentClient = client;
-
-        FillFields(client);
-        CheckSaveClient();
-
-        OutCommand = new LambdaCommand(OnOutCommandExecute, CanOutCommandExecute);
-        SaveCommand = new LambdaCommand(OnSaveCommandExecute, CanSaveCommandExecute);
+        get => _title;
+        set => Set(ref _title, value);
     }
-
-
-    /// <summary>
-    /// Заполнение данных
-    /// </summary>
-    /// <param name="clientInfo"></param>
-    private void FillFields(ClientLookUpDto clientInfo)
-    {
-        if (clientInfo is null)
-            return;
-        _firstname = clientInfo.Firstname ?? String.Empty;
-        _lastname = clientInfo.Lastname ?? String.Empty;
-        _patronymic = clientInfo.Patronymic ?? String.Empty;
-        _phoneNumber = clientInfo.PhoneNumber ?? String.Empty;
-        _passportSeries = clientInfo.PassportSeries;
-        _passportNumber = clientInfo.PassportNumber ?? String.Empty;
-        _totalIncomePerMonth = clientInfo.TotalIncomePerMounth ?? String.Empty;
-    }
-
-
-    /// <summary>
-    /// метод для блокирования кнопки сохранения, если введенные данные не валидны
-    /// </summary>
-    /// <param name="dataAccess"></param>
-    private void CheckSaveClient()
-    {
-        EnableSaveClient = _borderFirstName != InputValueValidationEnum.Error
-                        && !string.IsNullOrEmpty(_firstname)
-                        && _borderLastName != InputValueValidationEnum.Error
-                        && !string.IsNullOrEmpty(_lastname)
-                        && _borderPatronymic != InputValueValidationEnum.Error
-                        && !string.IsNullOrEmpty(_patronymic)
-                        && _borderPassportSeries != InputValueValidationEnum.Error
-                        && !string.IsNullOrEmpty(_passportSeries)
-                        && _borderPassportNumber != InputValueValidationEnum.Error
-                        && !string.IsNullOrEmpty(_passportNumber)
-                        && _borderPhoneNumber != InputValueValidationEnum.Error
-                        && !string.IsNullOrEmpty(_phoneNumber)
-                        && _borderTotalIncomePerMonth != InputValueValidationEnum.Error
-                        && !string.IsNullOrEmpty(_totalIncomePerMonth);
-    }
-
-    /// <summary>
-    /// метод установки модификаторов валидности
-    /// </summary>
-    /// <param name="isEnable"></param>
-    /// <param name="isValid"></param>
-    /// <returns></returns>
-    private InputValueValidationEnum InputHighlighting(bool isEnable, bool isValid)
-    {
-        if (!isValid) return InputValueValidationEnum.Error;
-        if (!isEnable) return InputValueValidationEnum.Disable;
-
-        return InputValueValidationEnum.Default;
-    }
-
-    #region ClientInfo
+    #endregion  
 
     #region Firstname
-    private string _firstname;
+    private string _firstname = null!;
     public string Firstname
     {
         get => _firstname;
@@ -125,7 +68,7 @@ public class ClientInfoViewModel : ViewModel
     #endregion
 
     #region Lastname
-    private string _lastname;
+    private string _lastname = null!;
     public string Lastname
     {
         get => _lastname;
@@ -157,7 +100,7 @@ public class ClientInfoViewModel : ViewModel
     #endregion
 
     #region Patronymic
-    private string _patronymic;
+    private string _patronymic = null!;
     public string Patronymic
     {
         get => _patronymic;
@@ -189,7 +132,7 @@ public class ClientInfoViewModel : ViewModel
     #endregion
 
     #region PhoneNumber
-    private string _phoneNumber;
+    private string _phoneNumber = null!;
 
     public string PhoneNumber
     {
@@ -222,7 +165,7 @@ public class ClientInfoViewModel : ViewModel
     #endregion
 
     #region PassportData
-    private string _passportSeries;
+    private string _passportSeries = null!;
     public string PassportSeries
     {
         get => _passportSeries;
@@ -233,7 +176,7 @@ public class ClientInfoViewModel : ViewModel
         }
     }
 
-    private string _passportNumber;
+    private string _passportNumber = null!;
     public string PassportNumber
     {
         get => _passportNumber;
@@ -276,7 +219,7 @@ public class ClientInfoViewModel : ViewModel
     #endregion
 
     #region TotalIncomePerMonth
-    private string _totalIncomePerMonth;
+    private string _totalIncomePerMonth = null!;
 
     public string TotalIncomePerMonth
     {
@@ -305,10 +248,74 @@ public class ClientInfoViewModel : ViewModel
             CheckSaveClient();
         }
     }
-
     #endregion
 
     #endregion      
+    
+    public ClientInfoViewModel(MainWindowViewModel mainWindowView, IMediator mediator, ClientLookUpDto client = null)
+    {
+        _mainWindowViewModel = mainWindowView;
+        _mediator = mediator;
+        this.CurrentClient = client;
+
+        FillFields(client);
+        CheckSaveClient();
+
+        OutCommand = new LambdaCommand(OnOutCommandExecute, CanOutCommandExecute);
+        SaveCommand = new LambdaCommand(OnSaveCommandExecute, CanSaveCommandExecute);
+    }
+
+    /// <summary>
+    /// Заполнение данных
+    /// </summary>
+    /// <param name="clientInfo"></param>
+    private void FillFields(ClientLookUpDto clientInfo)
+    {
+        if (clientInfo is null)
+            return;
+        _firstname = clientInfo.Firstname;
+        _lastname = clientInfo.Lastname;
+        _patronymic = clientInfo.Patronymic;
+        _phoneNumber = clientInfo.PhoneNumber;
+        _passportSeries = clientInfo.PassportSeries;
+        _passportNumber = clientInfo.PassportNumber;
+        _totalIncomePerMonth = clientInfo.TotalIncomePerMounth;
+    }
+
+    /// <summary>
+    /// метод для блокирования кнопки сохранения, если введенные данные не валидны
+    /// </summary>
+    private void CheckSaveClient()
+    {
+        EnableSaveClient = _borderFirstName != InputValueValidationEnum.Error
+                        && !string.IsNullOrEmpty(_firstname)
+                        && _borderLastName != InputValueValidationEnum.Error
+                        && !string.IsNullOrEmpty(_lastname)
+                        && _borderPatronymic != InputValueValidationEnum.Error
+                        && !string.IsNullOrEmpty(_patronymic)
+                        && _borderPassportSeries != InputValueValidationEnum.Error
+                        && !string.IsNullOrEmpty(_passportSeries)
+                        && _borderPassportNumber != InputValueValidationEnum.Error
+                        && !string.IsNullOrEmpty(_passportNumber)
+                        && _borderPhoneNumber != InputValueValidationEnum.Error
+                        && !string.IsNullOrEmpty(_phoneNumber)
+                        && _borderTotalIncomePerMonth != InputValueValidationEnum.Error
+                        && !string.IsNullOrEmpty(_totalIncomePerMonth);
+    }
+
+    /// <summary>
+    /// метод установки модификаторов валидности
+    /// </summary>
+    /// <param name="isEnable"></param>
+    /// <param name="isValid"></param>
+    /// <returns></returns>
+    private InputValueValidationEnum InputHighlighting(bool isEnable, bool isValid)
+    {
+        if (!isValid) return InputValueValidationEnum.Error;
+        if (!isEnable) return InputValueValidationEnum.Disable;
+
+        return InputValueValidationEnum.Default;
+    }
 
     #region Commands
     #region OutCommand
@@ -326,14 +333,11 @@ public class ClientInfoViewModel : ViewModel
     #endregion
 
     #region SaveCommand
-
     public ICommand SaveCommand { get; }
-
     private bool CanSaveCommandExecute(object p) => true;
-
     private async void OnSaveCommandExecute(object p)
     {
-        if (currentClient is null) // новый клиент
+        if (CurrentClient is null) // новый клиент
         {
             var command = new CreateClientCommand
             {
@@ -352,7 +356,7 @@ public class ClientInfoViewModel : ViewModel
         {
             var command = new UpdateClientCommand
             {
-                Id = currentClient.Id,
+                Id = CurrentClient.Id,
                 Firstname = _firstname,
                 Lastname = _lastname,
                 Patronymic = _patronymic,
@@ -373,19 +377,5 @@ public class ClientInfoViewModel : ViewModel
     #endregion
     #endregion
 
-    #region EnableSaveClient
-    private bool _enableSaveClient;
-    public bool EnableSaveClient
-    {
-        get => _enableSaveClient;
-        set => Set(ref _enableSaveClient, value);
-    }
-
-    private string _Title = "Окно редактирования клиента";
-    public string Title
-    {
-        get => _Title;
-        set => Set(ref _Title, value);
-    }
-    #endregion  
+    
 }

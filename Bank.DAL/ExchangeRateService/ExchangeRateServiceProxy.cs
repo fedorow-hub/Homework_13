@@ -5,6 +5,7 @@ namespace Bank.DAL.ExchangeRateService;
 
 /// <summary>
 /// временная реализация proxy без записи в кэш
+/// TODO в будущем необходимо реализовать
 /// </summary>
 public class ExchangeRateServiceProxy : IExchangeRateService
 {

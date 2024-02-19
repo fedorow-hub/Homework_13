@@ -8,12 +8,7 @@ public sealed class SomeBank : Entity
     /// название банка
     /// </summary>
     public string Name { get; private set; }
-
-    /// <summary>
-    /// список клиентов банка
-    /// </summary>
-    //public List<Client.Client> Clients { get; }
-
+    
     /// <summary>
     /// капиталл банка в рублях
     /// </summary>
@@ -78,5 +73,4 @@ public sealed class SomeBank : Entity
         }
         else throw new DomainExeption("Недостаточно средств банка");
     }
-
 }

@@ -1,17 +1,16 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
+using Homework_13.Infrastructure.Extensions;
 using Microsoft.Xaml.Behaviors;
 
 namespace Homework_13.Infrastructure.Behaviors
 {
-    public class WinsowTitleBarBehavior : Behavior<UIElement>
+    public class WindowTitleBarBehavior : Behavior<UIElement>
     {
-        private Window _window;
+        private Window? _window;
 
         protected override void OnAttached()
         {
-            //_window = AssociatedObject as Window ?? AssociatedObject.FindLogicalParent<Window>();
             _window = AssociatedObject.FindVisualRoot() as Window;
             if (_window is null) return;
             AssociatedObject.MouseLeftButtonDown += OnMouseDown;
@@ -43,15 +42,16 @@ namespace Homework_13.Infrastructure.Behaviors
 
         private void Maximize()
         {
-            switch (_window.WindowState)
-            {
-                case WindowState.Normal:
-                    _window.WindowState = WindowState.Maximized;
-                    break;
-                case WindowState.Maximized:
-                    _window.WindowState = WindowState.Normal;
-                    break;
-            }
+            if (_window != null)
+                switch (_window.WindowState)
+                {
+                    case WindowState.Normal:
+                        _window.WindowState = WindowState.Maximized;
+                        break;
+                    case WindowState.Maximized:
+                        _window.WindowState = WindowState.Normal;
+                        break;
+                }
         }
     }
 }

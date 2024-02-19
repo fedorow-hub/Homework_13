@@ -6,11 +6,9 @@ using System.Windows.Input;
 using Bank.Domain.Account;
 using MediatR;
 using System;
-using Bank.Application.Accounts.Queries;
-using Bank.Application.Accounts;
-using System.Threading.Tasks;
 using System.Windows;
 using Homework_13.ViewModels.DialogViewModels;
+using Homework_13.ViewModels.Helpers;
 using Homework_13.Views.DialogWindows;
 
 namespace Homework_13.ViewModels;
@@ -18,8 +16,9 @@ namespace Homework_13.ViewModels;
 public class AddAndWithdrawalsViewModel : ViewModel
 {
     public Action UpdateAccountList;
-    private IMediator _mediator;
+    private readonly IMediator _mediator;
 
+    #region Свойства зависимости
     private ClientLookUpDto _currentClient;
     public ClientLookUpDto CurrentClient
     {
@@ -28,7 +27,7 @@ public class AddAndWithdrawalsViewModel : ViewModel
     }
 
     #region Accounts
-    private ObservableCollection<Account> _accounts;
+    private ObservableCollection<Account> _accounts = null!;
     public ObservableCollection<Account> Accounts
     {
         get => _accounts;
@@ -40,7 +39,7 @@ public class AddAndWithdrawalsViewModel : ViewModel
     #endregion
 
     #region SelectedAccount
-    private Account _selectedAccount;
+    private Account _selectedAccount = null!;
     public Account SelectedAccount
     {
         get => _selectedAccount;
@@ -48,17 +47,18 @@ public class AddAndWithdrawalsViewModel : ViewModel
     }
     #endregion
 
-    public AddAndWithdrawalsViewModel()
-    {
 
-    }
-    public AddAndWithdrawalsViewModel(ClientLookUpDto CurrentClient, IMediator mediator)
+    #endregion
+    
+    public AddAndWithdrawalsViewModel(ClientLookUpDto currentClient, IMediator mediator)
     {
-        _currentClient = CurrentClient;
+        _currentClient = currentClient;
         _mediator = mediator;
 
+        #region Commands
         AddCommand = new LambdaCommand(OnAddCommandExecute, CanAddCommandExecute);
         WithdrawalCommand = new LambdaCommand(OnWithdrawalCommandExecute, CanWithdrawalCommandExecute);
+        #endregion
 
         UpdateAccountList += UpdateAccount;
         UpdateAccountList.Invoke();
@@ -66,28 +66,15 @@ public class AddAndWithdrawalsViewModel : ViewModel
 
     private void UpdateAccount()
     {
-        Accounts = new ObservableCollection<Account>(GetAccounts(_currentClient.Id).Result.Accounts);
+        Accounts = new ObservableCollection<Account>(ViewModelHelper.GetAccounts(_currentClient.Id).Result.Accounts);
     }
 
-    private async Task<AccountListVm> GetAccounts(Guid id)
-    {
-        var query = new GetAccountsQuery
-        {
-            Id = id
-        };
-        var result = await _mediator.Send(query);
-
-        return result;
-    }
-
-    #region Команды
-
-    private AddAndWithdrawalDialogWindow _dialogWindow;
+    #region Commands
+    public AddAndWithdrawalDialogWindow DialogWindow { get; private set; } = null!;
 
     #region AddCommand
     public ICommand AddCommand { get; }
-
-    private bool CanAddCommandExecute(object p) => p != null;
+    private bool CanAddCommandExecute(object? p) => p != null;
 
     private void OnAddCommandExecute(object p)
     {
@@ -95,8 +82,8 @@ public class AddAndWithdrawalsViewModel : ViewModel
         {
             Owner = Application.Current.MainWindow
         };
-        _dialogWindow = window;
-        window.DataContext = new AddAndWithdrawalsDialogViewModel(p as Account, _mediator, true, this);
+        DialogWindow = window;
+        window.DataContext = new AddAndWithdrawalsDialogViewModel((p as Account)!, _mediator, true, this);
         window.Closed += OnWindowClosed;
         window.ShowDialog();
     }
@@ -104,17 +91,15 @@ public class AddAndWithdrawalsViewModel : ViewModel
 
     #region WithdrawalCommand
     public ICommand WithdrawalCommand { get; }
-
-    private bool CanWithdrawalCommandExecute(object p) => p != null;
-
+    private bool CanWithdrawalCommandExecute(object? p) => p != null;
     private void OnWithdrawalCommandExecute(object p)
     {
         var window = new AddAndWithdrawalDialogWindow
         {
             Owner = Application.Current.MainWindow
         };
-        _dialogWindow = window;
-        window.DataContext = new AddAndWithdrawalsDialogViewModel(p as Account, _mediator, false, this);
+        DialogWindow = window;
+        window.DataContext = new AddAndWithdrawalsDialogViewModel((p as Account)!, _mediator, false, this);
         window.Closed += OnWindowClosed;
         window.ShowDialog();
     }
@@ -122,12 +107,9 @@ public class AddAndWithdrawalsViewModel : ViewModel
     private void OnWindowClosed(object? sender, EventArgs e)
     {
         ((Window)sender!).Closed -= OnWindowClosed;
-        _dialogWindow = null;
+        DialogWindow = null!;
     }
     #endregion
 
-
     #endregion
-
-
 }

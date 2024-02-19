@@ -6,21 +6,19 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows;
 using System;
-using System.Collections.Generic;
 using MediatR;
 using Homework_13.Views;
-using System.Threading.Tasks;
-using Bank.Application.Accounts;
 using Bank.Application.Accounts.Commands.CloseAccount;
-using Bank.Application.Accounts.Queries;
+using Homework_13.ViewModels.Helpers;
 
 namespace Homework_13.ViewModels;
 
 public class OpenAccountViewModel : ViewModel
 {
     public Action UpdateAccountList;
-    private IMediator _mediator;
+    private readonly IMediator _mediator;
 
+    #region Свойства зависимости
     #region CurrentClient
     private ClientLookUpDto _currentClient;
     public ClientLookUpDto CurrentClient
@@ -35,10 +33,7 @@ public class OpenAccountViewModel : ViewModel
     public ObservableCollection<Account> Accounts
     {
         get => _accounts;
-        set
-        {
-            Set(ref _accounts, value);
-        }
+        set => Set(ref _accounts, value);
     }
     #endregion
 
@@ -50,22 +45,18 @@ public class OpenAccountViewModel : ViewModel
         set => Set(ref _selectedAccount, value);
     }
     #endregion
-    
+    #endregion
 
-	public OpenAccountViewModel(ClientLookUpDto CurrentClient, IMediator mediator)
+    public OpenAccountViewModel(ClientLookUpDto currentClient, IMediator mediator)
 	{
-        _currentClient = CurrentClient;
+        _currentClient = currentClient;
         _mediator = mediator;
 
-
         #region Commands
-
         OutCommand = new LambdaCommand(OnOutCommandExecute, CanOutCommandExecute);
-        CreateAccoundCommand = new LambdaCommand(OnCreateAccoundCommandExecute, CanCreateAccoundCommandExecute);
-        CloseAccoundCommand = new LambdaCommand(OnCloseAccoundCommandExecute, CanCloseAccoundCommandExecute);
-
+        CreateAccountCommand = new LambdaCommand(OnCreateAccountCommandExecute, CanCreateAccountCommandExecute);
+        CloseAccountCommand = new LambdaCommand(OnCloseAccountCommandExecute, CanCloseAccountCommandExecute);
         #endregion
-
 
         UpdateAccountList += UpdateAccount;
         UpdateAccountList.Invoke();
@@ -73,31 +64,20 @@ public class OpenAccountViewModel : ViewModel
 
     private void UpdateAccount()
     {
-        Accounts = new ObservableCollection<Account>(GetAccounts(_currentClient.Id).Result.Accounts);
+        Accounts = new ObservableCollection<Account>(ViewModelHelper.GetAccounts(_currentClient.Id).Result.Accounts);
     }
 
-    private async Task<AccountListVm> GetAccounts(Guid id)
-    {
-        var query = new GetAccountsQuery
-        {
-            Id = id
-        };
-        var result = await _mediator.Send(query);
-
-        return result;
-    }
-
-
+    #region Commands
     #region CreateAccount
 
-    public ICommand CreateAccoundCommand { get; }
+    public ICommand CreateAccountCommand { get; }
 
-    private bool CanCreateAccoundCommandExecute(object p)
+    private bool CanCreateAccountCommandExecute(object p)
     {
         return true;
     }
     private AccountInfoWindow _accountInfoWindow;
-    private void OnCreateAccoundCommandExecute(object p)
+    private void OnCreateAccountCommandExecute(object p)
     {
         var window = new AccountInfoWindow
         {
@@ -117,11 +97,11 @@ public class OpenAccountViewModel : ViewModel
 
     #region CloseAccount
 
-    public ICommand CloseAccoundCommand { get; }
+    public ICommand CloseAccountCommand { get; }
 
-    private bool CanCloseAccoundCommandExecute(object p) => p != null;
-    
-    private async void OnCloseAccoundCommandExecute(object p)
+    private bool CanCloseAccountCommandExecute(object p) => p != null;
+
+    private async void OnCloseAccountCommandExecute(object p)
     {
         if (_selectedAccount.Amount > 0)
         {
@@ -158,5 +138,5 @@ public class OpenAccountViewModel : ViewModel
         }
     }
     #endregion
-
+    #endregion
 }

@@ -12,22 +12,27 @@ namespace Homework_13.ViewModels;
 
 public class OperationsWindowViewModel : ViewModel
 {
-    private IMediator _mediator;
+    private readonly IMediator _mediator;
+    private readonly MainWindowViewModel _mainWindowViewModel;
 
+    #region Свойства зависимости
     private ClientLookUpDto _currentClient;
-
     public ClientLookUpDto CurrentClient
     {
         get => _currentClient;
         set => Set(ref _currentClient, value);
     }
 
-    private readonly MainWindowViewModel _mainWindowViewModel;
-    
-    public OperationsWindowViewModel()
+    #region Pages
+    private Page _currentPage;
+    public Page CurrentPage
     {
-
+        get => _currentPage;
+        set => Set(ref _currentPage, value);
     }
+    #endregion
+    #endregion
+
     public OperationsWindowViewModel(ClientLookUpDto currentClient, 
         MainWindowViewModel mainWindowViewModel, IMediator mediator)
     {
@@ -44,31 +49,22 @@ public class OperationsWindowViewModel : ViewModel
         CurrentPage = new EmptyPage();
         #endregion
 
+        #region Commands
         ExitCommand = new LambdaCommand(OnExitCommandExecute, CanExitCommandExecute);
         AddAndWithdrawalsCommand = new LambdaCommand(OnAddAndWithdrawalsCommandExecuted, CanAddAndWithdrawalsCommandExecute);
         BetweenOwnAccountsCommand = new LambdaCommand(OnBetweenOwnAccountsCommandExecuted, CanBetweenOwnAccountsCommandExecute);
         TransferToOtherClientsAccountsCommand = new LambdaCommand(OnTransferToOtherClientsAccountsCommandExecuted, CanTransferToOtherClientsAccountsCommandExecute);
         OpenAccountCommand = new LambdaCommand(OnOpenAccountCommandExecuted, CanOpenAccountCommandExecute);
+        #endregion
     }
 
-    #region Pages
+    
     private readonly Page _addAndWithdrawals;
     private readonly Page _betweenOwnAccounts;
     private readonly Page _openAccount;
     private readonly Page _transferToOtherClientsAccounts;
 
-    private Page _currentPage;
-    /// <summary>
-    /// Текущая страница фрейма
-    /// </summary>
-    public Page CurrentPage
-    {
-        get => _currentPage;
-        set => Set(ref _currentPage, value);        
-    }
-    #endregion
-
-    #region Command
+    #region Commands
 
     #region AddAndWithdrawalsCommand
     public ICommand AddAndWithdrawalsCommand { get; }
@@ -86,7 +82,6 @@ public class OperationsWindowViewModel : ViewModel
     #endregion
 
     #region BetweenOwnAccountsCommand
-
     public ICommand BetweenOwnAccountsCommand { get; }
     private void OnBetweenOwnAccountsCommandExecuted(object p)
     {
@@ -102,7 +97,6 @@ public class OperationsWindowViewModel : ViewModel
     #endregion
 
     #region TransferToOtherClientsAccountsCommand
-
     public ICommand TransferToOtherClientsAccountsCommand { get; }
     private void OnTransferToOtherClientsAccountsCommandExecuted(object p)
     {
@@ -111,12 +105,9 @@ public class OperationsWindowViewModel : ViewModel
     }
     private bool CanTransferToOtherClientsAccountsCommandExecute(object p)
     {
-        if (CurrentPage == _transferToOtherClientsAccounts)
-            return false;
-        return true;
+        return CurrentPage != _transferToOtherClientsAccounts;
     }
     #endregion
-
 
     #region OpenAccountCommand
     public ICommand OpenAccountCommand { get; }
@@ -124,7 +115,7 @@ public class OperationsWindowViewModel : ViewModel
     {
         CurrentPage = _openAccount;
 
-        _openAccount.DataContext = new OpenAccountViewModel(p as ClientLookUpDto, _mediator);
+        _openAccount.DataContext = new OpenAccountViewModel((p as ClientLookUpDto)!, _mediator);
 
     }
     private bool CanOpenAccountCommandExecute(object p)
@@ -153,5 +144,4 @@ public class OperationsWindowViewModel : ViewModel
     }
     #endregion    
     #endregion
-
 }

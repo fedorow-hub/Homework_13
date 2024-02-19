@@ -15,7 +15,6 @@ namespace Bank.Application.Accounts.Queries
         {
             var accountsQuery = await _dbContext.Accounts.Where(ac => ac.ClientId == request.Id && ac.IsExistance == true).AsNoTracking()
                 .ToListAsync(cancellationToken);
-            
 
             return new AccountListVm { Accounts = accountsQuery };
         }
