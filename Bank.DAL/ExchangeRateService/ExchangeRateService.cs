@@ -1,6 +1,5 @@
 ﻿using Bank.Application.Interfaces;
 using System.Text.Json;
-using System.Xml.Linq;
 
 namespace Bank.DAL.ExchangeRateService;
 
@@ -25,7 +24,7 @@ public class ExchangeRateService : IExchangeRateService
         else
         {
             // если файл не существует, создаем новый пустой фаил
-            File.Create(_path);
+            using (FileStream fs = File.Create(_path)){}
         }
 
         if (_allDataLines != null && _allDataLines.Any())
@@ -135,12 +134,12 @@ public class ExchangeRateService : IExchangeRateService
         try
         {
             File.WriteAllText(path, json);
+            
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            //реализовать логирование
         }
-        
     }
 
     /// <summary>
