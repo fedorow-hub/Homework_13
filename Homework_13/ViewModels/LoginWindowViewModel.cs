@@ -3,40 +3,55 @@ using Homework_13.ViewModels.Base;
 using System.Windows;
 using System.Windows.Input;
 using Homework_13.Views;
+using Bank.Application.Interfaces;
+using Bank.Domain.Worker;
+using MediatR;
 
 namespace Homework_13.ViewModels;
 
 public class LoginWindowViewModel : ViewModel
 {
-    private readonly MainWindowViewModel _mainWindowViewModel;
-
-    public LoginWindowViewModel(MainWindowViewModel mainWindowViewModel)
+    private readonly IExchangeRateService _exchangeRateService;
+    private readonly IMediator _mediator;
+    public LoginWindowViewModel(IExchangeRateService exchangeRateService, IMediator mediator)
     {
-        _mainWindowViewModel = mainWindowViewModel;
-        ComeInCommand = new LambdaCommand(OnComeInCommandExecuted, CanSetComeInCommandExecute);
+        _exchangeRateService = exchangeRateService;
+        _mediator = mediator;
+        SetConsultantMode = new LambdaCommand(OnSetConsultantModeExecuted, CanSetConsultantModeExecute);
+        SetManagerMode = new LambdaCommand(OnSetManagerModeExecuted, CanSetManagerModeExecute);
         OutCommand = new LambdaCommand(OnOutCommandExecuted, CanOutCommandExecute);
     }
 
     #region Commands
 
-    #region ComeInCommand
-    public ICommand ComeInCommand { get; }
-    private void OnComeInCommandExecuted(object p)
+    public ICommand SetConsultantMode { get; }
+    private void OnSetConsultantModeExecuted(object p)
     {
-        var mainWindow = new MainWindow
-        {
-            DataContext = _mainWindowViewModel
-        };
-        mainWindow.Show();
+        OpenMainWindow(new Consultant(), p);
 
         if (p is Window window)
         {
             window.Close();
         }
     }
-    private static bool CanSetComeInCommandExecute(object p) => true;
+    private bool CanSetConsultantModeExecute(object p) => true;
     #endregion
 
+    #region SetManagerMode
+    public ICommand SetManagerMode { get; }
+    private void OnSetManagerModeExecuted(object p)
+    {
+        OpenMainWindow(new Manager(), p);
+
+        if (p is Window window)
+        {
+            window.Close();
+        }
+    }
+    private bool CanSetManagerModeExecute(object p) => true;
+
+    #endregion
+    
     #region OutCommand
     public ICommand OutCommand { get; }
     private static void OnOutCommandExecuted(object p)
@@ -45,5 +60,18 @@ public class LoginWindowViewModel : ViewModel
     }
     private static bool CanOutCommandExecute(object p) => true;
     #endregion
-    #endregion    
+
+    private void OpenMainWindow(Worker worker, object p)
+    {
+        var mainWindow = new MainWindow();
+        var mainWindowVm = new MainWindowViewModel(worker, _exchangeRateService, _mediator);
+        
+        mainWindow.DataContext = mainWindowVm;
+        mainWindow.Show();
+
+        if (p is Window window)
+        {
+            window.Close();
+        }
+    }
 }

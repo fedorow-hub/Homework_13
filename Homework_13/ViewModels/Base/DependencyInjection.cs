@@ -7,9 +7,7 @@ namespace Homework_13.ViewModels.Base
     {
         public static IServiceCollection AddViewModels(this IServiceCollection services)
         {
-            services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<LoginWindowViewModel>();
-            services.AddTransient<ClientInfoViewModel>();
             services.AddTransient<OperationsWindowViewModel>();
             services.AddTransient<OpenAccountViewModel>();
             services.AddTransient<AccountInfoViewModel>();

@@ -42,8 +42,10 @@ public partial class App : Application
 
         var urlExchangeServise = builder.Build().GetConnectionString("UrlExchangeService");
 
-        services.AddSingleton<IExchangeRateService>(new ExchangeRateService(urlExchangeServise!));
+        services.AddSingleton<string>(urlExchangeServise);
 
+        services.AddSingleton<IExchangeRateService, ExchangeRateService>();
+        
         services.AddAutoMapper(config =>
         {
             config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));

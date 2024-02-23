@@ -15,6 +15,7 @@ using System.Windows.Input;
 using System.ComponentModel;
 using System.Windows.Data;
 using Bank.Domain.Account;
+using Bank.Domain.Worker;
 using Homework_13.Views.AccountOperationWindow;
 using Homework_13.ViewModels.Helpers;
 
@@ -33,6 +34,8 @@ public class MainWindowViewModel : ViewModel
     #region Currency
     public decimal DollarCurrentRate { get; private set; }
     public decimal EuroCurrentRate { get; private set; }
+
+    public Worker Worker { get; private set; }
     #endregion
 
     #region Свойства зависимости
@@ -165,10 +168,11 @@ public class MainWindowViewModel : ViewModel
 
     #endregion
 
-    public MainWindowViewModel(IExchangeRateService exchangeRateService, IMediator mediator)
+    public MainWindowViewModel(Worker worker, IExchangeRateService exchangeRateService, IMediator mediator)
     {
         _exchangeRateService = exchangeRateService;
         _mediator = mediator;
+        Worker = worker;
 
         Title = $"Банк {GetExistBankOrCreateAsync().Result.Name}, капитал банка: {GetExistBankOrCreateAsync().Result.Capital} руб.";
 
@@ -182,8 +186,13 @@ public class MainWindowViewModel : ViewModel
         DeleteClientCommand = new LambdaCommand(OnDeleteClientCommandExecute, CanDeleteClientCommandExecute);
         OutLoggingCommand = new LambdaCommand(OnOutLoggingCommandExecute, CanOutLoggingCommandExecute);
         EditClientCommand = new LambdaCommand(OnEditClientCommandExecute, CanEditClientCommandExecute);
+        AddClientCommand = new LambdaCommand(OnAddClientCommandExecute, CanAddClientCommandExecute);
         OpenOperationWindowCommand = new LambdaCommand(OnOpenOperationWindowCommandExecute, CanOpenOperationWindowCommandExecute);
         #endregion
+
+        _enableAddClient = Worker.DataAccess.Commands.AddClient;
+        _enableDelClient = Worker.DataAccess.Commands.DelClient;
+        _enableEditClient = Worker.DataAccess.Commands.EditClient;
 
         UpdateClientList += UpdateClients;
         UpdateClientList.Invoke();
@@ -241,7 +250,9 @@ public class MainWindowViewModel : ViewModel
 
     private bool CanDeleteClientCommandExecute(object p)
     {
-        return SelectedClient != null;
+        if (_enableDelClient && SelectedClient != null)
+            return true;
+        return false;
     }
     private void OnDeleteClientCommandExecute(object p)
     {
@@ -273,7 +284,9 @@ public class MainWindowViewModel : ViewModel
 
     private bool CanEditClientCommandExecute(object p)
     {
-        return SelectedClient is not null;
+        if (_enableEditClient && SelectedClient != null)
+            return true;
+        return false;
     }
     private ClientInfoWindow _clientInfoWindow;
     private void OnEditClientCommandExecute(object p)
@@ -285,7 +298,7 @@ public class MainWindowViewModel : ViewModel
             Owner = Application.Current.MainWindow
         };
         _clientInfoWindow = window;
-        window.DataContext = new ClientInfoViewModel(this, _mediator, SelectedClient);
+        window.DataContext = new ClientInfoViewModel(this, Worker.DataAccess, _mediator, SelectedClient);
         window.Closed += OnWindowClosed;
         window.ShowDialog();
     }
@@ -296,6 +309,33 @@ public class MainWindowViewModel : ViewModel
         _clientInfoWindow = null;
     }
     #endregion
+
+    #region AddClient
+
+    public ICommand AddClientCommand { get; }
+
+    private bool CanAddClientCommandExecute(object p)
+    {
+        if (_enableAddClient && SelectedClient is not null)
+            return true;
+        return false;
+    }
+    private void OnAddClientCommandExecute(object p)
+    {
+        if (SelectedClient is null) return;
+        
+        var window = new ClientInfoWindow
+        {
+            Owner = Application.Current.MainWindow
+        };
+        _clientInfoWindow = window;
+        window.DataContext = new ClientInfoViewModel(this, Worker.DataAccess, _mediator, SelectedClient);
+        window.Closed += OnWindowClosed;
+        window.ShowDialog();
+    }
+
+    #endregion
+
 
     #region OpenOperationWindow
 

@@ -1,4 +1,6 @@
 ﻿using Bank.Application.Interfaces;
+using System.Text.Json;
+using System.Xml.Linq;
 
 namespace Bank.DAL.ExchangeRateService;
 
@@ -6,9 +8,45 @@ public class ExchangeRateService : IExchangeRateService
 {
     private static string _dataUrl = null!;
 
+    private static IEnumerable<string> _allDataLines;
+
+    string _path;
+
     public ExchangeRateService(string urlExchangeService)
     {
         _dataUrl = urlExchangeService;
+
+        _path = "exchangeRate.json";
+
+        if (File.Exists(_path)) // если файл существует, подгружаем данные
+        {
+            Load(_path);
+        }
+        else
+        {
+            // если файл не существует, создаем новый пустой фаил
+            File.Create(_path);
+        }
+
+        if (_allDataLines != null && _allDataLines.Any())
+        {
+            var lineWithDate = _allDataLines.Skip(1).First();
+            var date = lineWithDate.Substring(13, 10);
+
+            var dateFromCache = DateTime.Parse(date);
+            var dateNow = DateTime.Today;
+
+            if (dateNow > dateFromCache)
+            {
+                _allDataLines = GetDataLines();
+                Save(_path, _allDataLines);
+            }
+        }
+        else
+        {
+            _allDataLines = GetDataLines();
+            Save(_path, _allDataLines);
+        }
     }
 
     private static async Task<Stream> GetDataStream()
@@ -40,7 +78,7 @@ public class ExchangeRateService : IExchangeRateService
     {
         var data = new string[5];
 
-        var allLines = GetDataLines().ToArray();
+        var allLines = _allDataLines.ToArray();
         var lineWithDate = allLines.Skip(1).First();
         data[0] = lineWithDate.Substring(13, 10);
 
@@ -71,7 +109,7 @@ public class ExchangeRateService : IExchangeRateService
         {
             return rate;
         }
-        else throw new Exception("Не удалась конвертация строки в тип decimal");
+        throw new Exception("Не удалась конвертация строки в тип decimal");
     }
     
     public (decimal prev, decimal cur) GetDollarExchangeRate()
@@ -86,5 +124,44 @@ public class ExchangeRateService : IExchangeRateService
         var cur = ParsingData(GetAllData()[3]);
         var prev = ParsingData(GetAllData()[4]);
         return (prev, cur);
+    }
+
+    /// <summary>
+    /// Сохранение в файл
+    /// </summary>
+    void Save(string path, IEnumerable<string> allDataLines)
+    {
+        string json = JsonSerializer.Serialize(allDataLines);
+        try
+        {
+            File.WriteAllText(path, json);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        
+    }
+
+    /// <summary>
+    /// Загрузка кэша
+    /// </summary>
+    void Load(string path)
+    {
+        string data = File.ReadAllText(path);
+        if (string.IsNullOrEmpty(data))
+        {
+            _allDataLines = new List<string>();
+            return;
+        }
+        _allDataLines = JsonSerializer.Deserialize<List<string>>(data, new JsonSerializerOptions()
+        {
+            PropertyNameCaseInsensitive = true
+        });
+
+        if (_allDataLines is null)
+        {
+            _allDataLines = new List<string>();
+        }
     }
 }

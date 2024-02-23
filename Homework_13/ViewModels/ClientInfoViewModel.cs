@@ -9,6 +9,7 @@ using System;
 using System.Windows;
 using System.Windows.Input;
 using Bank.Application.Clients.Queries.GetClientList;
+using Bank.Domain.Worker;
 
 namespace Homework_13.ViewModels;
 
@@ -17,6 +18,8 @@ public class ClientInfoViewModel : ViewModel
     private readonly IMediator _mediator;
     public ClientLookUpDto CurrentClient;
     private readonly MainWindowViewModel _mainWindowViewModel;
+
+    private readonly RoleDataAccess _dataAccess;
 
     #region Свойствса зависимости
     #region EnableSaveClient
@@ -61,7 +64,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _borderFirstName, value);
-            CheckSaveClient();
+            CheckSaveClient(_dataAccess);
         }
     }
 
@@ -93,7 +96,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _borderLastName, value);
-            CheckSaveClient();
+            CheckSaveClient(_dataAccess);
         }
     }
 
@@ -125,7 +128,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _borderPatronymic, value);
-            CheckSaveClient();
+            CheckSaveClient(_dataAccess);
         }
     }
 
@@ -151,6 +154,13 @@ public class ClientInfoViewModel : ViewModel
         set => Set(ref _enablePhoneNumber, value);
     }
 
+    private bool _enableTotalIncome;
+    public bool EnableTotalIncome
+    {
+        get => _enableTotalIncome;
+        set => Set(ref _enableTotalIncome, value);
+    }
+
     private InputValueValidationEnum _borderPhoneNumber;
     public InputValueValidationEnum BorderPhoneNumber
     {
@@ -158,7 +168,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _borderPhoneNumber, value);
-            CheckSaveClient();
+            CheckSaveClient(_dataAccess);
         }
     }
 
@@ -201,7 +211,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _borderPassportSeries, value);
-            CheckSaveClient();
+            CheckSaveClient(_dataAccess);
         }
     }
 
@@ -212,7 +222,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _borderPassportNumber, value);
-            CheckSaveClient();
+            CheckSaveClient(_dataAccess);
         }
     }
 
@@ -245,21 +255,24 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _borderTotalIncomePerMonth, value);
-            CheckSaveClient();
+            CheckSaveClient(_dataAccess);
         }
     }
     #endregion
 
     #endregion      
     
-    public ClientInfoViewModel(MainWindowViewModel mainWindowView, IMediator mediator, ClientLookUpDto client = null)
+    public ClientInfoViewModel(MainWindowViewModel mainWindowView, RoleDataAccess dataAccess, IMediator mediator, ClientLookUpDto client = null)
     {
         _mainWindowViewModel = mainWindowView;
         _mediator = mediator;
         this.CurrentClient = client;
 
+        _dataAccess = dataAccess;
+
         FillFields(client);
-        CheckSaveClient();
+        EnableFields(dataAccess);
+        CheckSaveClient(dataAccess);
 
         OutCommand = new LambdaCommand(OnOutCommandExecute, CanOutCommandExecute);
         SaveCommand = new LambdaCommand(OnSaveCommandExecute, CanSaveCommandExecute);
@@ -283,24 +296,52 @@ public class ClientInfoViewModel : ViewModel
     }
 
     /// <summary>
+    /// Включение/отключения возможности ввода данных
+    /// </summary>
+    /// <param name="dataAccess"></param>
+    private void EnableFields(RoleDataAccess dataAccess)
+    {
+        _enableFirstName = dataAccess.EditFields.FirstName;
+        _enableLastName = dataAccess.EditFields.LastName;
+        _enablePatronymic = dataAccess.EditFields.MiddleName;
+        _enablePassportData = dataAccess.EditFields.PassportData;
+        _enablePhoneNumber = dataAccess.EditFields.PhoneNumber;
+        _enableTotalIncome = dataAccess.EditFields.TotalIncome;
+
+        _borderFirstName = InputHighlighting(_enableFirstName, _firstname.Length > 0);
+        _borderLastName = InputHighlighting(_enableLastName, _lastname.Length > 0);
+        _borderPatronymic = InputHighlighting(_enablePatronymic, _patronymic.Length > 0);
+        _borderTotalIncomePerMonth = InputHighlighting(_enableTotalIncome, true);
+        _borderPhoneNumber = InputHighlighting(_enablePhoneNumber, Bank.Domain.Client.ValueObjects.PhoneNumber.IsPhoneNumber(_phoneNumber));
+        if (dataAccess.EditFields.PassportData == true)
+        {
+            _borderPassportSeries = InputHighlighting(_enablePassportData, Bank.Domain.Client.ValueObjects.PassportSeries.IsSeries(_passportSeries));
+            _borderPassportNumber = InputHighlighting(_enablePassportData, Bank.Domain.Client.ValueObjects.PassportNumber.IsNumber(_passportNumber));
+        }
+    }
+
+    /// <summary>
     /// метод для блокирования кнопки сохранения, если введенные данные не валидны
     /// </summary>
-    private void CheckSaveClient()
+    private void CheckSaveClient(RoleDataAccess dataAccess)
     {
-        EnableSaveClient = _borderFirstName != InputValueValidationEnum.Error
-                        && !string.IsNullOrEmpty(_firstname)
-                        && _borderLastName != InputValueValidationEnum.Error
-                        && !string.IsNullOrEmpty(_lastname)
-                        && _borderPatronymic != InputValueValidationEnum.Error
-                        && !string.IsNullOrEmpty(_patronymic)
-                        && _borderPassportSeries != InputValueValidationEnum.Error
-                        && !string.IsNullOrEmpty(_passportSeries)
-                        && _borderPassportNumber != InputValueValidationEnum.Error
-                        && !string.IsNullOrEmpty(_passportNumber)
-                        && _borderPhoneNumber != InputValueValidationEnum.Error
-                        && !string.IsNullOrEmpty(_phoneNumber)
-                        && _borderTotalIncomePerMonth != InputValueValidationEnum.Error
-                        && !string.IsNullOrEmpty(_totalIncomePerMonth);
+        if (dataAccess.EditFields.PassportData == false)
+        {
+            EnableSaveClient = _borderFirstName != InputValueValidationEnum.Error
+                               && _borderLastName != InputValueValidationEnum.Error
+                               && _borderPatronymic != InputValueValidationEnum.Error
+                               && _borderPhoneNumber != InputValueValidationEnum.Error;
+        }
+        else
+        {
+            EnableSaveClient = _borderFirstName != InputValueValidationEnum.Error
+                               && _borderLastName != InputValueValidationEnum.Error
+                               && _borderPatronymic != InputValueValidationEnum.Error
+                               && _borderPassportSeries != InputValueValidationEnum.Error
+                               && _borderPassportNumber != InputValueValidationEnum.Error
+                               && _borderPhoneNumber != InputValueValidationEnum.Error
+                               && _borderTotalIncomePerMonth != InputValueValidationEnum.Error;
+        }
     }
 
     /// <summary>

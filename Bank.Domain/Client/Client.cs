@@ -4,7 +4,7 @@ using Bank.Domain.Root;
 
 namespace Bank.Domain.Client;
 
-public sealed class Client : Entity
+public class Client : Entity
 {  
     public Firstname Firstname { get; private set; } = null!;
 

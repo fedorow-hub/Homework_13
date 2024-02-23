@@ -9,7 +9,7 @@
         Icon ="../../Resources/Images/icons8-bank-100.png"
         xmlns:c="clr-namespace:Homework_13.Infrastructure.Convertors"
         mc:Ignorable="d"
-        DataContext="{Binding ClientInfoModel, Source={StaticResource Locator}}"
+        d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
         Title="{Binding Title}" Height="390" Width="605" WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">    
     <Window.Resources>
@@ -40,40 +40,47 @@
             <Border Grid.Row="0" Grid.Column="1" Margin="0,5" Style="{StaticResource BorderToTextBox}" 
                     BorderBrush="{Binding BorderLastName, Converter={StaticResource InputValueValidationConvertor}}">
                 <TextBox Width="450" Cursor="Arrow" FontSize="18"  
-                     Text="{Binding Lastname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                     Text="{Binding Lastname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     IsEnabled="{Binding EnableLastName}"/>
             </Border>
             <TextBlock Grid.Row="1" Grid.Column="0" Text="Имя:" Margin="10,0" FontSize="20" Foreground="Gray"/>
             <Border Grid.Row="1" Grid.Column="1" Margin="0,5" Style="{StaticResource BorderToTextBox}" BorderBrush="{Binding BorderFirstName, Converter={StaticResource InputValueValidationConvertor}}">
                 <TextBox Width="450" Cursor="Arrow" FontSize="18" 
-                     Text="{Binding Firstname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                     Text="{Binding Firstname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     IsEnabled="{Binding EnableFirstName}"/>
             </Border>
             <TextBlock Grid.Row="2" Grid.Column="0" Text="Отчество:" Margin="10,0" FontSize="20" Foreground="Gray"/>
             <Border Grid.Row="2" Grid.Column="1" Margin="0,5" Style="{StaticResource BorderToTextBox}" BorderBrush="{Binding BorderPatronymic, Converter={StaticResource InputValueValidationConvertor}}">
                 <TextBox Width="450" Cursor="Arrow" FontSize="18" 
-                     Text="{Binding Patronymic, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                     Text="{Binding Patronymic, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     IsEnabled="{Binding EnablePatronymic}"/>
             </Border>
             <TextBlock Grid.Row="3" Grid.Column="0" Text="Номер телефона:" Margin="10,0" FontSize="20" Foreground="Gray"/>
             <Border Grid.Row="3" Grid.Column="1" Margin="0,5" Style="{StaticResource BorderToTextBox}" BorderBrush="{Binding BorderPhoneNumber, Converter={StaticResource InputValueValidationConvertor}}">
                 <TextBox Width="450" Cursor="Arrow" FontSize="18" 
-                     Text="{Binding PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                     Text="{Binding PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     IsEnabled="{Binding EnablePhoneNumber}"/>
             </Border>
             <TextBlock Grid.Row="4" Grid.Column="0" Text="Паспорт:" Margin="10,0" FontSize="20" Foreground="Gray"/>
             <StackPanel Grid.Row="4" Grid.Column="1" Margin="0,5" Orientation="Horizontal" >
                 <TextBlock Text="серия:" FontSize="20" Foreground="Gray"/>
                 <Border Style="{StaticResource BorderToTextBox}" BorderBrush="{Binding BorderPassportSeries, Converter={StaticResource InputValueValidationConvertor}}">
                     <TextBox Width="50" Cursor="Arrow" FontSize="18" 
-                     Text="{Binding PassportSeries, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                     Text="{Binding PassportSeries, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     IsEnabled="{Binding EnablePassportData}"/>
                 </Border>
                 <TextBlock Text="номер:" Margin="10,0" FontSize="20" Foreground="Gray"/>
                 <Border Style="{StaticResource BorderToTextBox}" BorderBrush="{Binding BorderPassportNumber, Converter={StaticResource InputValueValidationConvertor}}">
                     <TextBox Width="188" Cursor="Arrow" FontSize="18" 
-                     Text="{Binding PassportNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                     Text="{Binding PassportNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     IsEnabled="{Binding EnablePassportData}"/>
                 </Border>
             </StackPanel>
             <TextBlock Grid.Row="5" Grid.Column="0" Text="Месячный доход:" Margin="10,0" FontSize="20" Foreground="Gray"/>
             <Border Grid.Row="5" Grid.Column="1" Margin="0,5" Style="{StaticResource BorderToTextBox}" BorderBrush="{Binding BorderTotalIncomePerMonth, Converter={StaticResource InputValueValidationConvertor}}">
                 <TextBox Width="450" Cursor="Arrow" FontSize="18" 
-                Text="{Binding TotalIncomePerMonth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                Text="{Binding TotalIncomePerMonth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                IsEnabled="{Binding EnableTotalIncome}"/>
             </Border>
         </Grid>
         <StackPanel Orientation="Horizontal" Width="320" Margin="5,20">

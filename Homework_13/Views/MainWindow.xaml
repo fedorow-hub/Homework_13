@@ -4,11 +4,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:cmd="clr-namespace:Homework_13.Infrastructure.Commands"
         xmlns:fa="http://schemas.fontawesome.com/icons/"
+        xmlns:viewModels="clr-namespace:Homework_13.ViewModels"
         Icon ="../../Resources/Images/icons8-bank-100.png"
         Style="{StaticResource WindowStyle}"
-        d:DataContext="{Binding MainWindowModel, Source={StaticResource Locator}}"
+        d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel}"
         mc:Ignorable="d"
         Title="{Binding Path=Title}" Height="464" Width="950" WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
@@ -88,7 +88,8 @@
                         </DataGrid.Columns>
                     </DataGrid>
                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" Height="53">
-                        <Button Margin="5" Height="40" Cursor="Hand" Width="160">
+                        <Button Margin="5" Height="40" Cursor="Hand" Width="160"
+                                Command="{Binding AddClientCommand}">
                             <StackPanel Orientation="Horizontal">
                                 <fa:ImageAwesome Icon="Solid_Plus" Height="20" Margin="0,0,10,0" Foreground="Yellow">
                                     <fa:ImageAwesome.Effect>
@@ -97,9 +98,6 @@
                                 </fa:ImageAwesome>
                                 <TextBlock Text="Добавить" FontSize="18"/>
                             </StackPanel>
-                            <Button.Command>
-                                <cmd:ManageClientsCommand/>
-                            </Button.Command>
                         </Button>
                         <Button Height="40" Margin="5" 
                         Command="{Binding DeleteClientCommand}" 
@@ -132,7 +130,8 @@
         </Grid>
         <StatusBar DockPanel.Dock="Bottom" Height="40">
             <Canvas Width="790">
-                
+                <TextBlock Text="Режим работы:" VerticalAlignment="Top" Canvas.Left="10" Canvas.Top="-8" HorizontalAlignment="Center" />
+                <TextBlock Text="{Binding Path=Worker}" VerticalAlignment="Center" HorizontalAlignment="Left" Width="123" Canvas.Left="99" Canvas.Top="-8"/>
                 <Button Width="170" FontSize="20" Cursor="Hand" 
                         Command="{Binding OutLoggingCommand}" 
                         CommandParameter="{Binding ElementName=MainWind}" Canvas.Left="742" Canvas.Top="-16" HorizontalAlignment="Left" VerticalAlignment="Center">
