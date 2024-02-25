@@ -12,6 +12,9 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using Homework_13.ViewModels.Base;
+using Serilog;
+using MediatR.NotificationPublishers;
+using Homework_13.Services;
 
 namespace Homework_13;
 
@@ -31,6 +34,7 @@ public partial class App : Application
     {
         //сюда добавляем необходимые сервисы
         services.AddApplication();
+        
         services.AddViewModels();
         
         var builder = new ConfigurationBuilder();
@@ -45,7 +49,9 @@ public partial class App : Application
         services.AddSingleton<string>(urlExchangeServise);
 
         services.AddSingleton<IExchangeRateService, ExchangeRateService>();
-        
+
+        services.AddSingleton<ICurrentWorkerService, CurrentWorkerService>();
+
         services.AddAutoMapper(config =>
         {
             config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
@@ -59,7 +65,14 @@ public partial class App : Application
         var host = Host;
         base.OnStartup(e);
         await host.StartAsync().ConfigureAwait(false);
-        DbInitializer.Initialize(host.Services.GetRequiredService<ApplicationDbContext>());
+        try
+        {
+            DbInitializer.Initialize(host.Services.GetRequiredService<ApplicationDbContext>());
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "Не удаалось инициализировать EF Core");
+        }
     }
 
     protected override async void OnExit(ExitEventArgs e)

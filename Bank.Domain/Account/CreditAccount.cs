@@ -1,4 +1,5 @@
-﻿using Bank.Domain.Root;
+﻿using Bank.Domain.Account.Events;
+using Bank.Domain.Root;
 
 namespace Bank.Domain.Account;
 
@@ -65,14 +66,24 @@ public sealed class CreditAccount : Account
     public override void AddMoneyToAccount(decimal money)
     {
         Amount -= money;
-        byte remainingMonths = Convert.ToByte(Math.Ceiling(Convert.ToDouble(AccountTerm.Subtract(DateTime.UtcNow).Days/30)));
-        MouthlyPayment = SetMonthlyPayment(remainingMonths);
+        AddDomainEvent(new AddedMoneyToAccountEvent
+        {
+            Id = this.Id,
+            AddedMoney = money
+        });
+        //byte remainingMonths = Convert.ToByte(Math.Ceiling(Convert.ToDouble(AccountTerm.Subtract(DateTime.UtcNow).Days/30)));
+        //MouthlyPayment = SetMonthlyPayment(remainingMonths);
     }
 
     public override void WithdrawalMoneyFromAccount(decimal money)
     {
         Amount += money;
-        byte remainingMonths = Convert.ToByte(Math.Ceiling(Convert.ToDouble(AccountTerm.Subtract(DateTime.UtcNow).Days / 30)));
-        MouthlyPayment = SetMonthlyPayment(remainingMonths);
+        AddDomainEvent(new WithdrawalMoneyFromAccountEvent
+        {
+            Id = this.Id,
+            WithdrawnMoney = money
+        });
+        //byte remainingMonths = Convert.ToByte(Math.Ceiling(Convert.ToDouble(AccountTerm.Subtract(DateTime.UtcNow).Days / 30)));
+        //MouthlyPayment = SetMonthlyPayment(remainingMonths);
     }
 }

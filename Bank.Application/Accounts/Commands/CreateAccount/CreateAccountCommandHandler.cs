@@ -1,5 +1,6 @@
 ﻿using Bank.Application.Interfaces;
 using Bank.Domain.Account;
+using Bank.Domain.Account.Events;
 using Bank.Domain.Root;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,11 @@ public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand,
                     bank.AddMoneyToCapital(request.Amount);
                     var depositAccount = DepositAccount.CreateDepositAccount(Guid.NewGuid(), request.ClientId, request.AccountTerm, request.Amount, request.CreatedAt);
                     _dbContext.Accounts.Add(depositAccount);
+                    depositAccount.AddDomainEvent(new CreateAccountEvent
+                    {
+                        Id = depositAccount.Id,
+                        Money = request.Amount
+                    });
                     break;
                 case 2://credit 
                     try
@@ -37,6 +43,11 @@ public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand,
                         var creditAccount = CreditAccount.CreateCreditAccount(Guid.NewGuid(), client,
                             request.AccountTerm, request.Amount, request.CreatedAt);
                         _dbContext.Accounts.Add(creditAccount);
+                        creditAccount.AddDomainEvent(new CreateAccountEvent
+                        {
+                            Id = creditAccount.Id,
+                            Money = request.Amount
+                        });
                     }
                     catch (DomainExeption ex)
                     {
@@ -47,7 +58,12 @@ public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand,
                     bank.AddMoneyToCapital(request.Amount);
                     var planeAccount = PlainAccount.CreatePlaneAccount(Guid.NewGuid(), request.ClientId, request.CreatedAt, request.AccountTerm, request.Amount);
                     _dbContext.Accounts.Add(planeAccount);
-                break;
+                    planeAccount.AddDomainEvent(new CreateAccountEvent
+                    {
+                        Id = planeAccount.Id,
+                        Money = request.Amount
+                    });
+                    break;
                 default:
                     Console.WriteLine("Нет такого типа счета");
                     break;

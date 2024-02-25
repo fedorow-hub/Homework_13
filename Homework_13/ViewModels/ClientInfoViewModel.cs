@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Input;
 using Bank.Application.Clients.Queries.GetClientList;
 using Bank.Domain.Worker;
+using Serilog;
 
 namespace Homework_13.ViewModels;
 
@@ -18,9 +19,8 @@ public class ClientInfoViewModel : ViewModel
     private readonly IMediator _mediator;
     public ClientLookUpDto CurrentClient;
     private readonly MainWindowViewModel _mainWindowViewModel;
-
-    private readonly RoleDataAccess _dataAccess;
-
+    private readonly Worker _worker;
+    
     #region Свойствса зависимости
     #region EnableSaveClient
     private bool _enableSaveClient;
@@ -64,7 +64,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _borderFirstName, value);
-            CheckSaveClient(_dataAccess);
+            CheckSaveClient(_worker.DataAccess);
         }
     }
 
@@ -96,7 +96,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _borderLastName, value);
-            CheckSaveClient(_dataAccess);
+            CheckSaveClient(_worker.DataAccess);
         }
     }
 
@@ -128,7 +128,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _borderPatronymic, value);
-            CheckSaveClient(_dataAccess);
+            CheckSaveClient(_worker.DataAccess);
         }
     }
 
@@ -168,7 +168,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _borderPhoneNumber, value);
-            CheckSaveClient(_dataAccess);
+            CheckSaveClient(_worker.DataAccess);
         }
     }
 
@@ -211,7 +211,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _borderPassportSeries, value);
-            CheckSaveClient(_dataAccess);
+            CheckSaveClient(_worker.DataAccess);
         }
     }
 
@@ -222,7 +222,7 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _borderPassportNumber, value);
-            CheckSaveClient(_dataAccess);
+            CheckSaveClient(_worker.DataAccess);
         }
     }
 
@@ -255,24 +255,24 @@ public class ClientInfoViewModel : ViewModel
         set
         {
             Set(ref _borderTotalIncomePerMonth, value);
-            CheckSaveClient(_dataAccess);
+            CheckSaveClient(_worker.DataAccess);
         }
-    }
+    }   
     #endregion
 
     #endregion      
     
-    public ClientInfoViewModel(MainWindowViewModel mainWindowView, RoleDataAccess dataAccess, IMediator mediator, ClientLookUpDto client = null)
+    public ClientInfoViewModel(MainWindowViewModel mainWindowView, Worker worker, IMediator mediator, ClientLookUpDto client = null)
     {
         _mainWindowViewModel = mainWindowView;
         _mediator = mediator;
         this.CurrentClient = client;
 
-        _dataAccess = dataAccess;
+        _worker = worker;
 
         FillFields(client);
-        EnableFields(dataAccess);
-        CheckSaveClient(dataAccess);
+        EnableFields(worker.DataAccess);
+        CheckSaveClient(worker.DataAccess);
 
         OutCommand = new LambdaCommand(OnOutCommandExecute, CanOutCommandExecute);
         SaveCommand = new LambdaCommand(OnSaveCommandExecute, CanSaveCommandExecute);
@@ -284,15 +284,13 @@ public class ClientInfoViewModel : ViewModel
     /// <param name="clientInfo"></param>
     private void FillFields(ClientLookUpDto clientInfo)
     {
-        if (clientInfo is null)
-            return;
-        _firstname = clientInfo.Firstname;
-        _lastname = clientInfo.Lastname;
-        _patronymic = clientInfo.Patronymic;
-        _phoneNumber = clientInfo.PhoneNumber;
-        _passportSeries = clientInfo.PassportSeries;
-        _passportNumber = clientInfo.PassportNumber;
-        _totalIncomePerMonth = clientInfo.TotalIncomePerMounth;
+        _firstname = clientInfo?.Firstname ?? String.Empty;
+        _lastname = clientInfo?.Lastname ?? String.Empty;
+        _patronymic = clientInfo?.Patronymic ?? String.Empty;
+        _phoneNumber = clientInfo?.PhoneNumber ?? String.Empty;
+        _passportSeries = clientInfo?.PassportSeries ?? String.Empty;
+        _passportNumber = clientInfo?.PassportNumber ?? String.Empty;
+        _totalIncomePerMonth = clientInfo?.TotalIncomePerMounth ?? String.Empty;
     }
 
     /// <summary>
@@ -311,7 +309,7 @@ public class ClientInfoViewModel : ViewModel
         _borderFirstName = InputHighlighting(_enableFirstName, _firstname.Length > 0);
         _borderLastName = InputHighlighting(_enableLastName, _lastname.Length > 0);
         _borderPatronymic = InputHighlighting(_enablePatronymic, _patronymic.Length > 0);
-        _borderTotalIncomePerMonth = InputHighlighting(_enableTotalIncome, true);
+        _borderTotalIncomePerMonth = InputHighlighting(_enableTotalIncome, TotalIncomePerMounth.IsIncome(_totalIncomePerMonth));
         _borderPhoneNumber = InputHighlighting(_enablePhoneNumber, Bank.Domain.Client.ValueObjects.PhoneNumber.IsPhoneNumber(_phoneNumber));
         if (dataAccess.EditFields.PassportData == true)
         {
@@ -407,6 +405,8 @@ public class ClientInfoViewModel : ViewModel
                 TotalIncomePerMounth = Convert.ToDecimal(_totalIncomePerMonth)
             };
             await _mediator.Send(command);
+            Log.Information($"{_worker} редактировал данные клиента {CurrentClient.Id}");
+
         }
 
         if (p is Window window)

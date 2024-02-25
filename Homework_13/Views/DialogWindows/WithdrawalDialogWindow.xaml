@@ -1,24 +1,23 @@
-﻿<Window x:Class="Homework_13.Views.DialogWindows.AddAndWithdrawalDialogWindow"
+﻿<Window x:Class="Homework_13.Views.DialogWindows.WithdrawalDialogWindow"
         x:Name="DialogWind"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Homework_13.Views.DialogWindows"
-        d:DataContext="{Binding AddAndWithdrawalsDialogModel, Source={StaticResource Locator}}"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="228" Width="353" WindowStartupLocation="CenterScreen">
+        d:DataContext="{Binding WithdrawalDialog, Source={StaticResource Locator}}"
+        Title="Снятие средств" Height="228" Width="353" WindowStartupLocation="CenterScreen">
     <StackPanel Margin="0,0,4,3">
         <TextBlock Text="Введите сумму" TextAlignment="Center" Margin="10" FontSize="14" FontWeight="SemiBold"/>
         <TextBox PreviewTextInput="NumberValidationTextBox" FontSize="20" Margin="3,0,3,10" TextAlignment="Center" FontWeight="Bold"
                  Text="{Binding Amount}" Width="188"/>
         <StackPanel Orientation="Horizontal">
             <Button  
-                    Height="40"
-                    Margin="5"
-                    Command="{Binding SaveCommand}"
-                    CommandParameter="{Binding ElementName=DialogWind}"
-                    Cursor="Hand" Width="160">
+                Height="40"
+                Margin="5"
+                Command="{Binding SaveCommand}"
+                CommandParameter="{Binding ElementName=DialogWind}"
+                Cursor="Hand" Width="160">
                 <TextBlock Text="Выполнить" FontSize="18"/>
             </Button>
             <Button Height="40"  

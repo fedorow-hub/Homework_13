@@ -1,4 +1,6 @@
-﻿using Bank.Domain.Root;
+﻿
+using Bank.Domain.Account.Events;
+using Bank.Domain.Root;
 
 namespace Bank.Domain.Account;
 
@@ -70,8 +72,12 @@ public abstract class Account : Entity
         else if(Amount > 0) 
         {
             throw new DomainExeption("На счете имеются денежные средства");
-        }        
-        IsExistance = false;        
+        }
+        IsExistance = false;
+        AddDomainEvent(new CloseAccountEvent
+        {
+            Id = this.Id
+        });
     }
 
     /// <summary>
@@ -81,6 +87,11 @@ public abstract class Account : Entity
     public virtual void AddMoneyToAccount(decimal money)
     {
         Amount += money;
+        AddDomainEvent(new AddedMoneyToAccountEvent
+        {
+            Id = this.Id,
+            AddedMoney = money
+        });
     }
 
     /// <summary>
@@ -92,6 +103,11 @@ public abstract class Account : Entity
         if (Amount >= money)
         {
             Amount -= money;
+            AddDomainEvent(new WithdrawalMoneyFromAccountEvent
+            {
+                Id = this.Id,
+                WithdrawnMoney = money
+            });
         }
         else throw new DomainExeption("Недостаточно средств на счете");
     }

@@ -22,7 +22,7 @@ public sealed class TotalIncomePerMounth : ValueObject
 
     public static bool IsIncome(string value)
     {
-        if (!int.TryParse(value, out var number))
+        if (!decimal.TryParse(value, out var number))
             return false;
 
         return number >= 0;

@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Bank.Application.Clients.Queries.GetClientList;
+using Bank.Domain.Worker;
 using Homework_13.Views;
 using MediatR;
 
@@ -14,6 +15,7 @@ public class OperationsWindowViewModel : ViewModel
 {
     private readonly IMediator _mediator;
     private readonly MainWindowViewModel _mainWindowViewModel;
+    private readonly Worker _worker;
 
     #region Свойства зависимости
     private ClientLookUpDto _currentClient;
@@ -34,11 +36,12 @@ public class OperationsWindowViewModel : ViewModel
     #endregion
 
     public OperationsWindowViewModel(ClientLookUpDto currentClient, 
-        MainWindowViewModel mainWindowViewModel, IMediator mediator)
+        MainWindowViewModel mainWindowViewModel, IMediator mediator, Worker worker)
     {
         _currentClient = currentClient;
         _mainWindowViewModel = mainWindowViewModel;
         _mediator = mediator;
+        _worker = worker;
 
         #region Pages
         _addAndWithdrawals = new AddAndWithdrawalsPage();
@@ -86,7 +89,7 @@ public class OperationsWindowViewModel : ViewModel
     private void OnBetweenOwnAccountsCommandExecuted(object p)
     {
         CurrentPage = _betweenOwnAccounts;
-        _betweenOwnAccounts.DataContext = new TransferBetweenOwnAccountsViewModel(_currentClient, _mediator);
+        _betweenOwnAccounts.DataContext = new TransferBetweenOwnAccountsViewModel(_currentClient, _mediator, _worker);
     }
     private bool CanBetweenOwnAccountsCommandExecute(object p)
     {
@@ -101,7 +104,7 @@ public class OperationsWindowViewModel : ViewModel
     private void OnTransferToOtherClientsAccountsCommandExecuted(object p)
     {
         CurrentPage = _transferToOtherClientsAccounts;
-        _transferToOtherClientsAccounts.DataContext = new TransferToOtherClientsAccountsViewModel(_currentClient, _mediator);
+        _transferToOtherClientsAccounts.DataContext = new TransferToOtherClientsAccountsViewModel(_currentClient, _mediator, _worker);
     }
     private bool CanTransferToOtherClientsAccountsCommandExecute(object p)
     {
@@ -115,7 +118,7 @@ public class OperationsWindowViewModel : ViewModel
     {
         CurrentPage = _openAccount;
 
-        _openAccount.DataContext = new OpenAccountViewModel((p as ClientLookUpDto)!, _mediator);
+        _openAccount.DataContext = new OpenAccountViewModel((p as ClientLookUpDto)!, _mediator, _worker);
 
     }
     private bool CanOpenAccountCommandExecute(object p)

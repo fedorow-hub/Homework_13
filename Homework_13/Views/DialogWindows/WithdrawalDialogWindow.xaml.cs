@@ -1,15 +1,21 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
+
 using System.Windows.Input;
 
 namespace Homework_13.Views.DialogWindows
 {
     /// <summary>
-    /// Логика взаимодействия для DialogWindow.xaml
+    /// Логика взаимодействия для WithdrawalDialogWindow.xaml
     /// </summary>
-    public partial class AddAndWithdrawalDialogWindow : Window
+    public partial class WithdrawalDialogWindow : Window
     {
-        public AddAndWithdrawalDialogWindow()
+        public WithdrawalDialogWindow()
         {
             InitializeComponent();
         }

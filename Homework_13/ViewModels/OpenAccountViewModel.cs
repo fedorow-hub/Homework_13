@@ -9,6 +9,7 @@ using System;
 using MediatR;
 using Homework_13.Views;
 using Bank.Application.Accounts.Commands.CloseAccount;
+using Bank.Domain.Worker;
 using Homework_13.ViewModels.Helpers;
 
 namespace Homework_13.ViewModels;
@@ -17,6 +18,7 @@ public class OpenAccountViewModel : ViewModel
 {
     public Action UpdateAccountList;
     private readonly IMediator _mediator;
+    private readonly Worker _worker;
 
     #region Свойства зависимости
     #region CurrentClient
@@ -47,10 +49,11 @@ public class OpenAccountViewModel : ViewModel
     #endregion
     #endregion
 
-    public OpenAccountViewModel(ClientLookUpDto currentClient, IMediator mediator)
+    public OpenAccountViewModel(ClientLookUpDto currentClient, IMediator mediator, Worker worker)
 	{
         _currentClient = currentClient;
         _mediator = mediator;
+        _worker = worker;
 
         #region Commands
         OutCommand = new LambdaCommand(OnOutCommandExecute, CanOutCommandExecute);

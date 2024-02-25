@@ -70,7 +70,7 @@ public class AddAndWithdrawalsViewModel : ViewModel
     }
 
     #region Commands
-    public AddAndWithdrawalDialogWindow DialogWindow { get; private set; } = null!;
+    public AddDialogWindow DialogWindow { get; private set; } = null!;
 
     #region AddCommand
     public ICommand AddCommand { get; }
@@ -78,28 +78,30 @@ public class AddAndWithdrawalsViewModel : ViewModel
 
     private void OnAddCommandExecute(object p)
     {
-        var window = new AddAndWithdrawalDialogWindow
+        var window = new AddDialogWindow
         {
             Owner = Application.Current.MainWindow
         };
         DialogWindow = window;
-        window.DataContext = new AddAndWithdrawalsDialogViewModel((p as Account)!, _mediator, true, this);
+        window.DataContext = new AddDialogViewModel((p as Account)!, _mediator, this);
         window.Closed += OnWindowClosed;
         window.ShowDialog();
     }
     #endregion
+
+    public WithdrawalDialogWindow WithdrawalDialogWindow { get; private set; } = null!;
 
     #region WithdrawalCommand
     public ICommand WithdrawalCommand { get; }
     private bool CanWithdrawalCommandExecute(object? p) => p != null;
     private void OnWithdrawalCommandExecute(object p)
     {
-        var window = new AddAndWithdrawalDialogWindow
+        var window = new WithdrawalDialogWindow
         {
             Owner = Application.Current.MainWindow
         };
-        DialogWindow = window;
-        window.DataContext = new AddAndWithdrawalsDialogViewModel((p as Account)!, _mediator, false, this);
+        WithdrawalDialogWindow = window;
+        window.DataContext = new WithdrawalDialogViewModel((p as Account)!, _mediator, this);
         window.Closed += OnWindowClosed;
         window.ShowDialog();
     }
@@ -109,7 +111,12 @@ public class AddAndWithdrawalsViewModel : ViewModel
         ((Window)sender!).Closed -= OnWindowClosed;
         DialogWindow = null!;
     }
+
     #endregion
 
     #endregion
+
+
 }
+
+

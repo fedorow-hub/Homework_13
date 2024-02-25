@@ -18,6 +18,7 @@ using Bank.Domain.Account;
 using Bank.Domain.Worker;
 using Homework_13.Views.AccountOperationWindow;
 using Homework_13.ViewModels.Helpers;
+using Serilog;
 
 namespace Homework_13.ViewModels;
 
@@ -35,7 +36,7 @@ public class MainWindowViewModel : ViewModel
     public decimal DollarCurrentRate { get; private set; }
     public decimal EuroCurrentRate { get; private set; }
 
-    public Worker Worker { get; private set; }
+    public Worker Worker { get; }
     #endregion
 
     #region Свойства зависимости
@@ -168,11 +169,12 @@ public class MainWindowViewModel : ViewModel
 
     #endregion
 
-    public MainWindowViewModel(Worker worker, IExchangeRateService exchangeRateService, IMediator mediator)
+    public MainWindowViewModel(Worker worker, IExchangeRateService exchangeRateService, IMediator mediator, ICurrentWorkerService workerService)
     {
         _exchangeRateService = exchangeRateService;
         _mediator = mediator;
         Worker = worker;
+        workerService.Worker = Worker;
 
         Title = $"Банк {GetExistBankOrCreateAsync().Result.Name}, капитал банка: {GetExistBankOrCreateAsync().Result.Capital} руб.";
 
@@ -271,10 +273,10 @@ public class MainWindowViewModel : ViewModel
         {
             Id = SelectedClient.Id,
         };
-
-        Clients.Remove(SelectedClient);
-
+        
         _mediator.Send(command);
+        Log.Information($"{Worker} удалил клиента {SelectedClient.Id} {SelectedClient.Lastname} {SelectedClient.Firstname} {SelectedClient.Patronymic}");
+        UpdateClientList.Invoke();
     }
     #endregion
 
@@ -298,7 +300,7 @@ public class MainWindowViewModel : ViewModel
             Owner = Application.Current.MainWindow
         };
         _clientInfoWindow = window;
-        window.DataContext = new ClientInfoViewModel(this, Worker.DataAccess, _mediator, SelectedClient);
+        window.DataContext = new ClientInfoViewModel(this, Worker, _mediator, SelectedClient);
         window.Closed += OnWindowClosed;
         window.ShowDialog();
     }
@@ -316,20 +318,18 @@ public class MainWindowViewModel : ViewModel
 
     private bool CanAddClientCommandExecute(object p)
     {
-        if (_enableAddClient && SelectedClient is not null)
+        if (_enableAddClient)
             return true;
         return false;
     }
     private void OnAddClientCommandExecute(object p)
     {
-        if (SelectedClient is null) return;
-        
         var window = new ClientInfoWindow
         {
             Owner = Application.Current.MainWindow
         };
         _clientInfoWindow = window;
-        window.DataContext = new ClientInfoViewModel(this, Worker.DataAccess, _mediator, SelectedClient);
+        window.DataContext = new ClientInfoViewModel(this, Worker, _mediator);
         window.Closed += OnWindowClosed;
         window.ShowDialog();
     }
@@ -351,7 +351,7 @@ public class MainWindowViewModel : ViewModel
         if (SelectedClient is null) return;
 
         var operationWindow = new OperationsWindow();
-        var viewModel = new OperationsWindowViewModel(SelectedClient, this, _mediator);
+        var viewModel = new OperationsWindowViewModel(SelectedClient, this, _mediator, Worker);
         operationWindow.DataContext = viewModel;
         operationWindow.Show();
 
@@ -362,10 +362,6 @@ public class MainWindowViewModel : ViewModel
     }
     #endregion
 
-
     #endregion
-
-    
-
 
 }

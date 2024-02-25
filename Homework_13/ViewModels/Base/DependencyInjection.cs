@@ -1,5 +1,7 @@
 ﻿using Homework_13.ViewModels.DialogViewModels;
+using MediatR.NotificationPublishers;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace Homework_13.ViewModels.Base
 {
@@ -12,13 +14,15 @@ namespace Homework_13.ViewModels.Base
             services.AddTransient<OpenAccountViewModel>();
             services.AddTransient<AccountInfoViewModel>();
             services.AddTransient<AddAndWithdrawalsViewModel>();
-            services.AddTransient<AddAndWithdrawalsDialogViewModel>();
+            services.AddTransient<AddDialogViewModel>();
             services.AddTransient<TransferBetweenOwnAccountsViewModel>();
             services.AddTransient<TransferBetweenOwnAccountsDialogViewModel>();
             services.AddTransient<TransferToOtherClientsAccountsViewModel>();
             services.AddTransient<TransferToOtherClientsDialogViewModel>();
+            services.AddTransient<WithdrawalDialogViewModel>();
 
             return services;
         }
+
     }
 }

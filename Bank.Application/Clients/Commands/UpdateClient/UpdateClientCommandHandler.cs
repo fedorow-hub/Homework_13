@@ -25,6 +25,11 @@ public class UpdateClientCommandHandler : IRequestHandler<UpdateClientCommand>
         client?.ChangePassportNumber(request.PassportNumber);
         client?.ChangeTotalIncomePerMounth(request.TotalIncomePerMounth.ToString(CultureInfo.CurrentCulture));
 
+        client?.AddDomainEvent(new UpdateClientEvent
+        {
+            Id = request.Id
+        });
+
         await _context.SaveChangesAsync(cancellationToken);
     }
 }

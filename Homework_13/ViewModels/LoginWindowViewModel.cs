@@ -13,10 +13,12 @@ public class LoginWindowViewModel : ViewModel
 {
     private readonly IExchangeRateService _exchangeRateService;
     private readonly IMediator _mediator;
-    public LoginWindowViewModel(IExchangeRateService exchangeRateService, IMediator mediator)
+    private readonly ICurrentWorkerService _currentWorkerService;
+    public LoginWindowViewModel(IExchangeRateService exchangeRateService, IMediator mediator, ICurrentWorkerService workerService)
     {
         _exchangeRateService = exchangeRateService;
         _mediator = mediator;
+        _currentWorkerService = workerService;
         SetConsultantMode = new LambdaCommand(OnSetConsultantModeExecuted, CanSetConsultantModeExecute);
         SetManagerMode = new LambdaCommand(OnSetManagerModeExecuted, CanSetManagerModeExecute);
         OutCommand = new LambdaCommand(OnOutCommandExecuted, CanOutCommandExecute);
@@ -64,7 +66,7 @@ public class LoginWindowViewModel : ViewModel
     private void OpenMainWindow(Worker worker, object p)
     {
         var mainWindow = new MainWindow();
-        var mainWindowVm = new MainWindowViewModel(worker, _exchangeRateService, _mediator);
+        var mainWindowVm = new MainWindowViewModel(worker, _exchangeRateService, _mediator, _currentWorkerService);
         
         mainWindow.DataContext = mainWindowVm;
         mainWindow.Show();

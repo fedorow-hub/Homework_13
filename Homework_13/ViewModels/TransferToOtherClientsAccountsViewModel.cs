@@ -11,6 +11,7 @@ using Homework_13.ViewModels.DialogViewModels;
 using Homework_13.Views.DialogWindows;
 using System.Windows.Input;
 using System.Windows;
+using Bank.Domain.Worker;
 using Homework_13.ViewModels.Helpers;
 
 namespace Homework_13.ViewModels;
@@ -20,6 +21,7 @@ public class TransferToOtherClientsAccountsViewModel : ViewModel
     private readonly IMediator _mediator;
     public Action UpdateAccountList;
     public Action UpdateClientList;
+    private Worker _worker;
 
     #region Свойства зависимости
     private ClientLookUpDto _currentClient;
@@ -113,10 +115,11 @@ public class TransferToOtherClientsAccountsViewModel : ViewModel
 
     #endregion
 
-    public TransferToOtherClientsAccountsViewModel(ClientLookUpDto currentClient, IMediator mediator)
+    public TransferToOtherClientsAccountsViewModel(ClientLookUpDto currentClient, IMediator mediator, Worker worker)
     {
         _currentClient = currentClient;
         _mediator = mediator;
+        _worker = worker;
 
         TransferCommand = new LambdaCommand(OnTransferCommandExecute, CanTransferCommandExecute);
 

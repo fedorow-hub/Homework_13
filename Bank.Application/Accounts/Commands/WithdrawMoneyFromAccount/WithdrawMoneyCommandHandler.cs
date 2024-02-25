@@ -3,30 +3,22 @@ using Bank.Domain.Root;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bank.Application.Accounts.Commands.AddAndWithdrawalMoney;
+namespace Bank.Application.Accounts.Commands.WithdrawMoneyFromAccount;
 
-public class AddAndWithdrawalMoneyCommandHandler : IRequestHandler<AddAndWithdrawalMoneyCommand, string>
+public class WithdrawMoneyCommandHandler : IRequestHandler<WithdrawMoneyFromAccountCommand, string>
 {
     private readonly IApplicationDbContext _dbContext;
-    public AddAndWithdrawalMoneyCommandHandler(IApplicationDbContext dbContext)
+    public WithdrawMoneyCommandHandler(IApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
     }
-   
-    public async Task<string> Handle(AddAndWithdrawalMoneyCommand request, CancellationToken cancellationToken)
+
+    public async Task<string> Handle(WithdrawMoneyFromAccountCommand request, CancellationToken cancellationToken)
     {
         var selectedAccount = await _dbContext.Accounts.FirstOrDefaultAsync(ac => ac.Id == request.Id, cancellationToken);
         var bank = await _dbContext.Bank.FirstOrDefaultAsync(cancellationToken);
         if (selectedAccount != null)
         {
-            if (request.IsAdd)
-            {
-                selectedAccount.AddMoneyToAccount(request.Amount);
-                bank?.AddMoneyToCapital(request.Amount);
-                await _dbContext.SaveChangesAsync(cancellationToken);
-                return "Средства успешно добавлены на счет";
-            }
-
             try
             {
                 selectedAccount.WithdrawalMoneyFromAccount(request.Amount);
@@ -46,7 +38,8 @@ public class AddAndWithdrawalMoneyCommandHandler : IRequestHandler<AddAndWithdra
                 return ex.Message;
             }
         }
-
         return "Клиент не найден";
     }
 }
+
+

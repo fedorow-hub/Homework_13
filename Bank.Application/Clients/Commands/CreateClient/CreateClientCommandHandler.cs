@@ -25,6 +25,13 @@ public class CreateClientCommandHandler : IRequestHandler<CreateClientCommand>
                 request.PassportSeries, request.PassportNumber, request.TotalIncomePerMounth, bank);
             
             await _dbContext.Clients.AddAsync(client, cancellationToken);
+            client.AddDomainEvent(new CreateClientEvent
+            {
+                Id = client.Id,
+                Firstname = request.Firstname,
+                Lastname = request.Lastname,
+                Patronymic = request.Patronymic
+            });
         }
 
         await _dbContext.SaveChangesAsync(cancellationToken);
