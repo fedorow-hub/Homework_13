@@ -390,6 +390,7 @@ public class ClientInfoViewModel : ViewModel
                 TotalIncomePerMounth = _totalIncomePerMonth
             };
             await _mediator.Send(command);
+            MessageBox.Show($"{_worker} создал клиента: {_firstname} {_lastname}");
         }
         else
         {
@@ -405,8 +406,7 @@ public class ClientInfoViewModel : ViewModel
                 TotalIncomePerMounth = Convert.ToDecimal(_totalIncomePerMonth)
             };
             await _mediator.Send(command);
-            Log.Information($"{_worker} редактировал данные клиента {CurrentClient.Id}");
-
+            MessageBox.Show($"{_worker} отредактировал данные клиента {CurrentClient.Id}");
         }
 
         if (p is Window window)

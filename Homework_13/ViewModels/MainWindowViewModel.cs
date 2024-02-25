@@ -276,6 +276,7 @@ public class MainWindowViewModel : ViewModel
         
         _mediator.Send(command);
         Log.Information($"{Worker} удалил клиента {SelectedClient.Id} {SelectedClient.Lastname} {SelectedClient.Firstname} {SelectedClient.Patronymic}");
+        MessageBox.Show($"{Worker} удалил клиента {SelectedClient.Id}");
         UpdateClientList.Invoke();
     }
     #endregion
