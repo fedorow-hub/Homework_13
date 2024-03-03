@@ -33,6 +33,7 @@ public static class WorkingWithThreads
         // Ожидать завершения всей обработки
         await Task.WhenAll(processingTasks);
     }
+
 }
 
 
