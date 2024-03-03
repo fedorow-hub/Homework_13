@@ -7,7 +7,6 @@ namespace WebServer
     public class WebServer
     {
         public event EventHandler<RequestReceiverEventArgs> RequestReceived;
-        //private TcpListener _listener = new TcpListener(new IPEndPoint(IPAddress.Any, 8080));
 
         private HttpListener _listener;
         private readonly int _port;
@@ -34,8 +33,7 @@ namespace WebServer
             {
                 if (_enabled) return;
                 _listener = new HttpListener();
-                _listener.Prefixes.Add($"http://*:{_port}/");// netsh http add urlacl url=http://*:8080/ user=Sergei1 (в консоли, запущенной с правами администратора это надо выполнить)
-                _listener.Prefixes.Add($"http://*:{_port}/");// netsh http add urlacl url=http://+:8080/ user=Sergei1
+                _listener.Prefixes.Add($"http://*:{_port}/");// netsh http add urlacl url=http://*:8080/ user=Sergei1 (это надо выполнить в консоли, запущенной с правами администратора)
                 _enabled = true;
             }
             ListenAsync();
