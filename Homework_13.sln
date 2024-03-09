@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebServer", "WebServer\WebS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApplication", "ConsoleApplication\ConsoleApplication.csproj", "{4F5AABDD-4EE0-447B-9E57-CD1DE0F7F035}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homework_15", "Homework_15\Homework_15.csproj", "{092747A2-8176-4BFB-9362-D57D4BD723BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Homework_15", "Homework_15\Homework_15.csproj", "{092747A2-8176-4BFB-9362-D57D4BD723BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

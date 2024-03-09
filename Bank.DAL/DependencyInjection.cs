@@ -6,7 +6,7 @@ namespace Bank.DAL;
 
 public static class DependencyInjection
 {
-
+    
     public static IServiceCollection AddBankDal(this IServiceCollection services, string connectionString)
     {
         services.AddDbContext<ApplicationDbContext>(options =>

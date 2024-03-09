@@ -15,6 +15,13 @@ using Homework_13.ViewModels.Base;
 using Serilog;
 using MediatR.NotificationPublishers;
 using Homework_13.Services;
+using System.Data.Common;
+using Bank.DAL.DataProviderAdoNet;
+
+#if PC
+using System.Data.OleDb;
+#endif
+using Microsoft.Data.SqlClient;
 
 namespace Homework_13;
 
@@ -36,17 +43,20 @@ public partial class App : Application
         services.AddApplication();
         
         services.AddViewModels();
-        
-        var builder = new ConfigurationBuilder();
-        builder.SetBasePath(Directory.GetCurrentDirectory());
-        builder.AddJsonFile("appsettings.json");
-        var connectionString = builder.Build().GetConnectionString("DbConnection");
 
-        services.AddBankDal(connectionString!);
+        var (provider, connectionString, confBuilder) = GetProviderFromConfiguration();
 
-        var urlExchangeServise = builder.Build().GetConnectionString("UrlExchangeService");
+        //services.AddBankDal(connectionString!);
 
-        services.AddSingleton<string>(urlExchangeServise);
+        DbProviderFactory factory = GetDbProviderFactory(provider);
+                
+        services.AddSingleton<DbProviderFactory>(factory);
+        services.AddSingleton<ConnectionString>(new ConnectionString { String = connectionString });
+        services.AddSingleton<IDataProvider, DataProviderAdoNet>();
+
+        var urlExchangeService = confBuilder.GetConnectionString("UrlExchangeService");
+
+        services.AddSingleton<string>(urlExchangeService);
 
         services.AddSingleton<IExchangeRateService, ExchangeRateService>();
 
@@ -89,4 +99,42 @@ public partial class App : Application
         : Environment.CurrentDirectory;
 
     private static string? GetSourceCodePath([CallerFilePath] string? path = null) => path;
+
+    static (DataProviderEnum Provider, string ConnectionString, IConfigurationRoot ConfBuilder) GetProviderFromConfiguration()
+    {
+        var config = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", true, true)
+            .Build();
+
+        var providerName = config["ProviderName"];
+
+        if (Enum.TryParse<DataProviderEnum>(providerName, out DataProviderEnum provider))
+        {
+            return (provider, config[$"{providerName}:ConnectionString"], config);
+        };
+       
+        throw new Exception("Invalid data provider value supplied.");
+    }
+
+    enum DataProviderEnum
+    {
+        SQLite,
+        SqlServer,        
+#if PC
+    OleDb,
+#endif
+        None
+    }
+
+    static DbProviderFactory GetDbProviderFactory(DataProviderEnum provider)
+ => provider switch
+ {
+     DataProviderEnum.SqlServer => SqlClientFactory.Instance,
+     DataProviderEnum.SQLite => SqlClientFactory.Instance,
+#if PC
+     DataProviderEnum.OleDb => OleDbFactory.Instance,
+#endif
+     _ => null
+ };
 }

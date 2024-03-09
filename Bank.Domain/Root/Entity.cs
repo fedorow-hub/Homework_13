@@ -4,7 +4,7 @@ namespace Bank.Domain.Root;
 
 public abstract class Entity
 {
-    public virtual Guid Id { get; }
+    public virtual Guid Id { get; set; }
 
     private readonly List<INotification> _domainEvents = new();
 

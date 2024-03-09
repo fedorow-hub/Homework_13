@@ -216,6 +216,7 @@ public class MainWindowViewModel : ViewModel
     {
         var createBankCommand = new CreateBankCommand
         {
+            Id = Guid.NewGuid(),
             Name = "Сбер",
             Capital = 100000000,
             DateOfCreation = DateTime.Now

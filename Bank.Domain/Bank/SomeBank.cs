@@ -1,4 +1,5 @@
 ﻿using Bank.Domain.Root;
+using System.Xml.Linq;
 
 namespace Bank.Domain.Bank;
 
@@ -26,10 +27,10 @@ public sealed class SomeBank : Entity
 
     private static readonly object SyncRoot = new();
 
-    private SomeBank(string name, decimal capital, DateTime dateOfCreation)
+    private SomeBank(Guid id, string name, decimal capital, DateTime dateOfCreation)
     {
+        Id = id;
         Name = name;
-        //Clients = new List<Client.Client>();
         Capital = capital;
         DateOfCreation = dateOfCreation;
     }
@@ -41,12 +42,12 @@ public sealed class SomeBank : Entity
     /// <param name="capital"></param>
     /// <param name="dateOfCreation"></param>
     /// <returns></returns>
-    public static SomeBank CreateBank(string name, decimal capital, DateTime dateOfCreation)
+    public static SomeBank CreateBank(Guid id, string name, decimal capital, DateTime dateOfCreation)
     {
         if (_uniqueInstanceOfBank != null) return _uniqueInstanceOfBank;
         lock (SyncRoot)
         {
-            _uniqueInstanceOfBank = new SomeBank(name, capital, dateOfCreation);
+            _uniqueInstanceOfBank = new SomeBank(id, name, capital, dateOfCreation);
         }
         return _uniqueInstanceOfBank;
     }
