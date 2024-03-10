@@ -21,7 +21,6 @@ public interface IDataProvider
     bool CreateAccount(Account account);
     bool CloseAccount(Account account);
     bool ChangeAmountOfAccount(Account account);
-    //bool TransactionBetweenAccounts(Guid idAccountFrom, Guid idAccountTo, decimal amount);
     Account GetAccount(Guid id);
     AccountListVm GetAccountList(Guid clientId);
 }

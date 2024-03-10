@@ -1,7 +1,5 @@
 ﻿using Homework_13.ViewModels.DialogViewModels;
-using MediatR.NotificationPublishers;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 namespace Homework_13.ViewModels.Base
 {
@@ -23,6 +21,5 @@ namespace Homework_13.ViewModels.Base
 
             return services;
         }
-
     }
 }

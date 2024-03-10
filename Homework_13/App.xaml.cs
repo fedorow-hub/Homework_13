@@ -1,19 +1,14 @@
 ﻿using Bank.Application;
-using Bank.Application.Common.Mapping;
 using Bank.Application.Interfaces;
-using Bank.DAL;
 using Bank.DAL.ExchangeRateService;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using Homework_13.ViewModels.Base;
-using Serilog;
-using MediatR.NotificationPublishers;
 using Homework_13.Services;
 using System.Data.Common;
 using Bank.DAL.DataProviderAdoNet;
@@ -46,8 +41,6 @@ public partial class App : Application
 
         var (provider, connectionString, confBuilder) = GetProviderFromConfiguration();
 
-        //services.AddBankDal(connectionString!);
-
         DbProviderFactory factory = GetDbProviderFactory(provider);
                 
         services.AddSingleton<DbProviderFactory>(factory);
@@ -61,12 +54,6 @@ public partial class App : Application
         services.AddSingleton<IExchangeRateService, ExchangeRateService>();
 
         services.AddSingleton<ICurrentWorkerService, CurrentWorkerService>();
-
-        services.AddAutoMapper(config =>
-        {
-            config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
-            config.AddProfile(new AssemblyMappingProfile(typeof(IApplicationDbContext).Assembly));
-        });
     }
 
     protected override async void OnStartup(StartupEventArgs e)
@@ -74,15 +61,7 @@ public partial class App : Application
         IsDesignMode = false;
         var host = Host;
         base.OnStartup(e);
-        await host.StartAsync().ConfigureAwait(false);
-        try
-        {
-            DbInitializer.Initialize(host.Services.GetRequiredService<ApplicationDbContext>());
-        }
-        catch (Exception ex)
-        {
-            Log.Fatal(ex, "Не удаалось инициализировать EF Core");
-        }
+        await host.StartAsync().ConfigureAwait(false);        
     }
 
     protected override async void OnExit(ExitEventArgs e)
@@ -119,7 +98,6 @@ public partial class App : Application
 
     enum DataProviderEnum
     {
-        SQLite,
         SqlServer,        
 #if PC
     OleDb,
@@ -131,7 +109,6 @@ public partial class App : Application
  => provider switch
  {
      DataProviderEnum.SqlServer => SqlClientFactory.Instance,
-     DataProviderEnum.SQLite => SqlClientFactory.Instance,
 #if PC
      DataProviderEnum.OleDb => OleDbFactory.Instance,
 #endif

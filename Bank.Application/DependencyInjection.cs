@@ -13,7 +13,6 @@ public static class DependencyInjection
             cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
             cfg.NotificationPublisher = new ForeachAwaitPublisher();
         });
-        //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>)); 
         
         return services;
     }

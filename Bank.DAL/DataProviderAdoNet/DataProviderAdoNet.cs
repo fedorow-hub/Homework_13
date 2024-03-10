@@ -1,19 +1,16 @@
-﻿using AutoMapper.Execution;
-using Bank.Application.Accounts;
+﻿using Bank.Application.Accounts;
 using Bank.Application.Clients.Queries.GetClientList;
 using Bank.Application.Interfaces;
 using Bank.Domain.Account;
 using Bank.Domain.Bank;
 using Bank.Domain.Client;
-using Bank.Domain.Client.ValueObjects;
-using Bank.Domain.Worker;
+using Bank.Domain.Root;
 using Microsoft.Data.SqlClient;
-using Microsoft.Identity.Client;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Serilog;
 using System.Data;
 using System.Data.Common;
 using System.Data.OleDb;
-using System.Security.Principal;
 
 namespace Bank.DAL.DataProviderAdoNet;
 
@@ -115,9 +112,9 @@ public class DataProviderAdoNet : IDataProvider
             try
             {
                 var reader = command.ExecuteReader();
-                if (reader.HasRows) // если есть данные
+                if (reader.HasRows) 
                 {
-                    while (reader.Read()) // построчно считываем данные
+                    while (reader.Read()) 
                     {
                         bank = SomeBank.CreateBank(new Guid(reader.GetString(0)), reader.GetString(1), Convert.ToDecimal(reader.GetString(2)), Convert.ToDateTime(reader.GetString(3)));
                     }
@@ -527,7 +524,6 @@ public class DataProviderAdoNet : IDataProvider
             }            
         }
     }
-
     public bool CreateAccount(Account account)
     {
         using (DbConnection connection = _provider.CreateConnection())
@@ -758,11 +754,7 @@ public class DataProviderAdoNet : IDataProvider
             }
         }
     }
-    //public bool TransactionBetweenAccounts(Guid idAccountFrom, Guid idAccountTo, decimal amount)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
+   
     public Account GetAccount(Guid id)
     {
         using (DbConnection connection = _provider.CreateConnection())
@@ -899,5 +891,4 @@ public class DataProviderAdoNet : IDataProvider
         }
     }
 
-    
 }
