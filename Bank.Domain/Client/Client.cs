@@ -20,12 +20,12 @@ public class Client : Entity
 
     public TotalIncomePerMounth TotalIncomePerMounth { get; private set; } = null!;
 
-    public SomeBank? Bank { get; private set; }
+    public Guid BankId { get; private set; }
 
     public Client() { }
 
     public Client(Guid id, string firstname, string lastname, string patronymic, string phoneNumber, 
-        string seriesPassport, string numberPassport, string totalIncome, SomeBank bank)
+        string seriesPassport, string numberPassport, string totalIncome, Guid bankId)
         :base(id)
     {        
         Firstname = Firstname.SetName(firstname);
@@ -35,7 +35,7 @@ public class Client : Entity
         PassportSeries = PassportSeries.SetSeries(seriesPassport);
         PassportNumber = PassportNumber.SetNumber(numberPassport);
         TotalIncomePerMounth = TotalIncomePerMounth.SetIncome(totalIncome);
-        Bank = bank;
+        BankId = bankId;
     }
 
     #region Методы замены полей класса

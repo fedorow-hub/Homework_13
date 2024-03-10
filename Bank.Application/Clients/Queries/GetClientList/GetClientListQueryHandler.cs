@@ -37,8 +37,9 @@ public class GetClientListQueryHandler : IRequestHandler<GetClientListQuery, Cli
 
     public async Task<ClientListVm> Handle(GetClientListQuery request, CancellationToken cancellationToken)
     {
+        var clientsQuery = _dataProvider.GetClientList();
 
+        return new ClientListVm { Clients = clientsQuery.Clients };
 
-        return null;
     }
 }

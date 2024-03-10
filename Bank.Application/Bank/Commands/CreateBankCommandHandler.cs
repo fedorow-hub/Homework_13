@@ -15,13 +15,6 @@ public class CreateBankCommandHandler : IRequestHandler<CreateBankCommand, SomeB
     //    _dbContext = dbContext;
     //}
 
-    private readonly IDataProvider _dataProvider;
-
-    public CreateBankCommandHandler(IDataProvider dataProvider)
-    {
-        _dataProvider = dataProvider;
-    }
-
     //public async Task<SomeBank> Handle(CreateBankCommand request, CancellationToken cancellationToken)
     //{
 
@@ -34,6 +27,13 @@ public class CreateBankCommandHandler : IRequestHandler<CreateBankCommand, SomeB
     //    await _dbContext.SaveChangesAsync(cancellationToken);
     //    return bank;
     //}
+
+    private readonly IDataProvider _dataProvider;
+
+    public CreateBankCommandHandler(IDataProvider dataProvider)
+    {
+        _dataProvider = dataProvider;
+    }
 
     public async Task<SomeBank> Handle(CreateBankCommand request, CancellationToken cancellationToken)
     {

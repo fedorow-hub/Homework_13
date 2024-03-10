@@ -1,21 +1,49 @@
 ﻿using System.Globalization;
 using Bank.Application.Interfaces;
+using Bank.Domain.Client;
 using MediatR;
 
 namespace Bank.Application.Clients.Commands.UpdateClient;
 
 public class UpdateClientCommandHandler : IRequestHandler<UpdateClientCommand>
 {
-    private readonly IApplicationDbContext _context;
+    //private readonly IApplicationDbContext _context;
 
-    public UpdateClientCommandHandler(IApplicationDbContext context)
+    //public UpdateClientCommandHandler(IApplicationDbContext context)
+    //{
+    //    _context = context;
+    //}
+
+    //public async Task Handle(UpdateClientCommand request, CancellationToken cancellationToken)
+    //{
+    //    var client = _context.Clients.FirstOrDefault(r => r.Id == request.Id);
+
+    //    client?.ChangeFirstname(request.Firstname);
+    //    client?.ChangeLastname(request.Lastname);
+    //    client?.ChangePatronymic(request.Patronymic);
+    //    client?.ChangePhoneNumber(request.PhoneNumber);
+    //    client?.ChangePassportSeries(request.PassportSeries);
+    //    client?.ChangePassportNumber(request.PassportNumber);
+    //    client?.ChangeTotalIncomePerMounth(request.TotalIncomePerMounth.ToString(CultureInfo.CurrentCulture));
+
+    //    client?.AddDomainEvent(new UpdateClientEvent
+    //    {
+    //        Id = request.Id
+    //    });
+
+    //    await _context.SaveChangesAsync(cancellationToken);
+    //}
+
+    private readonly IDataProvider _dataProvider;
+
+    public UpdateClientCommandHandler(IDataProvider dataProvider)
     {
-        _context = context;
+        _dataProvider = dataProvider;
     }
 
     public async Task Handle(UpdateClientCommand request, CancellationToken cancellationToken)
     {
-        var client = _context.Clients.FirstOrDefault(r => r.Id == request.Id);
+        var client = _dataProvider.GetClient(request.Id);
 
         client?.ChangeFirstname(request.Firstname);
         client?.ChangeLastname(request.Lastname);
@@ -25,11 +53,14 @@ public class UpdateClientCommandHandler : IRequestHandler<UpdateClientCommand>
         client?.ChangePassportNumber(request.PassportNumber);
         client?.ChangeTotalIncomePerMounth(request.TotalIncomePerMounth.ToString(CultureInfo.CurrentCulture));
 
-        client?.AddDomainEvent(new UpdateClientEvent
-        {
-            Id = request.Id
-        });
+        bool isSuccess = _dataProvider.UpdateClient(client);
 
-        await _context.SaveChangesAsync(cancellationToken);
+        if (isSuccess)
+        {
+            client?.AddDomainEvent(new UpdateClientEvent
+            {
+                Id = request.Id
+            });
+        }
     }
 }
