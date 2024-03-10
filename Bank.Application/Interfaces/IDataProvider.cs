@@ -10,6 +10,7 @@ public interface IDataProvider
 {
     bool CreateBank(SomeBank bank);
     SomeBank GetBank();
+    bool UpdateBankCapital(SomeBank bank);
 
     bool CreateClient(Client client);
     bool UpdateClient(Client client);
@@ -18,9 +19,9 @@ public interface IDataProvider
     Client GetClient(Guid id);
 
     bool CreateAccount(Account account);
-    bool CloseAccount(Guid id);
-    bool AddMoneyToAccount(Guid id, decimal amount);
-    bool WithdrawMoneyFromAccount(Guid id, decimal amount);
-    bool TransactionBetweenAccounts(Guid idAccountFrom, Guid idAccountTo, decimal amount);
+    bool CloseAccount(Account account);
+    bool ChangeAmountOfAccount(Account account);
+    //bool TransactionBetweenAccounts(Guid idAccountFrom, Guid idAccountTo, decimal amount);
+    Account GetAccount(Guid id);
     AccountListVm GetAccountList(Guid clientId);
 }

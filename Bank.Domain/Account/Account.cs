@@ -57,8 +57,19 @@ public abstract class Account : Entity
         Amount = amount;
         IsExistance = true;
         Type = type;
-    }     
-       
+    }
+
+    public Account(Guid id, Guid clientId, DateTime accountTerm, decimal amount, DateTime timeOfCreated, TypeOfAccount type)
+        : base(id)
+    {
+        AccountTerm = accountTerm;
+        ClientId = clientId;
+        TimeOfCreated = timeOfCreated;
+        Amount = amount;
+        IsExistance = true;
+        Type = type;
+    }
+
     /// <summary>
     /// закрытие счета
     /// </summary>

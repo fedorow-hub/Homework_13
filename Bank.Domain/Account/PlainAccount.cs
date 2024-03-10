@@ -11,6 +11,11 @@ public sealed class PlainAccount : Account
     {
     }
 
+    public PlainAccount(Guid id, Guid clientId, DateTime accountTerm, DateTime timeOfCreated, decimal amount = 0)
+        : base(id, clientId, accountTerm, amount, timeOfCreated, TypeOfAccount.Plain)
+    {
+    }
+
     /// <summary>
     /// метод создания счета
     /// </summary>

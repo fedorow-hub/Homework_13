@@ -8,9 +8,12 @@ using Bank.Domain.Client;
 using Bank.Domain.Client.ValueObjects;
 using Bank.Domain.Worker;
 using Microsoft.Data.SqlClient;
+using Microsoft.Identity.Client;
 using Serilog;
+using System.Data;
 using System.Data.Common;
 using System.Data.OleDb;
+using System.Security.Principal;
 
 namespace Bank.DAL.DataProviderAdoNet;
 
@@ -127,7 +130,57 @@ public class DataProviderAdoNet : IDataProvider
             return bank;
         }
     }
+    public bool UpdateBankCapital(SomeBank bank)
+    {
+        using (DbConnection connection = _provider.CreateConnection())
+        {
+            if (connection == null)
+            {
+                return false;
+            }
 
+            connection.ConnectionString = _connectionString.String;
+            connection.Open();
+
+            DbCommand command = _provider.CreateCommand();
+            if (command == null)
+            {
+                return false;
+            }
+
+            command.Connection = connection;
+
+            if (_provider is SqlClientFactory)
+            {
+                command.CommandText = $@"UPDATE [dbo].[Bank] SET 
+                                            Capital = @Capital
+                                        WHERE Id = '{bank.Id}'";
+
+                SqlParameter sqlCapitalParam = new SqlParameter("@Capital", bank.Capital);
+                command.Parameters.Add(sqlCapitalParam);
+            }
+            else if (_provider is OleDbFactory)
+            {
+                var tempBankId = "{" + bank.Id + "}"; // Access добавляет фигурные скобки к Id
+                command.CommandText = $@"UPDATE Bank SET 
+                                            Capital = @Capital
+                                        WHERE Id = '{tempBankId}'";
+
+                OleDbParameter capitalParam = new OleDbParameter("@Capital", bank.Capital);
+                command.Parameters.Add(capitalParam);
+            }
+            try
+            {
+                command.ExecuteNonQuery();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                return false;
+            }
+        }
+    }
     public bool CreateClient(Client client)
     {
         using (DbConnection connection = _provider.CreateConnection())
@@ -477,23 +530,302 @@ public class DataProviderAdoNet : IDataProvider
 
     public bool CreateAccount(Account account)
     {
-        throw new NotImplementedException();
+        using (DbConnection connection = _provider.CreateConnection())
+        {
+            if (connection == null)
+            {
+                return false;
+            }
+
+            connection.ConnectionString = _connectionString.String;
+            connection.Open();
+
+            DbCommand command = _provider.CreateCommand();
+            if (command == null)
+            {
+                return false;
+            }
+
+            command.Connection = connection;
+
+            CreditAccount creditAccount = account as CreditAccount;
+            DepositAccount depositAccount = account as DepositAccount;
+            string mounthlyPayment = "0";
+            string interestRateName = "0";
+            int? interestRateId = 0;
+
+            if (creditAccount != null)
+            {
+                mounthlyPayment = creditAccount.MouthlyPayment.ToString();
+                interestRateName = creditAccount.LoanInterest.Name;
+                interestRateId = creditAccount.LoanInterest.Id;
+            }
+
+            if (depositAccount != null)
+            {
+                interestRateName = depositAccount.InterestRate.Name;
+                interestRateId = depositAccount.InterestRate.Id;
+            }
+
+            if (_provider is SqlClientFactory)
+            {
+                command.CommandText = $@"INSERT INTO [dbo].[Accounts] (Id, ClientId, TimeOfCreated, Amount, AccountTerm, IsExistance, Type, Discriminator, MouthlyPayment, InterestRateName, InterestRateId) 
+                                VALUES(@Id, @ClientId, @TimeOfCreated, @Amount, @AccountTerm, @IsExistance, @Type, @Discriminator, @MouthlyPayment, @InterestRateName, @InterestRateId)";
+
+                SqlParameter sqlIdParam = new SqlParameter("@Id", account.Id);
+                command.Parameters.Add(sqlIdParam);
+
+                SqlParameter sqlClientIdParam = new SqlParameter("@ClientId", account.ClientId);
+                command.Parameters.Add(sqlClientIdParam);
+
+                SqlParameter sqlTimeOfCreatedParam = new SqlParameter("@TimeOfCreated", account.TimeOfCreated.Date.ToString("O"));
+                command.Parameters.Add(sqlTimeOfCreatedParam);
+
+                SqlParameter sqlAmountParam = new SqlParameter("@Amount", account.Amount);
+                command.Parameters.Add(sqlAmountParam);
+
+                SqlParameter sqlAccountTermParam = new SqlParameter("@AccountTerm", account.AccountTerm.Date.ToString("O"));
+                command.Parameters.Add(sqlAccountTermParam);
+
+                SqlParameter sqlIsExistanceParam = new SqlParameter("@IsExistance", Convert.ToInt32(account.IsExistance));
+                command.Parameters.Add(sqlIsExistanceParam);
+
+                SqlParameter sqlTypeParam = new SqlParameter("@Type", account.Type.Name);
+                command.Parameters.Add(sqlTypeParam);
+
+                SqlParameter sqlDiscriminatorParam = new SqlParameter("@Discriminator", account.ToString());
+                command.Parameters.Add(sqlDiscriminatorParam);
+
+                SqlParameter sqlMouthlyPaymentParam = new SqlParameter("@MouthlyPayment", mounthlyPayment);
+                command.Parameters.Add(sqlMouthlyPaymentParam);
+
+                SqlParameter sqlInterestRateNameParam = new SqlParameter("@InterestRateName", interestRateName);
+                command.Parameters.Add(sqlInterestRateNameParam);
+
+                SqlParameter sqlInterestRateIdParam = new SqlParameter("@InterestRateId", interestRateId);
+                command.Parameters.Add(sqlInterestRateIdParam);
+            }
+            else if (_provider is OleDbFactory)
+            {
+                command.CommandText = $@"INSERT INTO Accounts (Id, ClientId, TimeOfCreated, Amount, AccountTerm, IsExistance, Type, Discriminator, MouthlyPayment, InterestRateName, InterestRateId) 
+                                VALUES(@Id, @ClientId, @TimeOfCreated, @Amount, @AccountTerm, @IsExistance, @Type, @Discriminator, @MouthlyPayment, @InterestRateName, @InterestRateId)";
+
+                OleDbParameter sqlIdParam = new OleDbParameter("@Id", account.Id);
+                command.Parameters.Add(sqlIdParam);
+
+                OleDbParameter sqlClientIdParam = new OleDbParameter("@ClientId", account.ClientId);
+                command.Parameters.Add(sqlClientIdParam);
+
+                OleDbParameter sqlTimeOfCreatedParam = new OleDbParameter("@TimeOfCreated", account.TimeOfCreated.Date.ToString("O"));
+                command.Parameters.Add(sqlTimeOfCreatedParam);
+
+                OleDbParameter sqlAmountParam = new OleDbParameter("@Amount", account.Amount);
+                command.Parameters.Add(sqlAmountParam);
+
+                OleDbParameter sqlAccountTermParam = new OleDbParameter("@AccountTerm", account.AccountTerm.Date.ToString("O"));
+                command.Parameters.Add(sqlAccountTermParam);
+
+                OleDbParameter sqlIsExistanceParam = new OleDbParameter("@IsExistance", Convert.ToInt32(account.IsExistance));
+                command.Parameters.Add(sqlIsExistanceParam);
+
+                OleDbParameter sqlTypeParam = new OleDbParameter("@Type", account.Type.Name);
+                command.Parameters.Add(sqlTypeParam);
+
+                OleDbParameter sqlDiscriminatorParam = new OleDbParameter("@Discriminator", account.ToString());
+                command.Parameters.Add(sqlDiscriminatorParam);
+
+                OleDbParameter sqlMouthlyPaymentParam = new OleDbParameter("@MouthlyPayment", mounthlyPayment);
+                command.Parameters.Add(sqlMouthlyPaymentParam);
+
+                OleDbParameter sqlInterestRateNameParam = new OleDbParameter("@InterestRateName", interestRateName);
+                command.Parameters.Add(sqlInterestRateNameParam);
+
+                OleDbParameter sqlInterestRateIdParam = new OleDbParameter("@InterestRateId", interestRateId);
+                command.Parameters.Add(sqlInterestRateIdParam);
+            }
+
+            try
+            {
+                command.ExecuteNonQuery();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message); 
+                return false;
+            }            
+        }
     }
-    public bool CloseAccount(Guid id)
+    public bool CloseAccount(Account account)
     {
-        throw new NotImplementedException();
+        using (DbConnection connection = _provider.CreateConnection())
+        {
+            if (connection == null)
+            {
+                return false;
+            }
+
+            connection.ConnectionString = _connectionString.String;
+            connection.Open();
+
+            DbCommand command = _provider.CreateCommand();
+            if (command == null)
+            {
+                return false;
+            }
+
+            command.Connection = connection;
+
+            if (_provider is SqlClientFactory)
+            {
+                command.CommandText = $@"UPDATE [dbo].[Accounts] SET 
+                                            IsExistance = @IsExistance
+                                        WHERE Id = '{account.Id}'";
+
+                SqlParameter sqlIsExistanceParam = new SqlParameter("@IsExistance", Convert.ToInt32(account.IsExistance));
+                command.Parameters.Add(sqlIsExistanceParam);
+            }
+            else if (_provider is OleDbFactory)
+            {
+                var tempAccountId = "{" + account.Id + "}"; // Access добавляет фигурные скобки к Id
+                command.CommandText = $@"UPDATE Accounts SET 
+                                           IsExistance = @IsExistance
+                                        WHERE Id = '{tempAccountId}'";
+
+                OleDbParameter isExistanceParam = new OleDbParameter("@IsExistance", Convert.ToInt32(account.IsExistance));
+                command.Parameters.Add(isExistanceParam);
+            }
+            try
+            {
+                command.ExecuteNonQuery();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                return false;
+            }
+        }
     }
-    public bool AddMoneyToAccount(Guid id, decimal amount)
+    public bool ChangeAmountOfAccount(Account account)
     {
-        throw new NotImplementedException();
+        using (DbConnection connection = _provider.CreateConnection())
+        {
+            if (connection == null)
+            {
+                return false;
+            }
+
+            connection.ConnectionString = _connectionString.String;
+            connection.Open();
+
+            DbCommand command = _provider.CreateCommand();
+            if (command == null)
+            {
+                return false;
+            }
+
+            command.Connection = connection;
+
+            if (_provider is SqlClientFactory)
+            {
+                command.CommandText = $@"UPDATE [dbo].[Accounts] SET 
+                                            Amount = @Amount
+                                        WHERE Id = '{account.Id}'";
+
+                SqlParameter sqlamountParam = new SqlParameter("@Amount", account.Amount);
+                command.Parameters.Add(sqlamountParam);
+            }
+            else if (_provider is OleDbFactory)
+            {
+                var tempAccountId = "{" + account.Id + "}"; // Access добавляет фигурные скобки к Id
+                command.CommandText = $@"UPDATE Accounts SET 
+                                            Amount = @Amount
+                                        WHERE Id = '{tempAccountId}'";
+
+                OleDbParameter amountParam = new OleDbParameter("@Amount", account.Amount);
+                command.Parameters.Add(amountParam);
+            }
+            try
+            {
+                command.ExecuteNonQuery();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                return false;
+            }
+        }
     }
-    public bool WithdrawMoneyFromAccount(Guid id, decimal amount)
+    //public bool TransactionBetweenAccounts(Guid idAccountFrom, Guid idAccountTo, decimal amount)
+    //{
+    //    throw new NotImplementedException();
+    //}
+
+    public Account GetAccount(Guid id)
     {
-        throw new NotImplementedException();
-    }
-    public bool TransactionBetweenAccounts(Guid idAccountFrom, Guid idAccountTo, decimal amount)
-    {
-        throw new NotImplementedException();
+        using (DbConnection connection = _provider.CreateConnection())
+        {
+            if (connection == null)
+            {
+                return null;
+            }
+
+            connection.ConnectionString = _connectionString.String;
+            connection.Open();
+
+            DbCommand command = _provider.CreateCommand();
+            if (command == null)
+            {
+                return null;
+            }
+
+            command.Connection = connection;
+
+            if (_provider is SqlClientFactory)
+            {
+                command.CommandText = $@"SELECT * FROM [dbo].[Accounts] WHERE Id = '{id}'";
+            }
+            else if (_provider is OleDbFactory)
+            {
+                var tempAccountId = "{" + id + "}"; // Access добавляет фигурные скобки к Id
+                command.CommandText = $@"SELECT * FROM Accounts WHERE Id = '{tempAccountId}'";
+            }
+
+            Account account = null;
+
+            try
+            {
+                var reader = command.ExecuteReader();
+                if (reader.HasRows) 
+                {
+                    while (reader.Read()) 
+                    {
+                        if (reader.GetString("Type") == "Депозитный")
+                        {
+                            account = new DepositAccount(new Guid(reader.GetString("Id")), new Guid(reader.GetString("ClientId")),
+                            Convert.ToDateTime(reader.GetString("AccountTerm")), Convert.ToDecimal(reader.GetString("Amount")), Convert.ToDateTime(reader.GetString("TimeOfCreated")));
+                        }
+                        else if (reader.GetString("Type") == "Рассчетный")
+                        {
+                            account = new PlainAccount(new Guid(reader.GetString("Id")), new Guid(reader.GetString("ClientId")),
+                            Convert.ToDateTime(reader.GetString("AccountTerm")), Convert.ToDateTime(reader.GetString("TimeOfCreated")), Convert.ToDecimal(reader.GetString("Amount")));
+                        }
+                        else if (reader.GetString("Type") == "Кредитный")
+                        {
+                            account = new CreditAccount(new Guid(reader.GetString("Id")), new Guid(reader.GetString("ClientId")),
+                            Convert.ToDateTime(reader.GetString("AccountTerm")), Convert.ToDecimal(reader.GetString("Amount")), Convert.ToDateTime(reader.GetString("TimeOfCreated")), reader.GetString("MouthlyPayment"));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+            }
+            return account;
+        }
     }
 
     public AccountListVm GetAccountList(Guid clientId)
@@ -518,11 +850,12 @@ public class DataProviderAdoNet : IDataProvider
 
             if (_provider is SqlClientFactory)
             {
-                command.CommandText = $@"SELECT * FROM [dbo].[Accounts] WHERE ClientId = {clientId}";
+                command.CommandText = $@"SELECT * FROM [dbo].[Accounts] WHERE ClientId = '{clientId}' AND IsExistance = 1";
             }
             else if (_provider is OleDbFactory)
             {
-                command.CommandText = $@"SELECT * FROM Accounts WHERE ClientId = {clientId}";
+                var tempClientId = "{" + clientId + "}"; // Access добавляет фигурные скобки к Id
+                command.CommandText = $@"SELECT * FROM Accounts WHERE ClientId = {tempClientId} AND IsExistance = 1";
             }
 
             var accounts = new AccountListVm();
@@ -536,10 +869,24 @@ public class DataProviderAdoNet : IDataProvider
                 {
                     while (reader.Read())
                     {
-                        //Guid id, Guid clientId, byte termOfMonth, decimal amount, DateTime timeOfCreated, TypeOfAccount type
-                        //var account = new Account(new Guid(reader.GetString(0)), new Guid(reader.GetString(1)), );
-                        
-                        //accounts.Accounts.Add(account);
+                        Account account = null;
+                        if (reader.GetString("Type") == "Депозитный")
+                        {
+                            account = new DepositAccount(new Guid(reader.GetString("Id")), new Guid(reader.GetString("ClientId")),
+                            Convert.ToDateTime(reader.GetString("AccountTerm")), Convert.ToDecimal(reader.GetString("Amount")), Convert.ToDateTime(reader.GetString("TimeOfCreated")));
+                        }
+                        else if (reader.GetString("Type") == "Рассчетный")
+                        {
+                            account = new PlainAccount(new Guid(reader.GetString("Id")), new Guid(reader.GetString("ClientId")),
+                            Convert.ToDateTime(reader.GetString("AccountTerm")), Convert.ToDateTime(reader.GetString("TimeOfCreated")), Convert.ToDecimal(reader.GetString("Amount")));
+                        }
+                        else if (reader.GetString("Type") == "Кредитный")
+                        {
+                            account = new CreditAccount(new Guid(reader.GetString("Id")), new Guid(reader.GetString("ClientId")),
+                            Convert.ToDateTime(reader.GetString("AccountTerm")), Convert.ToDecimal(reader.GetString("Amount")), Convert.ToDateTime(reader.GetString("TimeOfCreated")), reader.GetString("MouthlyPayment"));
+                        }
+
+                        accounts.Accounts.Add(account);
                     }
                 }
                 return accounts;

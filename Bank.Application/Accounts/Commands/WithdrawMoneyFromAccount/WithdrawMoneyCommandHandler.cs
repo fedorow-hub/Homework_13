@@ -7,31 +7,62 @@ namespace Bank.Application.Accounts.Commands.WithdrawMoneyFromAccount;
 
 public class WithdrawMoneyCommandHandler : IRequestHandler<WithdrawMoneyFromAccountCommand, string>
 {
-    private readonly IApplicationDbContext _dbContext;
-    public WithdrawMoneyCommandHandler(IApplicationDbContext dbContext)
+    //private readonly IApplicationDbContext _dbContext;
+    //public WithdrawMoneyCommandHandler(IApplicationDbContext dbContext)
+    //{
+    //    _dbContext = dbContext;
+    //}
+
+    //public async Task<string> Handle(WithdrawMoneyFromAccountCommand request, CancellationToken cancellationToken)
+    //{
+    //    var selectedAccount = await _dbContext.Accounts.FirstOrDefaultAsync(ac => ac.Id == request.Id, cancellationToken);
+    //    var bank = await _dbContext.Bank.FirstOrDefaultAsync(cancellationToken);
+    //    if (selectedAccount != null)
+    //    {
+    //        try
+    //        {
+    //            selectedAccount.WithdrawalMoneyFromAccount(request.Amount);
+    //            try
+    //            {
+    //                bank?.WithdrawalMoneyFromCapital(request.Amount);
+    //            }
+    //            catch (DomainExeption ex)
+    //            {
+    //                Console.WriteLine(ex);
+    //            }
+    //            await _dbContext.SaveChangesAsync(cancellationToken);
+    //            return "Средства успешно сняты со счета";
+    //        }
+    //        catch (DomainExeption ex)
+    //        {
+    //            return ex.Message;
+    //        }
+    //    }
+    //    return "Клиент не найден";
+    //}
+
+    private readonly IDataProvider _dataProvider;
+    public WithdrawMoneyCommandHandler(IDataProvider dataProvider)
     {
-        _dbContext = dbContext;
+        _dataProvider = dataProvider;
     }
 
     public async Task<string> Handle(WithdrawMoneyFromAccountCommand request, CancellationToken cancellationToken)
     {
-        var selectedAccount = await _dbContext.Accounts.FirstOrDefaultAsync(ac => ac.Id == request.Id, cancellationToken);
-        var bank = await _dbContext.Bank.FirstOrDefaultAsync(cancellationToken);
+        var selectedAccount = _dataProvider.GetAccount(request.Id);
+        var bank = _dataProvider.GetBank();
         if (selectedAccount != null)
         {
             try
             {
                 selectedAccount.WithdrawalMoneyFromAccount(request.Amount);
-                try
+                if (_dataProvider.ChangeAmountOfAccount(selectedAccount))
                 {
                     bank?.WithdrawalMoneyFromCapital(request.Amount);
-                }
-                catch (DomainExeption ex)
-                {
-                    Console.WriteLine(ex);
-                }
-                await _dbContext.SaveChangesAsync(cancellationToken);
-                return "Средства успешно сняты со счета";
+                    _dataProvider.UpdateBankCapital(bank);
+
+                    return "Средства успешно сняты со счета";
+                };
             }
             catch (DomainExeption ex)
             {

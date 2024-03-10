@@ -27,6 +27,13 @@ public sealed class CreditAccount : Account
         MouthlyPayment = SetMonthlyPayment(termOfMonth);
     }
 
+    public CreditAccount(Guid id, Guid clientId, DateTime accountTerm, decimal amount, DateTime timeOfCreated, string monthlyPayment)
+        : base(id, clientId, accountTerm, amount, timeOfCreated, TypeOfAccount.Credit)
+    {
+        LoanInterest = SetLoanInterest();
+        MouthlyPayment = Convert.ToDecimal(monthlyPayment);
+    }
+
     /// <summary>
     /// метод создания счета
     /// </summary>

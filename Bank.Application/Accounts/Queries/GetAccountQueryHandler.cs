@@ -26,11 +26,7 @@ namespace Bank.Application.Accounts.Queries
         }
         public async Task<AccountListVm> Handle(GetAccountsQuery request, CancellationToken cancellationToken)
         {
-            //var accountsQuery = await _dbContext.Accounts.Where(ac => ac.ClientId == request.Id && ac.IsExistance == true).AsNoTracking()
-            //    .ToListAsync(cancellationToken);
-
             var accountsQuery = _dataProvider.GetAccountList(request.Id);
-
             return new AccountListVm { Accounts = accountsQuery.Accounts };
         }
     }

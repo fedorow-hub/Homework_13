@@ -18,6 +18,12 @@ public sealed class DepositAccount : Account
         InterestRate = SetInterestRate();
     }
 
+    public DepositAccount(Guid id, Guid clientId, DateTime accountTerm, decimal amount, DateTime timeOfCreated)
+        : base(id, clientId, accountTerm, amount, timeOfCreated, TypeOfAccount.Deposit)
+    {
+        InterestRate = SetInterestRate();
+    }
+
     /// <summary>
     /// метод создания счета
     /// </summary>
