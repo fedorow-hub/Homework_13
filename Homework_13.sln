@@ -23,7 +23,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebServer", "WebServer\WebS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApplication", "ConsoleApplication\ConsoleApplication.csproj", "{4F5AABDD-4EE0-447B-9E57-CD1DE0F7F035}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homework_15", "Homework_15\Homework_15.csproj", "{092747A2-8176-4BFB-9362-D57D4BD723BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Homework_15", "Homework_15\Homework_15.csproj", "{092747A2-8176-4BFB-9362-D57D4BD723BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatternFactoryMethod", "PatternFactoryMethod\PatternFactoryMethod.csproj", "{BF595626-19A3-4998-944C-6F391DA2CBCC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,10 @@ Global
 		{092747A2-8176-4BFB-9362-D57D4BD723BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{092747A2-8176-4BFB-9362-D57D4BD723BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{092747A2-8176-4BFB-9362-D57D4BD723BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF595626-19A3-4998-944C-6F391DA2CBCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF595626-19A3-4998-944C-6F391DA2CBCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF595626-19A3-4998-944C-6F391DA2CBCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF595626-19A3-4998-944C-6F391DA2CBCC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
